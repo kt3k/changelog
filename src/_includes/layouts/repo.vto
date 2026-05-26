@@ -1,19 +1,27 @@
 ---
 layout: layouts/base.vto
 ---
-<div class="mb-12 border-b border-rule pb-8 text-center">
+<div class="mb-8 text-center">
   <h1 class="mb-2 font-mono text-3xl font-semibold tracking-tight">{{ repo }}</h1>
   <p class="m-0 text-sm text-ink-soft">
     <a class="text-ink-soft" href="https://github.com/{{ repo }}">github.com/{{ repo }}</a>
-    · {{ feedPosts.length }} issue{{ if feedPosts.length != 1 }}s{{ /if }}
   </p>
 </div>
 
+<nav class="mb-8 flex justify-center gap-6 border-b border-rule">
+  {{ for tab of tabs }}
+  <a href="{{ tab.href }}" class="-mb-px border-b-2 px-1 pb-3 text-sm font-semibold {{ if tab.key == period }}border-accent text-ink{{ else }}border-transparent text-ink-soft hover:text-ink{{ /if }}">{{ tab.label }}</a>
+  {{ /for }}
+</nav>
+
+{{ if feedPosts.length == 0 }}
+<p class="text-center italic text-ink-soft">No {{ period }} summaries yet.</p>
+{{ else }}
 <div>
   {{ for post of feedPosts }}
   <article class="border-b border-rule py-10 first:pt-0 last:border-0">
     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-soft">
-      <time datetime="{{ post.date |> date('DATETIME') }}">{{ post.date |> date('HUMAN_DATE') }}</time>{{ if post.commits }} · {{ post.commits }} commit{{ if post.commits != 1 }}s{{ /if }}{{ /if }}
+      {{ if post.period_label }}{{ post.period_label }}{{ else }}{{ post.date |> date('HUMAN_DATE') }}{{ /if }}{{ if post.commits }} · {{ post.commits }} commits{{ /if }}
     </p>
     <h2 class="mb-2 text-3xl font-bold leading-tight tracking-tight"><a class="text-ink no-underline hover:text-accent" href="{{ post.url }}">{{ post.title }}</a></h2>
     {{ if post.excerpt }}<p class="mb-4 text-lg text-ink-soft">{{ post.excerpt }}</p>{{ /if }}
@@ -21,3 +29,4 @@ layout: layouts/base.vto
   </article>
   {{ /for }}
 </div>
+{{ /if }}

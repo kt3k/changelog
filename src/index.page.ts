@@ -16,7 +16,9 @@ export default function (data: Lume.Data): string {
   end.setUTCDate(end.getUTCDate() - 1);
 
   const cards = watched.map((repo) => {
-    const posts = allPosts.filter((p) => p.repo === repo);
+    const posts = allPosts.filter((p) =>
+      p.repo === repo && (p.period ?? "daily") === "daily"
+    );
 
     // size and commit count keyed by day.
     const sizeByDate = new Map<string, string>();

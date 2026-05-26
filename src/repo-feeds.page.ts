@@ -1,20 +1,39 @@
-// Generates one feed page per watched repo at /<owner>/<name>/,
-// listing that repo's daily issues newest-first.
+// Generates the three tab pages per watched repo:
+//   /<owner>/<name>/          daily issues   (directory index)
+//   /<owner>/<name>/weekly    weekly summaries
+//   /<owner>/<name>/monthly   monthly summaries
 export const layout = "layouts/repo.vto";
 
-export default function* (data: Lume.Data) {
-  const posts = data.search.pages("type=post", "date=desc");
-  const repos = [...new Set(posts.map((p) => p.repo as string).filter(Boolean))];
+const PERIODS = [
+  { key: "daily", label: "Daily", seg: "" },
+  { key: "weekly", label: "Weekly", seg: "weekly" },
+  { key: "monthly", label: "Monthly", seg: "monthly" },
+];
 
-  for (const repo of repos) {
-    yield {
-      // Feed is the directory index for the repo (/<owner>/<name>/) so it can
-      // coexist with the nested article pages living inside that directory.
-      url: `/${repo}/`,
-      repo,
-      title: repo,
-      // Exclude "no change" (size: N) issues from the listing.
-      feedPosts: posts.filter((p) => p.repo === repo && p.size !== "N"),
-    };
+export default function* (data: Lume.Data) {
+  const watched: string[] = data.watched ?? [];
+  const all = data.search.pages("type=post", "date=desc");
+
+  for (const repo of watched) {
+    const tabs = PERIODS.map((p) => ({
+      label: p.label,
+      key: p.key,
+      href: p.seg ? `/${repo}/${p.seg}` : `/${repo}/`,
+    }));
+
+    for (const p of PERIODS) {
+      const feedPosts = all.filter((post) =>
+        post.repo === repo &&
+        (post.period ?? "daily") === p.key &&
+        post.size !== "N"
+      );
+      yield {
+        url: p.seg ? `/${repo}/${p.seg}.html` : `/${repo}/`,
+        repo,
+        period: p.key,
+        tabs,
+        feedPosts,
+      };
+    }
   }
 }

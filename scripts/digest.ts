@@ -2,15 +2,18 @@
 /**
  * Changelog — daily digest generator.
  *
- * Reads `repos.yml`, clones each watched repo, extracts the previous day's
- * commits, and asks an LLM to write an impact-weighted summary. One Markdown
- * article is written per repo per day to `src/posts/`.
+ * Daily:   clones each watched repo, extracts the previous day's commits, and
+ *          asks an LLM for an impact-weighted summary (one article per repo/day).
+ * Weekly / monthly: aggregates the existing daily summaries for the most recent
+ *          completed ISO week / calendar month into a higher-level summary.
  *
  * Usage:
- *   deno task digest                 # summarize yesterday (UTC)
+ *   deno task digest                       # daily, yesterday (UTC)
  *   deno task digest --date 2026-05-20
  *   deno task digest --repo denoland/deno
- *   deno task digest --dry-run       # print the prompt, don't call the API
+ *   deno task digest --period weekly       # last completed ISO week
+ *   deno task digest --period monthly      # last completed calendar month
+ *   deno task digest --dry-run             # print the prompt, don't call the API
  *
  * Env:
  *   OPENAI_API_KEY   required (unless --dry-run)
@@ -46,6 +49,7 @@ interface Commit {
 }
 
 type Size = "L" | "M" | "S" | "N";
+type Period = "daily" | "weekly" | "monthly";
 
 interface Summary {
   headline: string;
@@ -57,22 +61,26 @@ interface Summary {
 // ---------------------------------------------------------------- args ----
 
 function parseArgs(args: string[]) {
-  const out: { date?: string; repo?: string; dryRun: boolean } = {
+  const out: { date?: string; repo?: string; dryRun: boolean; period: Period } = {
     dryRun: false,
+    period: "daily",
   };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
     if (a === "--dry-run") out.dryRun = true;
     else if (a === "--date") out.date = args[++i];
     else if (a === "--repo") out.repo = args[++i];
+    else if (a === "--period") out.period = args[++i] as Period;
   }
   return out;
 }
 
+const ymd = (d: Date): string => d.toISOString().slice(0, 10);
+
 function yesterdayUTC(): string {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - 1);
-  return d.toISOString().slice(0, 10);
+  return ymd(d);
 }
 
 function nextDay(date: string): string {
@@ -225,11 +233,7 @@ Return ONLY a JSON object with keys:
   "size": one of "L", "M", or "S" per the rubric above (never "N"),
   "body": the markdown body described above.`;
 
-async function summarize(
-  repo: string,
-  date: string,
-  commits: Commit[],
-): Promise<Summary> {
+async function callLLM(system: string, user: string): Promise<Summary> {
   const model = Deno.env.get("OPENAI_MODEL") ?? "gpt-5.4-mini";
   const base = Deno.env.get("OPENAI_BASE_URL") ?? "https://api.openai.com/v1";
   const key = Deno.env.get("OPENAI_API_KEY");
@@ -245,8 +249,8 @@ async function summarize(
       model,
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: buildPrompt(repo, date, commits) },
+        { role: "system", content: system },
+        { role: "user", content: user },
       ],
     }),
   });
@@ -260,9 +264,13 @@ async function summarize(
   // Guard against an unexpected value from the model.
   const valid: Size[] = ["L", "M", "S", "N"];
   if (!valid.includes(parsed.size)) parsed.size = "M";
-  // We only summarize days that have commits, so never emit "N".
+  // We only ever summarize windows that have activity, so never emit "N".
   if (parsed.size === "N") parsed.size = "S";
   return parsed;
+}
+
+function summarize(repo: string, date: string, commits: Commit[]): Promise<Summary> {
+  return callLLM(SYSTEM_PROMPT, buildPrompt(repo, date, commits));
 }
 
 // --------------------------------------------------------------- output ----
@@ -300,6 +308,217 @@ async function writeArticle(
   return path;
 }
 
+// -------------------------------------------------------------- periods ----
+
+interface PeriodTarget {
+  start: Date; // inclusive
+  end: Date; // inclusive
+  slug: string; // URL id, e.g. "2026-W21" or "2026-05"
+  label: string; // human label, e.g. "May 18–24, 2026" or "May 2026"
+}
+
+const MONTHS_SHORT = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+const MONTHS_LONG = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+/** ISO week (Mon–Sun) containing `d`, as {year, week}. */
+function isoWeek(d: Date): { year: number; week: number } {
+  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const day = (t.getUTCDay() + 6) % 7; // Mon=0 … Sun=6
+  t.setUTCDate(t.getUTCDate() - day + 3); // Thursday of this week
+  const firstThu = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
+  const fday = (firstThu.getUTCDay() + 6) % 7;
+  firstThu.setUTCDate(firstThu.getUTCDate() - fday + 3);
+  const week = 1 + Math.round((t.getTime() - firstThu.getTime()) / (7 * 86400000));
+  return { year: t.getUTCFullYear(), week };
+}
+
+/** Monday (start) of the ISO week containing `d`. */
+function weekStart(d: Date): Date {
+  const day = (d.getUTCDay() + 6) % 7;
+  const s = new Date(d);
+  s.setUTCDate(d.getUTCDate() - day);
+  s.setUTCHours(0, 0, 0, 0);
+  return s;
+}
+
+/** The most recently completed ISO week relative to `anchor`. */
+function lastCompletedWeek(anchor: Date): PeriodTarget {
+  const thisMon = weekStart(anchor);
+  const end = new Date(thisMon);
+  end.setUTCDate(thisMon.getUTCDate() - 1); // last Sunday
+  const start = weekStart(end); // its Monday
+  const { year, week } = isoWeek(start);
+  const slug = `${year}-W${String(week).padStart(2, "0")}`;
+  const sameMonth = start.getUTCMonth() === end.getUTCMonth();
+  const label = sameMonth
+    ? `${MONTHS_SHORT[start.getUTCMonth()]} ${start.getUTCDate()}–${end.getUTCDate()}, ${end.getUTCFullYear()}`
+    : `${MONTHS_SHORT[start.getUTCMonth()]} ${start.getUTCDate()} – ${MONTHS_SHORT[end.getUTCMonth()]} ${end.getUTCDate()}, ${end.getUTCFullYear()}`;
+  return { start, end, slug, label };
+}
+
+/** The most recently completed calendar month relative to `anchor`. */
+function lastCompletedMonth(anchor: Date): PeriodTarget {
+  const firstThis = new Date(Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth(), 1));
+  const end = new Date(firstThis);
+  end.setUTCDate(0); // last day of previous month
+  const start = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1));
+  const slug = `${end.getUTCFullYear()}-${String(end.getUTCMonth() + 1).padStart(2, "0")}`;
+  const label = `${MONTHS_LONG[end.getUTCMonth()]} ${end.getUTCFullYear()}`;
+  return { start, end, slug, label };
+}
+
+interface DailyArticle {
+  date: string;
+  headline: string;
+  body: string;
+  commits: number;
+}
+
+/** Read the existing daily summary articles for `repo` within [startKey, endKey]. */
+async function collectDailyArticles(
+  repo: string,
+  startKey: string,
+  endKey: string,
+): Promise<DailyArticle[]> {
+  const out: DailyArticle[] = [];
+  for await (const e of Deno.readDir(POSTS_DIR)) {
+    if (!e.isFile || !e.name.endsWith(".md")) continue;
+    const text = await Deno.readTextFile(join(POSTS_DIR, e.name));
+    const m = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (!m) continue;
+    const data = parseYaml(m[1]) as Record<string, unknown>;
+    if (data.repo !== repo) continue;
+    if ((data.period ?? "daily") !== "daily") continue;
+    const dkey = ymd(new Date(data.date as string));
+    if (dkey < startKey || dkey > endKey) continue;
+    out.push({
+      date: dkey,
+      headline: String(data.title ?? ""),
+      body: m[2].trim(),
+      commits: Number(data.commits ?? 0),
+    });
+  }
+  out.sort((a, b) => a.date.localeCompare(b.date));
+  return out;
+}
+
+function periodSystemPrompt(period: Period): string {
+  return `You are the editor of "Changelog". You are given the DAILY summaries for one open-source repository over a single calendar ${period === "weekly" ? "week" : "month"}. Synthesize them into ONE concise ${period} summary for developers.
+
+Rules:
+- Do NOT just concatenate the days. Identify the ${period}'s most important themes and changes, merge related work across days, and tell the story of the ${period}.
+- Impact-weight: lead with the significant changes (features, breaking changes, security, performance, major fixes). Bundle the trivial stuff under a final "### Other misc changes".
+- Markdown body: use "### " for section headers and "**" for entry titles. No top-level # or ## heading, no preamble, no sign-off.
+- Classify the overall magnitude as "size": "L" (significant), "M" (medium), or "S" (small). Never "N".
+
+Return ONLY a JSON object with keys:
+  "headline": a punchy <=70 char headline for the ${period} (no repo name, no date),
+  "excerpt": a <=160 char one-line summary,
+  "size": one of "L", "M", or "S",
+  "body": the markdown body described above.`;
+}
+
+function buildPeriodPrompt(
+  repo: string,
+  period: Period,
+  label: string,
+  articles: DailyArticle[],
+): string {
+  const parts = articles.map((a) =>
+    `## ${a.date} — ${a.headline} (${a.commits} commits)\n${a.body}`
+  );
+  return [
+    `Repository: ${repo}`,
+    `Period: ${period} (${label})`,
+    `Daily summaries (${articles.length} day(s)):`,
+    "",
+    parts.join("\n\n"),
+  ].join("\n");
+}
+
+async function writePeriodArticle(
+  repo: string,
+  period: Period,
+  target: PeriodTarget,
+  commits: number,
+  s: Summary,
+): Promise<string> {
+  await ensureDir(POSTS_DIR);
+  const path = join(POSTS_DIR, `${target.slug}_${slug(repo)}.md`);
+  const md = [
+    "---",
+    `date: ${ymd(target.end)}`,
+    `repo: ${repo}`,
+    `period: ${period}`,
+    `slug: ${target.slug}`,
+    `period_label: "${frontmatterEscape(target.label)}"`,
+    `size: ${s.size}`,
+    `title: "${frontmatterEscape(s.headline)}"`,
+    `excerpt: "${frontmatterEscape(s.excerpt)}"`,
+    `commits: ${commits}`,
+    "---",
+    "",
+    s.body.trim(),
+    "",
+  ].join("\n");
+  await Deno.writeTextFile(path, md);
+  return path;
+}
+
+async function runPeriod(
+  period: Period,
+  repos: RepoEntry[],
+  anchor: Date,
+  dryRun: boolean,
+) {
+  const target = period === "weekly"
+    ? lastCompletedWeek(anchor)
+    : lastCompletedMonth(anchor);
+  console.error(
+    `Changelog — ${period} digest for ${target.label} ` +
+      `(${ymd(target.start)}…${ymd(target.end)}, ${repos.length} repo(s))`,
+  );
+
+  for (const entry of repos) {
+    console.error(`\n▶ ${entry.repo}`);
+    const articles = await collectDailyArticles(
+      entry.repo,
+      ymd(target.start),
+      ymd(target.end),
+    );
+    if (articles.length === 0) {
+      console.error(`  no daily summaries in range, skipping`);
+      continue;
+    }
+    const commits = articles.reduce((n, a) => n + a.commits, 0);
+    console.error(`  ${articles.length} daily summary(ies), ${commits} commits`);
+
+    if (dryRun) {
+      console.log("=".repeat(60));
+      console.log(`${period.toUpperCase()} PROMPT for ${entry.repo}`);
+      console.log("=".repeat(60));
+      console.log(buildPeriodPrompt(entry.repo, period, target.label, articles));
+      continue;
+    }
+
+    const summary = await callLLM(
+      periodSystemPrompt(period),
+      buildPeriodPrompt(entry.repo, period, target.label, articles),
+    );
+    const path = await writePeriodArticle(
+      entry.repo,
+      period,
+      target,
+      commits,
+      summary,
+    );
+    console.error(`  ✓ wrote ${path}`);
+  }
+}
+
 // ----------------------------------------------------------------- main ----
 
 async function loadRepos(filter?: string): Promise<RepoEntry[]> {
@@ -312,19 +531,27 @@ async function loadRepos(filter?: string): Promise<RepoEntry[]> {
 }
 
 async function main() {
-  const { date = yesterdayUTC(), repo, dryRun } = parseArgs(Deno.args);
+  const { date, repo, dryRun, period } = parseArgs(Deno.args);
   const repos = await loadRepos(repo);
   if (repos.length === 0) {
     console.error("No repositories to watch (check repos.yml / --repo).");
     Deno.exit(1);
   }
-  console.error(`Changelog — digest for ${date} (${repos.length} repo(s))`);
+
+  if (period !== "daily") {
+    const anchor = date ? new Date(`${date}T00:00:00Z`) : new Date();
+    await runPeriod(period, repos, anchor, dryRun);
+    return;
+  }
+
+  const day = date ?? yesterdayUTC();
+  console.error(`Changelog — daily digest for ${day} (${repos.length} repo(s))`);
 
   for (const entry of repos) {
     console.error(`\n▶ ${entry.repo}`);
-    const commits = await collectCommits(entry, date);
+    const commits = await collectCommits(entry, day);
     if (commits.length === 0) {
-      console.error(`  no commits on ${date}, skipping`);
+      console.error(`  no commits on ${day}, skipping`);
       continue;
     }
     console.error(`  ${commits.length} commit(s)`);
@@ -333,12 +560,12 @@ async function main() {
       console.log("=".repeat(60));
       console.log(`PROMPT for ${entry.repo}`);
       console.log("=".repeat(60));
-      console.log(buildPrompt(entry.repo, date, commits));
+      console.log(buildPrompt(entry.repo, day, commits));
       continue;
     }
 
-    const summary = await summarize(entry.repo, date, commits);
-    const path = await writeArticle(entry.repo, date, commits.length, summary);
+    const summary = await summarize(entry.repo, day, commits);
+    const path = await writeArticle(entry.repo, day, commits.length, summary);
     console.error(`  ✓ wrote ${path}`);
   }
 }
