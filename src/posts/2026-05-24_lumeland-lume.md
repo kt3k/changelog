@@ -1,6 +1,7 @@
 ---
 date: 2026-05-24
 repo: lumeland/lume
+size: M
 title: "Faster incremental builds in watch mode"
 excerpt: "Sample article. The dev server now rebuilds only the pages affected by a change."
 commit_count: 9

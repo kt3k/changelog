@@ -1,6 +1,7 @@
 ---
 date: 2026-05-25
 repo: oven-sh/bun
+size: L
 title: "Bundler gains stable CSS modules support"
 excerpt: "Sample article. CSS modules graduate to stable, plus a faster Bun.serve routing layer."
 commit_count: 22

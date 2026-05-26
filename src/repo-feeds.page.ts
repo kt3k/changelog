@@ -8,10 +8,13 @@ export default function* (data: Lume.Data) {
 
   for (const repo of repos) {
     yield {
+      // Feed is the directory index for the repo (/<owner>/<name>/) so it can
+      // coexist with the nested article pages living inside that directory.
       url: `/${repo}/`,
       repo,
       title: repo,
-      feedPosts: posts.filter((p) => p.repo === repo),
+      // Exclude "no change" (size: N) issues from the listing.
+      feedPosts: posts.filter((p) => p.repo === repo && p.size !== "N"),
     };
   }
 }

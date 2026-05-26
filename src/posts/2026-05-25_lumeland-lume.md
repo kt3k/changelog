@@ -1,6 +1,7 @@
 ---
 date: 2026-05-25
 repo: lumeland/lume
+size: L
 title: "Icons plugin gains SVG sprite support"
 excerpt: "Sample article. The icons plugin can now emit a single SVG sprite, with renamed, clearer options."
 commit_count: 16

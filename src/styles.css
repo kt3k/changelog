@@ -49,19 +49,6 @@ body {
   text-decoration: none;
 }
 
-.subscribe-btn {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
-  font-size: 0.85rem;
-  border-radius: 999px;
-  text-decoration: none;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-.subscribe-btn:hover { transform: translateY(-1px); opacity: 0.92; }
-
 /* ---------- Main column ---------- */
 .site-main {
   max-width: var(--measure);

@@ -1,6 +1,7 @@
 ---
 date: 2026-05-25
 repo: nodejs/node
+size: L
 title: "Permission model goes stable, plus a V8 bump"
 excerpt: "Sample article. The --permission model is unflagged, and V8 updates bring faster array ops."
 commit_count: 18

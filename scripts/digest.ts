@@ -45,9 +45,12 @@ interface Commit {
   files: FileStat[];
 }
 
+type Size = "L" | "M" | "S" | "N";
+
 interface Summary {
   headline: string;
   excerpt: string;
+  size: Size;
   body: string;
 }
 
@@ -210,9 +213,16 @@ Rules:
 - Coverage must be PROPORTIONAL to impact. A day of only trivial commits should be short.
 - Markdown body: use "### " for section headers and "**" for entry titles. No top-level # or ## heading, no preamble, no sign-off.
 
+Also classify the overall magnitude of the day for this repo as a single "size":
+- "L" = significant: breaking changes, major new features, security fixes, or otherwise high-impact work.
+- "M" = medium: notable features or bug fixes that matter but aren't major.
+- "S" = small: only minor/trivial changes (dependency bumps, docs, formatting, small internal fixes).
+- "N" = no change: no meaningful, user-relevant changes at all.
+
 Return ONLY a JSON object with keys:
   "headline": a punchy <=60 char headline for the day (no repo name, no date),
   "excerpt": a <=160 char one-line summary,
+  "size": one of "L", "M", "S", or "N" per the rubric above,
   "body": the markdown body described above.`;
 
 async function summarize(
@@ -247,6 +257,9 @@ async function summarize(
   const content = data.choices?.[0]?.message?.content;
   if (!content) throw new Error("OpenAI returned no content");
   const parsed = JSON.parse(content) as Summary;
+  // Guard against an unexpected value from the model.
+  const valid: Size[] = ["L", "M", "S", "N"];
+  if (!valid.includes(parsed.size)) parsed.size = "M";
   return parsed;
 }
 
@@ -272,6 +285,7 @@ async function writeArticle(
     "---",
     `date: ${date}`,
     `repo: ${repo}`,
+    `size: ${s.size}`,
     `title: "${frontmatterEscape(s.headline)}"`,
     `excerpt: "${frontmatterEscape(s.excerpt)}"`,
     `commit_count: ${commitCount}`,

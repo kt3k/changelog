@@ -1,6 +1,7 @@
 ---
 date: 2026-05-23
 repo: oven-sh/bun
+size: M
 title: "node:crypto compatibility nears completion"
 excerpt: "Sample article. More node:crypto APIs land, closing a long-standing compatibility gap."
 commit_count: 11

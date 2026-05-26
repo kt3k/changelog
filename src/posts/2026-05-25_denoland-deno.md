@@ -1,6 +1,7 @@
 ---
 date: 2026-05-25
 repo: denoland/deno
+size: M
 title: "Faster cold starts and a safer permissions prompt"
 excerpt: "Sample article showing the digest format. Delete once the daily job has generated real issues."
 commit_count: 14

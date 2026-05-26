@@ -1,6 +1,7 @@
 ---
 date: 2026-05-22
 repo: lumeland/lume
+size: S
 title: "A quiet day: docs and dependency upkeep"
 excerpt: "Sample article. No notable feature work — mostly documentation and dependency bumps."
 commit_count: 5

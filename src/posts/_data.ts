@@ -7,5 +7,5 @@ export const url = (page: Lume.Page): string => {
   const repo = page.data.repo;
   const date = page.data.date;
   const ymd = date instanceof Date ? date.toISOString().slice(0, 10) : String(date);
-  return `/${repo}/${ymd}/`;
+  return `/${repo}/${ymd}.html`;
 };

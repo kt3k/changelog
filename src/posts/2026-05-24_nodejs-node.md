@@ -1,6 +1,7 @@
 ---
 date: 2026-05-24
 repo: nodejs/node
+size: M
 title: "Built-in SQLite gets prepared statement caching"
 excerpt: "Sample article. node:sqlite caches prepared statements; plus assorted test and doc fixes."
 commit_count: 7

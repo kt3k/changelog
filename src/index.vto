@@ -3,7 +3,7 @@ layout: layouts/base.vto
 ---
 <div class="repo-list">
   {{ for repo of watched }}
-  {{ set posts = search.pages("type=post", "date=desc").filter((p) => p.repo === repo) }}
+  {{ set posts = search.pages("type=post", "date=desc").filter((p) => p.repo === repo && p.size !== "N") }}
   {{ set latest = posts[0] }}
   <article class="repo-card">
     <header class="repo-card-head">
