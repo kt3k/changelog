@@ -4,7 +4,7 @@ repo: oven-sh/bun
 size: L
 title: "Bundler gains stable CSS modules support"
 excerpt: "Sample article. CSS modules graduate to stable, plus a faster Bun.serve routing layer."
-commit_count: 22
+commits: 22
 ---
 > **Sample issue** for layout/testing. Replace with real output via `deno task digest`.
 

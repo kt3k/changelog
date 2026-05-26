@@ -1,304 +1,75 @@
-:root {
-  /* Palette adapted from Ghost's "Edition" theme. */
-  --bg: #ffffff;
-  --surface: #f6f6f6;
-  --ink: #333333;
-  --ink-soft: #6b6b6b;
-  --rule: #e6e6e6;
-  --accent: #ff572f;
-  --accent-ink: #ffffff;
-  --measure: 40rem;
-  --sans: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+@import "tailwindcss";
+
+/* Always generate the activity-strip cell colors, even on days a given
+   size doesn't appear in the scanned markup. */
+@source inline("bg-cell-empty bg-cell-s bg-cell-m bg-cell-l");
+
+/* Design tokens (Edition-inspired palette + Mulish). */
+@theme {
+  --font-sans: "Mulish", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-ink: #333333;
+  --color-ink-soft: #6b6b6b;
+  --color-rule: #e6e6e6;
+  --color-surface: #f6f6f6;
+  --color-accent: #ff572f;
+
+  /* Activity-strip cells, by issue size. (N / no-issue share the empty color.) */
+  --color-cell-empty: #ebedf0;
+  --color-cell-s: #9be9a8;
+  --color-cell-m: #40c463;
+  --color-cell-l: #216e39;
 }
 
-* { box-sizing: border-box; }
-
-html { -webkit-text-size-adjust: 100%; color-scheme: light; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: 1.0625rem;
-  line-height: 1.7;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  body {
+    color: var(--color-ink);
+  }
 }
 
-/* ---------- Header (single-line bar) ---------- */
-.site-header {
-  border-bottom: 1px solid var(--rule);
-}
-.site-header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
-}
-
-.site-title {
-  font-family: var(--sans);
-  font-weight: 800;
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-decoration: none;
-}
-
-/* ---------- Main column ---------- */
-.site-main {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: 3.5rem 1.5rem;
-}
-
-/* ---------- Repo list (home) ---------- */
-.repo-card {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--rule);
-}
-.repo-card:first-child { padding-top: 0; }
-.repo-card:last-child { border-bottom: 0; }
-
-.repo-card-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.85rem;
-}
-.repo-card-name {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+/* Markdown-rendered article body (elements we can't add utilities to). */
+.post-body {
   font-size: 1.15rem;
-  font-weight: 600;
+  line-height: 1.7;
 }
-.repo-card-name a { color: var(--accent); text-decoration: none; }
-.repo-card-name a:hover { text-decoration: underline; }
-
-.repo-card-count {
-  flex: none;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  white-space: nowrap;
-}
-
-.repo-card-date {
-  margin: 0 0 0.3rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.repo-card-title {
-  margin: 0 0 0.5rem;
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: 1.45rem;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-.repo-card-title a { color: var(--ink); text-decoration: none; }
-.repo-card-title a:hover { color: var(--accent); }
-.repo-card-excerpt { margin: 0 0 0.85rem; color: var(--ink-soft); }
-.repo-card-empty { margin: 0; color: var(--ink-soft); font-style: italic; }
-
-/* ---------- Issue list (front page) ---------- */
-.issue-item {
-  padding: 2.5rem 0;
-  border-bottom: 1px solid var(--rule);
-}
-.issue-item:first-child { padding-top: 0; }
-.issue-item:last-child { border-bottom: 0; }
-
-.issue-meta,
-.post-date {
-  margin: 0 0 0.6rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.issue-repo,
-.post-repo {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--accent);
-  text-decoration: none;
-}
-.issue-repo:hover,
-.post-repo:hover { text-decoration: underline; }
-.issue-repo { margin-right: 0.6rem; }
-
-/* ---------- Per-repo feed header ---------- */
-.feed-header {
-  text-align: center;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--rule);
-}
-.feed-title {
-  margin: 0 0 0.6rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-.feed-sub {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-}
-.feed-sub a { color: var(--ink-soft); }
-
-.issue-title {
-  margin: 0 0 0.6rem;
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: clamp(1.6rem, 3.5vw, 2.1rem);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
-.issue-title a {
-  color: var(--ink);
-  text-decoration: none;
-}
-.issue-title a:hover { color: var(--accent); }
-
-.issue-excerpt {
-  margin: 0 0 1rem;
-  color: var(--ink-soft);
-  font-size: 1.1rem;
-}
-
-.issue-readmore {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--accent);
-  text-decoration: none;
-}
-.issue-readmore:hover { text-decoration: underline; }
-
-/* ---------- Single post ---------- */
-.post-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-.post-title {
-  margin: 0.4rem 0 1rem;
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-.post-lede {
-  margin: 0 auto;
-  max-width: 32rem;
-  color: var(--ink-soft);
-  font-size: 1.2rem;
-  line-height: 1.5;
-}
-
-.post-body { font-size: 1.15rem; }
 .post-body h2 {
-  font-family: var(--sans);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.6rem;
   letter-spacing: -0.01em;
   margin: 2.5rem 0 0.75rem;
 }
-.post-body p { margin: 0 0 1.4rem; }
-.post-body a { color: var(--accent); }
-.post-body ul { padding-left: 1.2rem; }
-.post-body li { margin: 0.4rem 0; }
+.post-body h3 {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 2rem 0 0.5rem;
+}
+.post-body p {
+  margin: 0 0 1.4rem;
+}
+.post-body a {
+  color: var(--color-accent);
+}
+.post-body ul {
+  margin: 0 0 1.4rem;
+  padding-left: 1.2rem;
+  list-style: disc;
+}
+.post-body li {
+  margin: 0.4rem 0;
+}
 .post-body blockquote {
   margin: 2rem 0;
   padding: 0.25rem 0 0.25rem 1.4rem;
-  border-left: 3px solid var(--accent);
-  font-family: var(--sans);
-  font-size: 1.3rem;
+  border-left: 3px solid var(--color-accent);
   font-style: italic;
-  color: var(--ink);
 }
 .post-body code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
-  background: var(--rule);
+  background: var(--color-rule);
   padding: 0.1em 0.35em;
   border-radius: 4px;
-}
-
-.post-nav {
-  margin-top: 3.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-.post-nav a {
-  color: var(--ink-soft);
-  text-decoration: none;
-  font-weight: 500;
-}
-.post-nav a:hover { color: var(--accent); }
-
-/* ---------- Footer / subscribe CTA ---------- */
-.site-footer {
-  text-align: center;
-  padding: 4rem 1.5rem 3rem;
-  background: var(--surface);
-  border-top: 1px solid var(--rule);
-}
-.cta-title {
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: 2rem;
-  letter-spacing: -0.015em;
-  margin: 0 0 0.5rem;
-}
-.cta-text {
-  margin: 0 auto 1.75rem;
-  max-width: 26rem;
-  color: var(--ink-soft);
-}
-.cta-form {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 26rem;
-  margin: 0 auto;
-}
-.cta-form input {
-  flex: 1 1 14rem;
-  padding: 0.7rem 1rem;
-  font: inherit;
-  color: var(--ink);
-  background: var(--bg);
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-}
-.cta-form button {
-  padding: 0.7rem 1.5rem;
-  font: inherit;
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  cursor: pointer;
-}
-.cta-form button:hover { opacity: 0.92; }
-
-.footer-meta {
-  margin: 2.5rem 0 0;
-  font-size: 0.85rem;
-  color: var(--ink-soft);
 }

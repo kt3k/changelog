@@ -217,12 +217,12 @@ Also classify the overall magnitude of the day for this repo as a single "size":
 - "L" = significant: breaking changes, major new features, security fixes, or otherwise high-impact work.
 - "M" = medium: notable features or bug fixes that matter but aren't major.
 - "S" = small: only minor/trivial changes (dependency bumps, docs, formatting, small internal fixes).
-- "N" = no change: no meaningful, user-relevant changes at all.
+You are ALWAYS given a day that has at least one commit, so the size MUST be "L", "M", or "S" — never "N". Even a single trivial commit counts as at least "S". "N" (no change) is reserved for days with zero commits, which are never sent to you.
 
 Return ONLY a JSON object with keys:
   "headline": a punchy <=60 char headline for the day (no repo name, no date),
   "excerpt": a <=160 char one-line summary,
-  "size": one of "L", "M", "S", or "N" per the rubric above,
+  "size": one of "L", "M", or "S" per the rubric above (never "N"),
   "body": the markdown body described above.`;
 
 async function summarize(
@@ -260,6 +260,8 @@ async function summarize(
   // Guard against an unexpected value from the model.
   const valid: Size[] = ["L", "M", "S", "N"];
   if (!valid.includes(parsed.size)) parsed.size = "M";
+  // We only summarize days that have commits, so never emit "N".
+  if (parsed.size === "N") parsed.size = "S";
   return parsed;
 }
 
@@ -288,7 +290,7 @@ async function writeArticle(
     `size: ${s.size}`,
     `title: "${frontmatterEscape(s.headline)}"`,
     `excerpt: "${frontmatterEscape(s.excerpt)}"`,
-    `commit_count: ${commitCount}`,
+    `commits: ${commitCount}`,
     "---",
     "",
     s.body.trim(),

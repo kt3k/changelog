@@ -4,7 +4,7 @@ repo: oven-sh/bun
 size: M
 title: "node:crypto compatibility nears completion"
 excerpt: "Sample article. More node:crypto APIs land, closing a long-standing compatibility gap."
-commit_count: 11
+commits: 11
 ---
 > **Sample issue** for layout/testing. Replace with real output via `deno task digest`.
 

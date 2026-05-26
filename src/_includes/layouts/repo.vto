@@ -1,23 +1,23 @@
 ---
 layout: layouts/base.vto
 ---
-<div class="feed-header">
-  <h1 class="feed-title">{{ repo }}</h1>
-  <p class="feed-sub">
-    <a href="https://github.com/{{ repo }}">github.com/{{ repo }}</a>
+<div class="mb-12 border-b border-rule pb-8 text-center">
+  <h1 class="mb-2 font-mono text-3xl font-semibold tracking-tight">{{ repo }}</h1>
+  <p class="m-0 text-sm text-ink-soft">
+    <a class="text-ink-soft" href="https://github.com/{{ repo }}">github.com/{{ repo }}</a>
     · {{ feedPosts.length }} issue{{ if feedPosts.length != 1 }}s{{ /if }}
   </p>
 </div>
 
-<div class="issue-list">
+<div>
   {{ for post of feedPosts }}
-  <article class="issue-item">
-    <p class="issue-meta">
-      <time datetime="{{ post.date |> date('DATETIME') }}">{{ post.date |> date('HUMAN_DATE') }}</time>
+  <article class="border-b border-rule py-10 first:pt-0 last:border-0">
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-soft">
+      <time datetime="{{ post.date |> date('DATETIME') }}">{{ post.date |> date('HUMAN_DATE') }}</time>{{ if post.commits }} · {{ post.commits }} commit{{ if post.commits != 1 }}s{{ /if }}{{ /if }}
     </p>
-    <h2 class="issue-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
-    {{ if post.excerpt }}<p class="issue-excerpt">{{ post.excerpt }}</p>{{ /if }}
-    <a class="issue-readmore" href="{{ post.url }}">Read the issue →</a>
+    <h2 class="mb-2 text-3xl font-bold leading-tight tracking-tight"><a class="text-ink no-underline hover:text-accent" href="{{ post.url }}">{{ post.title }}</a></h2>
+    {{ if post.excerpt }}<p class="mb-4 text-lg text-ink-soft">{{ post.excerpt }}</p>{{ /if }}
+    <a class="text-sm font-semibold text-accent no-underline hover:underline" href="{{ post.url }}">Read the issue →</a>
   </article>
   {{ /for }}
 </div>

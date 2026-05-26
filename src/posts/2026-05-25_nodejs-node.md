@@ -4,7 +4,7 @@ repo: nodejs/node
 size: L
 title: "Permission model goes stable, plus a V8 bump"
 excerpt: "Sample article. The --permission model is unflagged, and V8 updates bring faster array ops."
-commit_count: 18
+commits: 18
 ---
 > **Sample issue** for layout/testing. Replace with real output via `deno task digest`.
 

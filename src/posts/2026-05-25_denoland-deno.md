@@ -4,7 +4,7 @@ repo: denoland/deno
 size: M
 title: "Faster cold starts and a safer permissions prompt"
 excerpt: "Sample article showing the digest format. Delete once the daily job has generated real issues."
-commit_count: 14
+commits: 14
 ---
 > **Sample issue.** This file shows what the generator produces. Run
 > `deno task digest` (or let the GitHub Action run) to replace it with real ones.

@@ -4,7 +4,7 @@ repo: nodejs/node
 size: M
 title: "Built-in SQLite gets prepared statement caching"
 excerpt: "Sample article. node:sqlite caches prepared statements; plus assorted test and doc fixes."
-commit_count: 7
+commits: 7
 ---
 > **Sample issue** for layout/testing. Replace with real output via `deno task digest`.
 

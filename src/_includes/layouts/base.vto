@@ -10,25 +10,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <header class="site-header">
-    <div class="site-header-inner">
-      <a class="site-title" href="/">{{ site_name }}</a>
+<body class="font-sans text-ink antialiased">
+  <header class="border-b border-rule">
+    <div class="mx-auto max-w-2xl px-6 py-4">
+      <a class="text-2xl font-extrabold tracking-tight text-ink no-underline" href="/">{{ site_name }}</a>
     </div>
   </header>
 
-  <main class="site-main">
+  <main class="mx-auto max-w-2xl px-6 py-14">
     {{ content }}
   </main>
 
-  <footer class="site-footer" id="subscribe">
-    <h2 class="cta-title">Never miss an issue</h2>
-    <p class="cta-text">Get the day's open-source highlights delivered to your inbox.</p>
-    <form class="cta-form" onsubmit="return false">
-      <input type="email" placeholder="you@example.com" aria-label="Email address" required>
-      <button type="submit">Subscribe</button>
-    </form>
-    <p class="footer-meta">© {{ ("" + new Date().getFullYear()) }} {{ site_name }}. Built with Lume.</p>
+  <footer class="border-t border-rule bg-surface" id="subscribe">
+    <div class="mx-auto max-w-2xl px-6 py-16 text-center">
+      <h2 class="text-3xl font-bold tracking-tight">Never miss an issue</h2>
+      <p class="mx-auto mt-2 mb-7 max-w-sm text-ink-soft">Get the day's open-source highlights delivered to your inbox.</p>
+      <form class="mx-auto flex max-w-sm flex-wrap justify-center gap-2" onsubmit="return false">
+        <input type="email" placeholder="you@example.com" aria-label="Email address" required
+          class="min-w-0 flex-1 rounded-full border border-rule bg-white px-4 py-2.5">
+        <button type="submit"
+          class="rounded-full bg-accent px-6 py-2.5 font-semibold text-white hover:opacity-90">Subscribe</button>
+      </form>
+      <p class="mt-10 text-sm text-ink-soft">© {{ ("" + new Date().getFullYear()) }} {{ site_name }}. Built with Lume.</p>
+    </div>
   </footer>
 </body>
 </html>

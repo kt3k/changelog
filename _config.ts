@@ -1,6 +1,7 @@
 import lume from "lume/mod.ts";
 import date from "lume/plugins/date.ts";
 import basePath from "lume/plugins/base_path.ts";
+import tailwindcss from "lume/plugins/tailwindcss.ts";
 import { parse as parseYaml } from "@std/yaml";
 
 const site = lume({
@@ -12,6 +13,7 @@ const site = lume({
 });
 
 site.use(date());
+site.use(tailwindcss());
 site.use(basePath()); // rewrites href/src in the output to include the base path
 
 // Expose the watched repo list (from repos.yml) to all templates.
@@ -23,8 +25,8 @@ const watched = (reposDoc.repos ?? []).map((r) =>
 );
 site.data("watched", watched);
 
-// Copy static assets through untouched.
-site.copy("/styles.css");
+// Tailwind entry stylesheet (compiled by the tailwindcss plugin).
+site.add("/styles.css");
 
 // Strip the `.html` extension from internal links so the address bar shows
 // clean, slash-less URLs (e.g. /denoland/deno/2026-05-25). The `.html` files
@@ -32,7 +34,6 @@ site.copy("/styles.css");
 site.process([".html"], (pages) => {
   for (const page of pages) {
     let html = page.content as string;
-    // Strip the `.html` extension from internal links.
     html = html.replace(
       /\b(href|src)="(\/[^"]*?)\.html(#[^"]*)?"/g,
       (_m, attr, path, hash = "") => `${attr}="${path}${hash}"`,

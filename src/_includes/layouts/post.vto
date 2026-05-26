@@ -1,18 +1,18 @@
 ---
 layout: layouts/base.vto
 ---
-<article class="post">
-  <header class="post-header">
-    <p class="post-date">
-      {{ if repo }}<a class="post-repo" href="/{{ repo }}/">{{ repo }}</a> · {{ /if }}<time datetime="{{ date |> date('DATETIME') }}">{{ date |> date('HUMAN_DATE') }}</time>
+<article>
+  <header class="mb-12 text-center">
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-soft">
+      {{ if repo }}<a class="font-mono normal-case tracking-normal text-accent no-underline hover:underline" href="/{{ repo }}/">{{ repo }}</a> · {{ /if }}<time datetime="{{ date |> date('DATETIME') }}">{{ date |> date('HUMAN_DATE') }}</time>{{ if commits }} · {{ commits }} commit{{ if commits != 1 }}s{{ /if }}{{ /if }}
     </p>
-    <h1 class="post-title">{{ title }}</h1>
-    {{ if excerpt }}<p class="post-lede">{{ excerpt }}</p>{{ /if }}
+    <h1 class="mb-4 text-4xl font-bold leading-tight tracking-tight md:text-5xl">{{ title }}</h1>
+    {{ if excerpt }}<p class="mx-auto max-w-lg text-xl leading-snug text-ink-soft">{{ excerpt }}</p>{{ /if }}
   </header>
   <div class="post-body">
     {{ content }}
   </div>
-  <nav class="post-nav">
-    {{ if repo }}<a href="/{{ repo }}/">← All {{ repo }} issues</a>{{ else }}<a href="/">← Back home</a>{{ /if }}
+  <nav class="mt-14 border-t border-rule pt-6">
+    {{ if repo }}<a class="font-medium text-ink-soft no-underline hover:text-accent" href="/{{ repo }}/">← All {{ repo }} issues</a>{{ else }}<a class="font-medium text-ink-soft no-underline hover:text-accent" href="/">← Back home</a>{{ /if }}
   </nav>
 </article>
