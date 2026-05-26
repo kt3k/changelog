@@ -91,6 +91,8 @@ function nextDay(date: string): string {
 
 // ----------------------------------------------------------------- git ----
 
+const decoder = new TextDecoder();
+
 async function git(cwd: string, ...args: string[]): Promise<string> {
   const cmd = new Deno.Command("git", {
     args,
@@ -100,9 +102,9 @@ async function git(cwd: string, ...args: string[]): Promise<string> {
   });
   const { code, stdout, stderr } = await cmd.output();
   if (code !== 0) {
-    throw new Error(`git ${args.join(" ")} failed:\n${new TextDecoder().decode(stderr)}`);
+    throw new Error(`git ${args.join(" ")} failed:\n${decoder.decode(stderr)}`);
   }
-  return new TextDecoder().decode(stdout);
+  return decoder.decode(stdout);
 }
 
 const US = "\x1f"; // unit separator (between fields)
@@ -279,32 +281,21 @@ function slug(repo: string): string {
   return repo.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-function frontmatterEscape(s: string): string {
-  return s.replace(/"/g, '\\"');
-}
+// Quote and escape a frontmatter string value.
+const q = (s: string): string => `"${s.replace(/"/g, '\\"')}"`;
 
+/** Write `<fileSlug>.md` with the given ordered frontmatter fields and body. */
 async function writeArticle(
-  repo: string,
-  date: string,
-  commitCount: number,
-  s: Summary,
+  fileSlug: string,
+  fields: Record<string, string | number>,
+  body: string,
 ): Promise<string> {
   await ensureDir(POSTS_DIR);
-  const path = join(POSTS_DIR, `${date}_${slug(repo)}.md`);
-  const md = [
-    "---",
-    `date: ${date}`,
-    `repo: ${repo}`,
-    `size: ${s.size}`,
-    `title: "${frontmatterEscape(s.headline)}"`,
-    `excerpt: "${frontmatterEscape(s.excerpt)}"`,
-    `commits: ${commitCount}`,
-    "---",
-    "",
-    s.body.trim(),
-    "",
-  ].join("\n");
-  await Deno.writeTextFile(path, md);
+  const path = join(POSTS_DIR, `${fileSlug}.md`);
+  const lines = ["---"];
+  for (const [k, v] of Object.entries(fields)) lines.push(`${k}: ${v}`);
+  lines.push("---", "", body.trim(), "");
+  await Deno.writeTextFile(path, lines.join("\n"));
   return path;
 }
 
@@ -317,11 +308,11 @@ interface PeriodTarget {
   label: string; // human label, e.g. "May 18–24, 2026" or "May 2026"
 }
 
-const MONTHS_SHORT = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
 const MONTHS_LONG = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
+const MONTHS_SHORT = MONTHS_LONG.map((m) => m.slice(0, 3));
 
 /** ISO week (Mon–Sun) containing `d`, as {year, week}. */
 function isoWeek(d: Date): { year: number; week: number } {
@@ -439,33 +430,24 @@ function buildPeriodPrompt(
   ].join("\n");
 }
 
-async function writePeriodArticle(
+function writePeriodArticle(
   repo: string,
   period: Period,
   target: PeriodTarget,
   commits: number,
   s: Summary,
 ): Promise<string> {
-  await ensureDir(POSTS_DIR);
-  const path = join(POSTS_DIR, `${target.slug}_${slug(repo)}.md`);
-  const md = [
-    "---",
-    `date: ${ymd(target.end)}`,
-    `repo: ${repo}`,
-    `period: ${period}`,
-    `slug: ${target.slug}`,
-    `period_label: "${frontmatterEscape(target.label)}"`,
-    `size: ${s.size}`,
-    `title: "${frontmatterEscape(s.headline)}"`,
-    `excerpt: "${frontmatterEscape(s.excerpt)}"`,
-    `commits: ${commits}`,
-    "---",
-    "",
-    s.body.trim(),
-    "",
-  ].join("\n");
-  await Deno.writeTextFile(path, md);
-  return path;
+  return writeArticle(`${target.slug}_${slug(repo)}`, {
+    date: ymd(target.end),
+    repo,
+    period,
+    slug: target.slug,
+    period_label: q(target.label),
+    size: s.size,
+    title: q(s.headline),
+    excerpt: q(s.excerpt),
+    commits,
+  }, s.body);
 }
 
 async function runPeriod(
@@ -565,7 +547,14 @@ async function main() {
     }
 
     const summary = await summarize(entry.repo, day, commits);
-    const path = await writeArticle(entry.repo, day, commits.length, summary);
+    const path = await writeArticle(`${day}_${slug(entry.repo)}`, {
+      date: day,
+      repo: entry.repo,
+      size: summary.size,
+      title: q(summary.headline),
+      excerpt: q(summary.excerpt),
+      commits: commits.length,
+    }, summary.body);
     console.error(`  ✓ wrote ${path}`);
   }
 }
