@@ -1,0 +1,14 @@
+# Repositories Changelog should follow.
+# Each entry is "owner/name", or a mapping with options.
+#
+#   repos:
+#     - denoland/deno              # default branch
+#     - repo: denoland/std
+#       branch: main               # pin a branch (optional)
+#
+repos:
+  - denoland/deno
+  - lumeland/lume
+  - oven-sh/bun
+  - nodejs/node
+  - tc39/ecma262

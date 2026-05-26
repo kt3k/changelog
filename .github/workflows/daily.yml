@@ -1,0 +1,76 @@
+name: Daily digest
+
+on:
+  schedule:
+    # 06:00 UTC daily — summarizes the previous UTC day.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Date to summarize (YYYY-MM-DD, UTC). Defaults to yesterday."
+        required: false
+
+# Needed to push generated posts and to publish to GitHub Pages.
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Avoid overlapping runs racing on the same branch / Pages deployment.
+concurrency:
+  group: daily-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Generate digest
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.4-mini' }}
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            deno task digest --date "${{ github.event.inputs.date }}"
+          else
+            deno task digest
+          fi
+
+      - name: Commit new posts
+        run: |
+          git config user.name  "oss-watch[bot]"
+          git config user.email "oss-watch@users.noreply.github.com"
+          git add src/posts
+          if git diff --cached --quiet; then
+            echo "No new posts to commit."
+          else
+            git commit -m "digest: add issues for $(date -u +%F)"
+            git push
+          fi
+
+      - name: Build site
+        env:
+          # Project-page base URL. Change if you use a custom domain.
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: deno task build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: digest
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

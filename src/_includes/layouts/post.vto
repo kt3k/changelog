@@ -1,0 +1,18 @@
+---
+layout: layouts/base.vto
+---
+<article class="post">
+  <header class="post-header">
+    <p class="post-date">
+      {{ if repo }}<a class="post-repo" href="/{{ repo }}/">{{ repo }}</a> · {{ /if }}<time datetime="{{ date |> date('DATETIME') }}">{{ date |> date('HUMAN_DATE') }}</time>
+    </p>
+    <h1 class="post-title">{{ title }}</h1>
+    {{ if excerpt }}<p class="post-lede">{{ excerpt }}</p>{{ /if }}
+  </header>
+  <div class="post-body">
+    {{ content }}
+  </div>
+  <nav class="post-nav">
+    {{ if repo }}<a href="/{{ repo }}/">← All {{ repo }} issues</a>{{ else }}<a href="/">← Back home</a>{{ /if }}
+  </nav>
+</article>

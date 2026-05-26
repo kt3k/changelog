@@ -1,0 +1,23 @@
+---
+layout: layouts/base.vto
+---
+<div class="feed-header">
+  <h1 class="feed-title">{{ repo }}</h1>
+  <p class="feed-sub">
+    <a href="https://github.com/{{ repo }}">github.com/{{ repo }}</a>
+    · {{ feedPosts.length }} issue{{ if feedPosts.length != 1 }}s{{ /if }}
+  </p>
+</div>
+
+<div class="issue-list">
+  {{ for post of feedPosts }}
+  <article class="issue-item">
+    <p class="issue-meta">
+      <time datetime="{{ post.date |> date('DATETIME') }}">{{ post.date |> date('HUMAN_DATE') }}</time>
+    </p>
+    <h2 class="issue-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+    {{ if post.excerpt }}<p class="issue-excerpt">{{ post.excerpt }}</p>{{ /if }}
+    <a class="issue-readmore" href="{{ post.url }}">Read the issue →</a>
+  </article>
+  {{ /for }}
+</div>

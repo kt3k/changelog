@@ -1,0 +1,20 @@
+{
+  "imports": {
+    "lume/": "https://deno.land/x/lume@v3.2.5/",
+    "@std/yaml": "jsr:@std/yaml@^1.0.9",
+    "@std/path": "jsr:@std/path@^1.1.2",
+    "@std/fs": "jsr:@std/fs@^1.0.19"
+  },
+  "tasks": {
+    "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
+    "build": "deno task lume",
+    "serve": "deno task lume -s",
+    "digest": "deno run -A scripts/digest.ts"
+  },
+  "compilerOptions": {
+    "types": ["lume/types.ts"]
+  },
+  "lint": {
+    "plugins": ["lume/lint.ts"]
+  }
+}
