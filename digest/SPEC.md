@@ -43,11 +43,9 @@ deno task digest [flags]
 | `OPENAI_API_KEY`      | — (required unless `--dry-run`) | Auth for the chat-completions endpoint.        |
 | `OPENAI_TRIAGE_MODEL` | `gpt-5.4-nano`                  | Pass-1 (triage) model.                         |
 | `OPENAI_WRITE_MODEL`  | `gpt-5.4-mini`                  | Pass-2 (write) model.                          |
-| `OPENAI_MODEL`        | —                               | Legacy fallback for the write model.           |
 | `OPENAI_BASE_URL`     | `https://api.openai.com/v1`     | API base. OpenAI-compatible (e.g. OpenRouter). |
 
-Model resolution order: CLI flag → specific env var → (write only)
-`OPENAI_MODEL` → built-in default.
+Model resolution order: CLI flag → env var → built-in default.
 
 The API is called via `POST {base}/chat/completions` with
 `response_format: { type: "json_object" }`; every model response must be a JSON

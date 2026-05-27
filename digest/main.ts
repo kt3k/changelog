@@ -23,7 +23,6 @@
  *   OPENAI_API_KEY      required (unless --dry-run)
  *   OPENAI_TRIAGE_MODEL triage model id (default: gpt-5.4-nano)
  *   OPENAI_WRITE_MODEL  write/summary model id (default: gpt-5.4-mini)
- *   OPENAI_MODEL        legacy fallback for the write model
  *   OPENAI_BASE_URL     API base (default: https://api.openai.com/v1)
  *
  * CLI flags --triage-model / --write-model override the env vars.
@@ -125,7 +124,7 @@ function resolveModels(
     triage: flags.triageModel ?? Deno.env.get("OPENAI_TRIAGE_MODEL") ??
       DEFAULT_TRIAGE_MODEL,
     write: flags.writeModel ?? Deno.env.get("OPENAI_WRITE_MODEL") ??
-      Deno.env.get("OPENAI_MODEL") ?? DEFAULT_WRITE_MODEL,
+      DEFAULT_WRITE_MODEL,
   };
 }
 

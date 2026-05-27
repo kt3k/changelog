@@ -416,11 +416,6 @@
                 <td>Pass-2 (write) model.</td>
               </tr>
               <tr>
-                <td><code>OPENAI_MODEL</code></td>
-                <td>—</td>
-                <td>Legacy fallback for the write model.</td>
-              </tr>
-              <tr>
                 <td><code>OPENAI_BASE_URL</code></td>
                 <td><code>https://api.openai.com/v1</code></td>
                 <td>API base. OpenAI-compatible (e.g. OpenRouter).</td>
@@ -429,8 +424,7 @@
           </table>
         </div>
         <p>
-          Model resolution order: CLI flag → specific env var → (write only)
-          <code>OPENAI_MODEL</code> → built-in default.
+          Model resolution order: CLI flag → env var → built-in default.
         </p>
         <p>
           The API is called via <code>POST {base}/chat/completions</code> with

@@ -42,8 +42,8 @@ deno task digest --triage-model gpt-5.4-nano --write-model gpt-5.4-mini
 ```
 
 Models are configurable via `OPENAI_TRIAGE_MODEL` (default `gpt-5.4-nano`) and
-`OPENAI_WRITE_MODEL` (default `gpt-5.4-mini`; `OPENAI_MODEL` is a legacy
-fallback), the CLI flags above, and the API endpoint via `OPENAI_BASE_URL`.
+`OPENAI_WRITE_MODEL` (default `gpt-5.4-mini`), the CLI flags above, and the API
+endpoint via `OPENAI_BASE_URL`.
 
 ## Preview the site
 
