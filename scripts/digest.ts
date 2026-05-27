@@ -4,7 +4,9 @@
  *
  * Daily:   clones each watched repo into `.cache/repos/` (reused & fetched on
  *          later runs), extracts the previous day's commits, and asks an LLM for
- *          an impact-weighted summary (one article per repo/day).
+ *          an impact-weighted summary (one article per repo/day). This is a
+ *          two-pass process: a cheap "triage" model first picks the high-impact
+ *          commits, whose real diffs are then attached for the "write" model.
  * Weekly / monthly: aggregates the existing daily summaries for the most recent
  *          completed ISO week / calendar month into a higher-level summary.
  *
@@ -15,11 +17,16 @@
  *   deno task digest --period weekly       # last completed ISO week
  *   deno task digest --period monthly      # last completed calendar month
  *   deno task digest --dry-run             # print the prompt, don't call the API
+ *   deno task digest --triage-model gpt-5.4-nano --write-model gpt-5.4-mini
  *
  * Env:
- *   OPENAI_API_KEY   required (unless --dry-run)
- *   OPENAI_MODEL     model id (default: gpt-5.4-mini)
- *   OPENAI_BASE_URL  API base (default: https://api.openai.com/v1)
+ *   OPENAI_API_KEY      required (unless --dry-run)
+ *   OPENAI_TRIAGE_MODEL triage model id (default: gpt-5.4-nano)
+ *   OPENAI_WRITE_MODEL  write/summary model id (default: gpt-5.4-mini)
+ *   OPENAI_MODEL        legacy fallback for the write model
+ *   OPENAI_BASE_URL     API base (default: https://api.openai.com/v1)
+ *
+ * CLI flags --triage-model / --write-model override the env vars.
  */
 import { parse as parseYaml } from "@std/yaml";
 import { join } from "@std/path";
@@ -29,6 +36,25 @@ const POSTS_DIR = "src/posts";
 const CACHE_DIR = ".cache/repos"; // project-local clones (git-ignored)
 const MAX_COMMITS = 300; // cap to keep token cost bounded
 const MAX_FILES_PER_COMMIT = 25;
+
+const DEFAULT_TRIAGE_MODEL = "gpt-5.4-nano";
+const DEFAULT_WRITE_MODEL = "gpt-5.4-mini";
+
+// Two-pass diff tuning. Small days skip triage entirely and just diff every
+// commit (still capped by MAX_DIFF_COMMITS). Diffs are the main token cost, so
+// they are bounded per commit and in count.
+const TRIAGE_BYPASS_THRESHOLD = 10; // <= this many commits: skip the triage call
+const MAX_DIFF_COMMITS = 8; // attach a diff to at most this many commits/day
+const MAX_DIFF_LINES = 120; // truncate each commit's diff to this many lines
+
+// Noisy/low-signal paths whose diffs are dropped to save tokens.
+const DIFF_EXCLUDE: RegExp[] = [
+  /(^|\/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|deno\.lock|Cargo\.lock|go\.sum)$/,
+  /\.min\.(js|css)$/,
+  /\.map$/,
+  /(^|\/)(vendor|third_party|node_modules)\//,
+  /(^|\/)__snapshots__\//,
+];
 
 interface RepoEntry {
   repo: string;
@@ -53,6 +79,11 @@ interface Commit {
 type Size = "L" | "M" | "S" | "N";
 type Period = "daily" | "weekly" | "monthly";
 
+interface Models {
+  triage: string;
+  write: string;
+}
+
 interface Summary {
   headline: string;
   excerpt: string;
@@ -63,19 +94,39 @@ interface Summary {
 // ---------------------------------------------------------------- args ----
 
 function parseArgs(args: string[]) {
-  const out: { date?: string; repo?: string; dryRun: boolean; period: Period } =
-    {
-      dryRun: false,
-      period: "daily",
-    };
+  const out: {
+    date?: string;
+    repo?: string;
+    dryRun: boolean;
+    period: Period;
+    triageModel?: string;
+    writeModel?: string;
+  } = {
+    dryRun: false,
+    period: "daily",
+  };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
     if (a === "--dry-run") out.dryRun = true;
     else if (a === "--date") out.date = args[++i];
     else if (a === "--repo") out.repo = args[++i];
     else if (a === "--period") out.period = args[++i] as Period;
+    else if (a === "--triage-model") out.triageModel = args[++i];
+    else if (a === "--write-model") out.writeModel = args[++i];
   }
   return out;
+}
+
+/** Resolve triage/write model ids from CLI flags, then env, then defaults. */
+function resolveModels(
+  flags: { triageModel?: string; writeModel?: string },
+): Models {
+  return {
+    triage: flags.triageModel ?? Deno.env.get("OPENAI_TRIAGE_MODEL") ??
+      DEFAULT_TRIAGE_MODEL,
+    write: flags.writeModel ?? Deno.env.get("OPENAI_WRITE_MODEL") ??
+      Deno.env.get("OPENAI_MODEL") ?? DEFAULT_WRITE_MODEL,
+  };
 }
 
 const ymd = (d: Date): string => d.toISOString().slice(0, 10);
@@ -193,9 +244,74 @@ async function fileStats(repoDir: string, hash: string): Promise<FileStat[]> {
   return files;
 }
 
+const churn = (c: Commit): number =>
+  c.files.reduce((n, f) => n + f.added + f.deleted, 0);
+
+const isExcludedPath = (p: string): boolean =>
+  DIFF_EXCLUDE.some((re) => re.test(p));
+
+/**
+ * Fetch the patch for `hash`, drop noisy files (lockfiles, generated, vendored)
+ * and truncate to MAX_DIFF_LINES. Blobs are fetched on demand (blobless clone).
+ * Returns "" when nothing meaningful is left.
+ */
+async function commitDiff(dir: string, hash: string): Promise<string> {
+  const raw = await git(
+    dir,
+    "show",
+    hash,
+    "--unified=3",
+    "--format=",
+    "--no-color",
+  ).catch(() => "");
+  if (!raw.trim()) return "";
+
+  // Split into per-file sections and drop excluded paths.
+  const sections = raw.split(/^(?=diff --git )/m).filter((s) => s.trim());
+  const kept = sections.filter((s) => {
+    const m = s.match(/^diff --git a\/(.+?) b\//);
+    return !m || !isExcludedPath(m[1]);
+  });
+  if (kept.length === 0) return "";
+
+  let lines = kept.join("").split("\n");
+  if (lines.length > MAX_DIFF_LINES) {
+    lines = lines.slice(0, MAX_DIFF_LINES);
+    lines.push(`… (diff truncated at ${MAX_DIFF_LINES} lines)`);
+  }
+  return lines.join("\n").trim();
+}
+
+/**
+ * For the commits flagged high-impact, fetch diffs for the MAX_DIFF_COMMITS
+ * largest (by churn). Returns a hash → diff map (commits with empty diffs are
+ * omitted).
+ */
+async function collectDiffs(
+  dir: string,
+  commits: Commit[],
+  high: Set<string>,
+): Promise<Map<string, string>> {
+  const selected = commits
+    .filter((c) => high.has(c.hash))
+    .sort((a, b) => churn(b) - churn(a))
+    .slice(0, MAX_DIFF_COMMITS);
+  const diffs = new Map<string, string>();
+  for (const c of selected) {
+    const d = await commitDiff(dir, c.hash);
+    if (d) diffs.set(c.hash, d);
+  }
+  return diffs;
+}
+
 // ----------------------------------------------------------------- llm ----
 
-function buildPrompt(repo: string, date: string, commits: Commit[]): string {
+function buildPrompt(
+  repo: string,
+  date: string,
+  commits: Commit[],
+  diffs?: Map<string, string>,
+): string {
   const lines: string[] = [];
   for (const c of commits) {
     const stat = c.files
@@ -209,13 +325,25 @@ function buildPrompt(repo: string, date: string, commits: Commit[]): string {
         (stat ? `\n  files: ${stat}` : ""),
     );
   }
-  return [
+  const parts = [
     `Repository: ${repo}`,
     `Date (UTC): ${date}`,
     `Commits (${commits.length}):`,
     "",
     lines.join("\n"),
-  ].join("\n");
+  ];
+  if (diffs && diffs.size > 0) {
+    const blocks = [...diffs].map(([hash, d]) =>
+      `### [${hash.slice(0, 7)}]\n\`\`\`diff\n${d}\n\`\`\``
+    );
+    parts.push(
+      "",
+      "Diffs for the high-impact commits (other commits' diffs omitted):",
+      "",
+      blocks.join("\n\n"),
+    );
+  }
+  return parts.join("\n");
 }
 
 const SYSTEM_PROMPT =
@@ -227,6 +355,7 @@ Rules:
 - Give each HIGH-impact change its own entry: a bold one-line title, then 1-2 sentences on what changed and why it matters. Reference the short commit hash like (abc1234).
 - Bundle ALL low-impact changes under a final "### Other misc changes" section as terse bullets. Aggregate aggressively (e.g. "Dependency bumps (3 commits)"). Do NOT give them equal weight.
 - Coverage must be PROPORTIONAL to impact. A day of only trivial commits should be short.
+- Some high-impact commits include their actual diff under a "Diffs for the high-impact commits" section. Use those diffs to describe precisely what changed; do not invent details for commits whose diff is not shown.
 - Markdown body: use "### " for section headers and "**" for entry titles. No top-level # or ## heading, no preamble, no sign-off.
 
 Also classify the overall magnitude of the day for this repo as a single "size":
@@ -241,8 +370,12 @@ Return ONLY a JSON object with keys:
   "size": one of "L", "M", or "S" per the rubric above (never "N"),
   "body": the markdown body described above.`;
 
-async function callLLM(system: string, user: string): Promise<Summary> {
-  const model = Deno.env.get("OPENAI_MODEL") ?? "gpt-5.4-mini";
+/** Low-level chat completion returning the raw JSON-object content string. */
+async function chat(
+  model: string,
+  system: string,
+  user: string,
+): Promise<string> {
   const base = Deno.env.get("OPENAI_BASE_URL") ?? "https://api.openai.com/v1";
   const key = Deno.env.get("OPENAI_API_KEY");
   if (!key) throw new Error("OPENAI_API_KEY is not set");
@@ -268,7 +401,15 @@ async function callLLM(system: string, user: string): Promise<Summary> {
   const data = await res.json();
   const content = data.choices?.[0]?.message?.content;
   if (!content) throw new Error("OpenAI returned no content");
-  const parsed = JSON.parse(content) as Summary;
+  return content;
+}
+
+async function callLLM(
+  model: string,
+  system: string,
+  user: string,
+): Promise<Summary> {
+  const parsed = JSON.parse(await chat(model, system, user)) as Summary;
   // Guard against an unexpected value from the model.
   const valid: Size[] = ["L", "M", "S", "N"];
   if (!valid.includes(parsed.size)) parsed.size = "M";
@@ -277,12 +418,81 @@ async function callLLM(system: string, user: string): Promise<Summary> {
   return parsed;
 }
 
-function summarize(
+const TRIAGE_SYSTEM_PROMPT =
+  `You are triaging one repository's commits for a single day for "Changelog", a developer digest.
+You are given the commit list (subject, body, changed files with line counts). Identify which commits are HIGH impact.
+
+HIGH impact = new features, breaking changes, security fixes, performance work, notable bug fixes, public API changes, or major refactors.
+LOW impact = typos, formatting, dependency bumps, CI/build tweaks, comment/test-only changes, trivial internal refactors.
+
+Judge by the MEANING of the change, not by commit-message conventions — many repos do not use conventional-commit prefixes. When unsure, lean towards including a commit (recall matters more than precision here).
+
+Return ONLY a JSON object: {"high": ["<short hash>", ...]} listing the short hashes (as shown in brackets) of the high-impact commits. Return an empty array if none qualify.`;
+
+/**
+ * Pass 1. Ask the triage model which commits are high-impact and return their
+ * full hashes. Days with few commits skip the call (everything is a candidate).
+ * On any error, fall back to the largest commits by churn.
+ */
+async function selectHighCommits(
+  model: string,
   repo: string,
   date: string,
   commits: Commit[],
+): Promise<Set<string>> {
+  if (commits.length <= TRIAGE_BYPASS_THRESHOLD) {
+    return new Set(commits.map((c) => c.hash));
+  }
+  const byShort = new Map(commits.map((c) => [c.hash.slice(0, 7), c.hash]));
+  try {
+    const content = await chat(
+      model,
+      TRIAGE_SYSTEM_PROMPT,
+      buildPrompt(repo, date, commits),
+    );
+    const obj = JSON.parse(content) as { high?: unknown };
+    const high = new Set<string>();
+    if (Array.isArray(obj.high)) {
+      for (const h of obj.high) {
+        const full = typeof h === "string" && byShort.get(h.slice(0, 7));
+        if (full) high.add(full);
+      }
+    }
+    return high;
+  } catch (e) {
+    console.error(`  triage failed (${e}); falling back to top-churn diffs`);
+    const top = [...commits].sort((a, b) => churn(b) - churn(a))
+      .slice(0, MAX_DIFF_COMMITS);
+    return new Set(top.map((c) => c.hash));
+  }
+}
+
+/**
+ * Two-pass daily summary: triage picks the high-impact commits, their diffs are
+ * fetched, then the write model produces the article.
+ */
+async function summarize(
+  entry: RepoEntry,
+  date: string,
+  commits: Commit[],
+  models: Models,
 ): Promise<Summary> {
-  return callLLM(SYSTEM_PROMPT, buildPrompt(repo, date, commits));
+  const dir = join(CACHE_DIR, slug(entry.repo));
+  const high = await selectHighCommits(
+    models.triage,
+    entry.repo,
+    date,
+    commits,
+  );
+  const diffs = await collectDiffs(dir, commits, high);
+  console.error(
+    `  triage: ${high.size} high-impact, ${diffs.size} diff(s) attached`,
+  );
+  return callLLM(
+    models.write,
+    SYSTEM_PROMPT,
+    buildPrompt(entry.repo, date, commits, diffs),
+  );
 }
 
 // --------------------------------------------------------------- output ----
@@ -488,6 +698,7 @@ async function runPeriod(
   repos: RepoEntry[],
   anchor: Date,
   dryRun: boolean,
+  models: Models,
 ) {
   const target = period === "weekly"
     ? lastCompletedWeek(anchor)
@@ -524,6 +735,7 @@ async function runPeriod(
     }
 
     const summary = await callLLM(
+      models.write,
       periodSystemPrompt(period),
       buildPeriodPrompt(entry.repo, period, target.label, articles),
     );
@@ -550,7 +762,9 @@ async function loadRepos(filter?: string): Promise<RepoEntry[]> {
 }
 
 async function main() {
-  const { date, repo, dryRun, period } = parseArgs(Deno.args);
+  const args = parseArgs(Deno.args);
+  const { date, repo, dryRun, period } = args;
+  const models = resolveModels(args);
   const repos = await loadRepos(repo);
   if (repos.length === 0) {
     console.error("No repositories to watch (check repos.yml / --repo).");
@@ -559,13 +773,14 @@ async function main() {
 
   if (period !== "daily") {
     const anchor = date ? new Date(`${date}T00:00:00Z`) : new Date();
-    await runPeriod(period, repos, anchor, dryRun);
+    await runPeriod(period, repos, anchor, dryRun, models);
     return;
   }
 
   const day = date ?? yesterdayUTC();
   console.error(
-    `Changelog — daily digest for ${day} (${repos.length} repo(s))`,
+    `Changelog — daily digest for ${day} (${repos.length} repo(s)); ` +
+      `triage=${models.triage} write=${models.write}`,
   );
 
   for (const entry of repos) {
@@ -578,14 +793,24 @@ async function main() {
     console.error(`  ${commits.length} commit(s)`);
 
     if (dryRun) {
+      // No API call: preview with diffs for the largest commits by churn
+      // (real triage would refine this selection).
+      const dir = join(CACHE_DIR, slug(entry.repo));
+      const top = [...commits].sort((a, b) => churn(b) - churn(a))
+        .slice(0, MAX_DIFF_COMMITS);
+      const diffs = await collectDiffs(
+        dir,
+        commits,
+        new Set(top.map((c) => c.hash)),
+      );
       console.log("=".repeat(60));
-      console.log(`PROMPT for ${entry.repo}`);
+      console.log(`PROMPT for ${entry.repo} (diffs by churn, triage skipped)`);
       console.log("=".repeat(60));
-      console.log(buildPrompt(entry.repo, day, commits));
+      console.log(buildPrompt(entry.repo, day, commits, diffs));
       continue;
     }
 
-    const summary = await summarize(entry.repo, day, commits);
+    const summary = await summarize(entry, day, commits, models);
     const path = await writeArticle(`${day}_${slug(entry.repo)}`, {
       date: day,
       repo: entry.repo,
