@@ -9,7 +9,7 @@
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
     "build": "deno task lume",
     "serve": "deno task lume -s",
-    "digest": "deno run -A digest/main.ts"
+    "digest": "deno run -A --env digest/main.ts"
   },
   "compilerOptions": {
     "types": ["lume/types.ts"]
