@@ -34,7 +34,8 @@ jobs:
       - name: Generate digest
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.4-mini' }}
+          OPENAI_TRIAGE_MODEL: ${{ vars.OPENAI_TRIAGE_MODEL || 'gpt-5.4-nano' }}
+          OPENAI_WRITE_MODEL: ${{ vars.OPENAI_WRITE_MODEL || 'gpt-5.4-mini' }}
         run: |
           if [ -n "${{ github.event.inputs.date }}" ]; then
             deno task digest --date "${{ github.event.inputs.date }}"
