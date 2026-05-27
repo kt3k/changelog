@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Digest script — specification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ---- shadcn/ui-style design tokens ---- */
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --card: 0 0% 100%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --border: 240 5.9% 90%;
+        --primary: 240 5.9% 10%;
+        --primary-foreground: 0 0% 98%;
+        --accent: 240 4.8% 95.9%;
+        --code: 240 5% 96%;
+        --radius: 0.5rem;
+      }
+      .dark {
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 5.5%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --border: 240 3.7% 17%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+        --accent: 240 3.7% 15.9%;
+        --code: 240 5% 12%;
+      }
+
+      * {
+        box-sizing: border-box;
+        border-color: hsl(var(--border));
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family:
+          "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .layout {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 6rem;
+      }
+
+      /* ---- header ---- */
+      header.hero {
+        margin-bottom: 3rem;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: hsl(var(--muted-foreground));
+        margin-bottom: 1rem;
+      }
+      .eyebrow .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 0 3px hsl(142 70% 45% / 0.15);
+      }
+      h1 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+        margin: 0 0 0.75rem;
+      }
+      .lead {
+        font-size: 1.05rem;
+        color: hsl(var(--muted-foreground));
+        margin: 0;
+        max-width: 62ch;
+      }
+
+      /* ---- sections / headings ---- */
+      h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin: 3rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid hsl(var(--border));
+        scroll-margin-top: 2rem;
+      }
+      h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 2rem 0 0.75rem;
+      }
+      p {
+        margin: 0 0 1rem;
+      }
+      strong {
+        font-weight: 600;
+      }
+      em {
+        color: hsl(var(--muted-foreground));
+      }
+
+      /* ---- lists ---- */
+      ul,
+      ol {
+        margin: 0 0 1rem;
+        padding-left: 1.35rem;
+      }
+      li {
+        margin: 0.35rem 0;
+      }
+      li::marker {
+        color: hsl(var(--muted-foreground));
+      }
+
+      /* ---- code ---- */
+      code {
+        font-family:
+          "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 0.84em;
+        background: hsl(var(--code));
+        border: 1px solid hsl(var(--border));
+        padding: 0.12em 0.4em;
+        border-radius: 0.35rem;
+        white-space: nowrap;
+      }
+      pre {
+        background: hsl(var(--code));
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        padding: 1rem 1.15rem;
+        overflow-x: auto;
+        margin: 0 0 1.25rem;
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        white-space: pre;
+        font-size: inherit;
+      }
+      .lang {
+        display: block;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: hsl(var(--muted-foreground));
+        margin-bottom: 0.6rem;
+      }
+
+      /* ---- tables (shadcn card style) ---- */
+      .table-wrap {
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin: 0 0 1.5rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      thead th {
+        text-align: left;
+        font-weight: 600;
+        color: hsl(var(--muted-foreground));
+        background: hsl(var(--muted) / 0.5);
+        padding: 0.7rem 1rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      tbody td {
+        padding: 0.7rem 1rem;
+        border-top: 1px solid hsl(var(--border));
+        vertical-align: top;
+      }
+      tbody tr:hover {
+        background: hsl(var(--muted) / 0.4);
+      }
+      td code,
+      th code {
+        white-space: nowrap;
+      }
+
+      /* ---- callout ---- */
+      .callout {
+        border: 1px solid hsl(var(--border));
+        border-left: 3px solid hsl(var(--primary));
+        background: hsl(var(--muted) / 0.4);
+        border-radius: var(--radius);
+        padding: 0.9rem 1.1rem;
+        margin: 1.5rem 0;
+        font-size: 0.92rem;
+        color: hsl(var(--muted-foreground));
+      }
+      .callout strong {
+        color: hsl(var(--foreground));
+      }
+
+      /* ---- badge ---- */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 0.1rem 0.45rem;
+        border-radius: 999px;
+        background: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+        white-space: nowrap;
+      }
+
+      /* ---- theme toggle ---- */
+      .toggle {
+        position: fixed;
+        top: 1.25rem;
+        right: 1.25rem;
+        height: 2.25rem;
+        width: 2.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid hsl(var(--border));
+        background: hsl(var(--card));
+        color: hsl(var(--foreground));
+        border-radius: var(--radius);
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.15s ease;
+      }
+      .toggle:hover {
+        background: hsl(var(--accent));
+      }
+
+      footer {
+        margin-top: 4rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid hsl(var(--border));
+        font-size: 0.82rem;
+        color: hsl(var(--muted-foreground));
+      }
+      footer code {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="toggle" id="theme-toggle" aria-label="Toggle theme">
+      🌙
+    </button>
+
+    <div class="layout">
+      <header class="hero">
+        <span class="eyebrow"><span class="dot"></span> Changelog ·
+          digest</span>
+        <h1>Digest script — specification</h1>
+        <p class="lead">
+          <code>digest/main.ts</code> turns the recent commit activity of a set
+          of watched repositories into impact-weighted Markdown articles under
+          <code>src/posts/</code>, which the Lume site then renders. This
+          document specifies its behaviour.
+        </p>
+      </header>
+
+      <section>
+        <h2 id="modes">Modes</h2>
+        <p>
+          The script runs in one of three modes, selected by
+          <code>--period</code> (default <code>daily</code>):
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Input</th>
+                <th>Output (one article per repo)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge">daily</span></td>
+                <td>a single day's commits per repo</td>
+                <td><code>&lt;date&gt;_&lt;slug&gt;.md</code></td>
+              </tr>
+              <tr>
+                <td><span class="badge">weekly</span></td>
+                <td>the daily summaries of the last ISO week</td>
+                <td><code>&lt;YYYY&gt;-W&lt;WW&gt;_&lt;slug&gt;.md</code></td>
+              </tr>
+              <tr>
+                <td><span class="badge">monthly</span></td>
+                <td>the daily summaries of the last month</td>
+                <td><code>&lt;YYYY&gt;-&lt;MM&gt;_&lt;slug&gt;.md</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <code>slug</code> is the repo <code>owner/name</code> lowercased with
+          non-alphanumerics collapsed to <code>-</code> (e.g.
+          <code>denoland/deno</code> → <code>denoland-deno</code>).
+        </p>
+        <p>
+          Weekly/monthly modes anchor on the <strong>most recent
+            completed</strong>
+          ISO week / calendar month relative to today (or to <code>--date</code>
+          if given) and synthesize the existing daily articles in that window.
+          They never re-read git.
+        </p>
+      </section>
+
+      <section>
+        <h2 id="cli">CLI</h2>
+        <pre><span class="lang">sh</span><code>deno task digest [flags]</code></pre>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Flag</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--date &lt;YYYY-MM-DD&gt;</code></td>
+                <td>
+                  Target day (daily) or anchor (period). Default: yesterday UTC.
+                </td>
+              </tr>
+              <tr>
+                <td><code>--repo &lt;owner/name&gt;</code></td>
+                <td>Restrict to one repo from <code>repos.yml</code>.</td>
+              </tr>
+              <tr>
+                <td><code>--period &lt;p&gt;</code></td>
+                <td>
+                  <code>daily</code> | <code>weekly</code> | <code
+                  >monthly</code>. Default <code>daily</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><code>--dry-run</code></td>
+                <td>Print the assembled prompt(s); make no API call.</td>
+              </tr>
+              <tr>
+                <td><code>--triage-model &lt;id&gt;</code></td>
+                <td>Override the triage model.</td>
+              </tr>
+              <tr>
+                <td><code>--write-model &lt;id&gt;</code></td>
+                <td>Override the write model.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 id="environment">Environment</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Var</th>
+                <th>Default</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>OPENAI_API_KEY</code></td>
+                <td>— (required unless <code>--dry-run</code>)</td>
+                <td>Auth for the chat-completions endpoint.</td>
+              </tr>
+              <tr>
+                <td><code>OPENAI_TRIAGE_MODEL</code></td>
+                <td><code>gpt-5.4-nano</code></td>
+                <td>Pass-1 (triage) model.</td>
+              </tr>
+              <tr>
+                <td><code>OPENAI_WRITE_MODEL</code></td>
+                <td><code>gpt-5.4-mini</code></td>
+                <td>Pass-2 (write) model.</td>
+              </tr>
+              <tr>
+                <td><code>OPENAI_MODEL</code></td>
+                <td>—</td>
+                <td>Legacy fallback for the write model.</td>
+              </tr>
+              <tr>
+                <td><code>OPENAI_BASE_URL</code></td>
+                <td><code>https://api.openai.com/v1</code></td>
+                <td>API base. OpenAI-compatible (e.g. OpenRouter).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Model resolution order: CLI flag → specific env var → (write only)
+          <code>OPENAI_MODEL</code> → built-in default.
+        </p>
+        <p>
+          The API is called via <code>POST {base}/chat/completions</code> with
+          <code>response_format: { type: "json_object" }</code>; every model
+          response must be a JSON object.
+        </p>
+      </section>
+
+      <section>
+        <h2 id="repository-source">Repository source</h2>
+        <p><code>repos.yml</code> at the project root:</p>
+        <pre><span class="lang">yaml</span><code>repos:
+  - denoland/deno              # default branch
+  - repo: lumeland/lume
+    branch: main               # optional branch pin</code></pre>
+        <p>
+          Each entry is either a string <code>owner/name</code> or a mapping
+          <code>{ repo, branch? }</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2 id="clone-cache">Local clone cache</h2>
+        <p>
+          Repos are cloned under <code>.cache/repos/&lt;slug&gt;</code>
+          (git-ignored):
+        </p>
+        <ul>
+          <li>
+            First run: <strong>blobless</strong> partial clone (<code
+            >--filter=blob:none</code>) — full history, file contents fetched on
+            demand.
+          </li>
+          <li>Later runs: <code>git fetch --prune origin</code> to update.</li>
+        </ul>
+        <p>
+          Commits are read from <code>origin/&lt;branch&gt;</code> (or
+          <code>origin/HEAD</code> when no branch is pinned).
+        </p>
+      </section>
+
+      <section>
+        <h2 id="daily-pipeline">Daily pipeline (per repo)</h2>
+        <ol>
+          <li>
+            <strong>Collect commits</strong> for the UTC day
+            <code>[date T00:00:00Z, nextDay T00:00:00Z)</code>. For each commit,
+            capture hash, author, ISO date, subject, body, and per-file
+            <code>(added, deleted, path)</code> from
+            <code>git show --numstat</code>. Caps: <code>MAX_COMMITS =
+              300</code>
+            commits/day, <code>MAX_FILES_PER_COMMIT = 25</code> files/commit.
+            Empty days are skipped (no article written).
+          </li>
+          <li>
+            <strong>Pass 1 — triage</strong> (<code>selectHighCommits</code>):
+            send the lightweight commit list (messages + numstat, no diffs) to
+            the triage model, which returns
+            <code>{"high": ["&lt;short hash&gt;", ...]}</code> — the high-impact
+            commits judged by the <em>meaning</em> of the change,
+            <strong>not</strong> by commit-message conventions (target repos may
+            not use conventional commits). Recall is favoured over precision.
+            <ul>
+              <li>
+                Days with <code>&lt;= TRIAGE_BYPASS_THRESHOLD</code> (10)
+                commits skip this call and treat every commit as a candidate.
+              </li>
+              <li>
+                Returned hashes are validated against the actual commit set
+                (matched by 7-char prefix); unknown hashes are dropped.
+              </li>
+              <li>
+                On any error (network, malformed JSON), fall back to the largest
+                commits by churn.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Fetch diffs</strong> (<code>collectDiffs</code> /
+            <code>commitDiff</code>): for the high-impact commits, take the
+            <code>MAX_DIFF_COMMITS</code> (8) largest by churn (added+deleted)
+            and fetch their patches. Each diff is:
+            <ul>
+              <li>
+                filtered to drop noisy files — lockfiles,
+                <code>*.min.js</code>/<code>*.min.css</code>, <code
+                >*.map</code>,
+                <code>vendor/</code>, <code>third_party/</code>,
+                <code>node_modules/</code>, <code>__snapshots__/</code>;
+              </li>
+              <li>
+                truncated to <code>MAX_DIFF_LINES</code> (120) lines with a
+                truncation marker. Commits whose diff is empty after filtering
+                are omitted.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Pass 2 — write</strong> (<code>callLLM</code>): send the
+            full commit list plus the attached diffs to the write model, which
+            returns the article <code>Summary</code>. The system prompt
+            instructs it to describe diff-backed commits precisely and not to
+            invent details for commits without a shown diff.
+          </li>
+        </ol>
+        <div class="callout">
+          <code>--dry-run</code> skips both API calls: it attaches diffs for the
+          top commits by churn (triage cannot run without the API) and prints
+          the resulting prompt.
+        </div>
+      </section>
+
+      <section>
+        <h2 id="period-pipeline">Weekly / monthly pipeline (per repo)</h2>
+        <p>
+          Read the existing daily articles for the window, concatenate their
+          bodies into a period prompt, and ask the <strong>write</strong> model
+          to synthesize one higher-level <code>Summary</code> (merging themes
+          across days, not concatenating). No git, no triage, no diffs.
+        </p>
+      </section>
+
+      <section>
+        <h2 id="llm-contract">LLM contract</h2>
+
+        <h3>Daily / period summary — response object</h3>
+        <pre><span class="lang">json</span><code>{
+  "headline": "&lt;= 60 chars (daily) / 70 chars (period); no repo name, no date",
+  "excerpt":  "&lt;= 160 char one-line summary",
+  "size":     "L | M | S",
+  "body":     "Markdown: '### ' section headers, '**' entry titles, no top-level heading/preamble/sign-off"
+}</code></pre>
+        <ul>
+          <li>
+            <strong>Impact weighting</strong>: each high-impact change gets its
+            own entry (bold title + 1–2 sentences + short hash like
+            <code>(abc1234)</code>); all trivial changes are bundled under a
+            final
+            <code>### Other misc changes</code> section, aggregated
+            aggressively. Coverage is proportional to impact.
+          </li>
+          <li>
+            <strong><code>size</code></strong>: <code>L</code> significant
+            (breaking/major feature/security), <code>M</code> notable,
+            <code>S</code> only minor/trivial. The model is only ever sent
+            windows with activity, so it never returns <code>N</code>; an
+            out-of-range value is coerced to <code>M</code>, and a stray <code
+            >N</code> to
+            <code>S</code>.
+          </li>
+        </ul>
+
+        <h3>Triage — response object</h3>
+        <pre><span class="lang">json</span><code>{ "high": ["abc1234", "def5678"] }</code></pre>
+        <p>Short hashes of the high-impact commits (possibly empty).</p>
+      </section>
+
+      <section>
+        <h2 id="output-format">Output article format</h2>
+        <p>
+          <code>writeArticle</code> emits YAML frontmatter followed by the
+          Markdown body. Daily fields: <code>date</code>, <code>repo</code>,
+          <code>size</code>, <code>title</code>, <code>excerpt</code>,
+          <code>commits</code>. Period articles additionally carry
+          <code>period</code>, <code>slug</code> (URL id), and
+          <code>period_label</code>. String values are quoted and
+          <code>"</code>-escaped.
+        </p>
+      </section>
+
+      <section>
+        <h2 id="tuning">Tuning constants (<code>digest/main.ts</code>)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Constant</th>
+                <th>Value</th>
+                <th>Effect</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>MAX_COMMITS</code></td>
+                <td><span class="badge">300</span></td>
+                <td>Max commits read per repo/day.</td>
+              </tr>
+              <tr>
+                <td><code>MAX_FILES_PER_COMMIT</code></td>
+                <td><span class="badge">25</span></td>
+                <td>Max file stats captured per commit.</td>
+              </tr>
+              <tr>
+                <td><code>TRIAGE_BYPASS_THRESHOLD</code></td>
+                <td><span class="badge">10</span></td>
+                <td>At/below this commit count, skip the triage call.</td>
+              </tr>
+              <tr>
+                <td><code>MAX_DIFF_COMMITS</code></td>
+                <td><span class="badge">8</span></td>
+                <td>Max commits that get a diff attached per day.</td>
+              </tr>
+              <tr>
+                <td><code>MAX_DIFF_LINES</code></td>
+                <td><span class="badge">120</span></td>
+                <td>Per-commit diff line cap.</td>
+              </tr>
+              <tr>
+                <td><code>DIFF_EXCLUDE</code></td>
+                <td><span class="badge">—</span></td>
+                <td>Path patterns whose diffs are dropped.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Diffs dominate token cost, so they are bounded by both count and
+          per-commit size; the triage call itself is comparatively cheap.
+        </p>
+      </section>
+
+      <footer>
+        Generated from <code>digest/SPEC.md</code> · Changelog digest generator
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const btn = document.getElementById("theme-toggle");
+        const stored = localStorage.getItem("spec-theme");
+        const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const setDark = (on) => {
+          root.classList.toggle("dark", on);
+          btn.textContent = on ? "☀️" : "🌙";
+        };
+        setDark(stored ? stored === "dark" : prefersDark);
+        btn.addEventListener("click", () => {
+          const on = !root.classList.contains("dark");
+          setDark(on);
+          localStorage.setItem("spec-theme", on ? "dark" : "light");
+        });
+      })();
+    </script>
+  </body>
+</html>
