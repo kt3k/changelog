@@ -459,7 +459,9 @@ async function selectHighCommits(
     }
     return high;
   } catch (e) {
-    console.error(`  triage failed (${e}); falling back to top-churn diffs`);
+    console.error(
+      `  triage [${model}] failed (${e}); falling back to top-churn diffs`,
+    );
     const top = [...commits].sort((a, b) => churn(b) - churn(a))
       .slice(0, MAX_DIFF_COMMITS);
     return new Set(top.map((c) => c.hash));
@@ -485,13 +487,31 @@ async function summarize(
   );
   const diffs = await collectDiffs(dir, commits, high);
   console.error(
-    `  triage: ${high.size} high-impact, ${diffs.size} diff(s) attached`,
+    `  triage [${models.triage}]: ${high.size} high-impact, ${diffs.size} diff(s) attached`,
   );
-  return callLLM(
-    models.write,
-    SYSTEM_PROMPT,
-    buildPrompt(entry.repo, date, commits, diffs),
+
+  // Dump every commit's impact classification (hash + title).
+  const line = (c: Commit) => `  ${c.hash.slice(0, 7)} ${c.subject}`;
+  const highCommits = commits.filter((c) => high.has(c.hash));
+  const lowCommits = commits.filter((c) => !high.has(c.hash));
+  console.error(
+    `HIGH-IMPACT (${highCommits.length}) [triage: ${models.triage}]:`,
   );
+  for (const c of highCommits) console.error(line(c));
+  console.error(`LOW-IMPACT (${lowCommits.length}):`);
+  for (const c of lowCommits) console.error(line(c));
+
+  // Dump the full write-stage prompt (model + system + user).
+  const writePrompt = buildPrompt(entry.repo, date, commits, diffs);
+  console.error("=".repeat(60));
+  console.error(`WRITE PROMPT [model: ${models.write}]`);
+  console.error("=".repeat(60));
+  console.error("--- system ---");
+  console.error(SYSTEM_PROMPT);
+  console.error("--- user ---");
+  console.error(writePrompt);
+
+  return callLLM(models.write, SYSTEM_PROMPT, writePrompt);
 }
 
 // --------------------------------------------------------------- output ----
