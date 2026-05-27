@@ -2,8 +2,9 @@
 /**
  * Changelog — daily digest generator.
  *
- * Daily:   clones each watched repo, extracts the previous day's commits, and
- *          asks an LLM for an impact-weighted summary (one article per repo/day).
+ * Daily:   clones each watched repo into `.cache/repos/` (reused & fetched on
+ *          later runs), extracts the previous day's commits, and asks an LLM for
+ *          an impact-weighted summary (one article per repo/day).
  * Weekly / monthly: aggregates the existing daily summaries for the most recent
  *          completed ISO week / calendar month into a higher-level summary.
  *
@@ -25,6 +26,7 @@ import { join } from "@std/path";
 import { ensureDir } from "@std/fs";
 
 const POSTS_DIR = "src/posts";
+const CACHE_DIR = ".cache/repos"; // project-local clones (git-ignored)
 const MAX_COMMITS = 300; // cap to keep token cost bounded
 const MAX_FILES_PER_COMMIT = 25;
 
@@ -61,10 +63,11 @@ interface Summary {
 // ---------------------------------------------------------------- args ----
 
 function parseArgs(args: string[]) {
-  const out: { date?: string; repo?: string; dryRun: boolean; period: Period } = {
-    dryRun: false,
-    period: "daily",
-  };
+  const out: { date?: string; repo?: string; dryRun: boolean; period: Period } =
+    {
+      dryRun: false,
+      period: "daily",
+    };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
     if (a === "--dry-run") out.dryRun = true;
@@ -110,61 +113,62 @@ async function git(cwd: string, ...args: string[]): Promise<string> {
 const US = "\x1f"; // unit separator (between fields)
 const RS = "\x1e"; // record separator (between commits)
 
+/**
+ * Ensure a project-local clone of `entry.repo` exists under CACHE_DIR and is
+ * up to date, then return its path. First run clones (blobless, to stay small);
+ * later runs just `git fetch`.
+ */
+async function ensureRepo(entry: RepoEntry): Promise<string> {
+  const dir = join(CACHE_DIR, slug(entry.repo));
+  const url = `https://github.com/${entry.repo}.git`;
+  try {
+    await Deno.stat(join(dir, ".git"));
+    await git(dir, "fetch", "--quiet", "--prune", "origin");
+  } catch {
+    await ensureDir(CACHE_DIR);
+    // blobless partial clone: full history, blobs fetched on demand.
+    await git(".", "clone", "--quiet", "--filter=blob:none", url, dir);
+  }
+  return dir;
+}
+
 async function collectCommits(
   entry: RepoEntry,
   date: string,
 ): Promise<Commit[]> {
-  const next = nextDay(date);
-  const tmp = await Deno.makeTempDir({ prefix: "oss-watch-" });
-  try {
-    const url = `https://github.com/${entry.repo}.git`;
-    const cloneArgs = [
-      "clone",
-      "--quiet",
-      `--shallow-since=${date}T00:00:00Z`,
-    ];
-    if (entry.branch) cloneArgs.push("--branch", entry.branch);
-    cloneArgs.push(url, tmp);
-    try {
-      await git(".", ...cloneArgs);
-    } catch {
-      // shallow-since can fail when the repo had no commits in the window.
-      return [];
-    }
+  const dir = await ensureRepo(entry);
+  const rev = entry.branch ? `origin/${entry.branch}` : "origin/HEAD";
+  const since = `${date}T00:00:00Z`;
+  const until = `${nextDay(date)}T00:00:00Z`;
+  const fmt = ["%H", "%an", "%aI", "%s", "%b"].join(US) + RS;
+  const log = await git(
+    dir,
+    "log",
+    rev,
+    `--since=${since}`,
+    `--until=${until}`,
+    `--date=iso-strict`,
+    `--pretty=format:${fmt}`,
+  );
 
-    const since = `${date}T00:00:00Z`;
-    const until = `${next}T00:00:00Z`;
-    const fmt = ["%H", "%an", "%aI", "%s", "%b"].join(US) + RS;
-    const log = await git(
-      tmp,
-      "log",
-      `--since=${since}`,
-      `--until=${until}`,
-      `--date=iso-strict`,
-      `--pretty=format:${fmt}`,
-    );
-
-    const commits: Commit[] = [];
-    for (const record of log.split(RS)) {
-      const r = record.trim();
-      if (!r) continue;
-      const [hash, author, cdate, subject, body = ""] = r.split(US);
-      if (!hash) continue;
-      const files = await fileStats(tmp, hash);
-      commits.push({
-        hash,
-        author,
-        date: cdate,
-        subject,
-        body: body.trim(),
-        files,
-      });
-      if (commits.length >= MAX_COMMITS) break;
-    }
-    return commits;
-  } finally {
-    await Deno.remove(tmp, { recursive: true }).catch(() => {});
+  const commits: Commit[] = [];
+  for (const record of log.split(RS)) {
+    const r = record.trim();
+    if (!r) continue;
+    const [hash, author, cdate, subject, body = ""] = r.split(US);
+    if (!hash) continue;
+    const files = await fileStats(dir, hash);
+    commits.push({
+      hash,
+      author,
+      date: cdate,
+      subject,
+      body: body.trim(),
+      files,
+    });
+    if (commits.length >= MAX_COMMITS) break;
   }
+  return commits;
 }
 
 async function fileStats(repoDir: string, hash: string): Promise<FileStat[]> {
@@ -199,7 +203,9 @@ function buildPrompt(repo: string, date: string, commits: Commit[]): string {
       .join(", ");
     lines.push(
       `- [${c.hash.slice(0, 7)}] ${c.subject}` +
-        (c.body ? `\n  body: ${c.body.replace(/\n+/g, " ").slice(0, 500)}` : "") +
+        (c.body
+          ? `\n  body: ${c.body.replace(/\n+/g, " ").slice(0, 500)}`
+          : "") +
         (stat ? `\n  files: ${stat}` : ""),
     );
   }
@@ -271,7 +277,11 @@ async function callLLM(system: string, user: string): Promise<Summary> {
   return parsed;
 }
 
-function summarize(repo: string, date: string, commits: Commit[]): Promise<Summary> {
+function summarize(
+  repo: string,
+  date: string,
+  commits: Commit[],
+): Promise<Summary> {
   return callLLM(SYSTEM_PROMPT, buildPrompt(repo, date, commits));
 }
 
@@ -309,20 +319,33 @@ interface PeriodTarget {
 }
 
 const MONTHS_LONG = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 const MONTHS_SHORT = MONTHS_LONG.map((m) => m.slice(0, 3));
 
 /** ISO week (Mon–Sun) containing `d`, as {year, week}. */
 function isoWeek(d: Date): { year: number; week: number } {
-  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const t = new Date(
+    Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
+  );
   const day = (t.getUTCDay() + 6) % 7; // Mon=0 … Sun=6
   t.setUTCDate(t.getUTCDate() - day + 3); // Thursday of this week
   const firstThu = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
   const fday = (firstThu.getUTCDay() + 6) % 7;
   firstThu.setUTCDate(firstThu.getUTCDate() - fday + 3);
-  const week = 1 + Math.round((t.getTime() - firstThu.getTime()) / (7 * 86400000));
+  const week = 1 +
+    Math.round((t.getTime() - firstThu.getTime()) / (7 * 86400000));
   return { year: t.getUTCFullYear(), week };
 }
 
@@ -345,18 +368,26 @@ function lastCompletedWeek(anchor: Date): PeriodTarget {
   const slug = `${year}-W${String(week).padStart(2, "0")}`;
   const sameMonth = start.getUTCMonth() === end.getUTCMonth();
   const label = sameMonth
-    ? `${MONTHS_SHORT[start.getUTCMonth()]} ${start.getUTCDate()}–${end.getUTCDate()}, ${end.getUTCFullYear()}`
-    : `${MONTHS_SHORT[start.getUTCMonth()]} ${start.getUTCDate()} – ${MONTHS_SHORT[end.getUTCMonth()]} ${end.getUTCDate()}, ${end.getUTCFullYear()}`;
+    ? `${
+      MONTHS_SHORT[start.getUTCMonth()]
+    } ${start.getUTCDate()}–${end.getUTCDate()}, ${end.getUTCFullYear()}`
+    : `${MONTHS_SHORT[start.getUTCMonth()]} ${start.getUTCDate()} – ${
+      MONTHS_SHORT[end.getUTCMonth()]
+    } ${end.getUTCDate()}, ${end.getUTCFullYear()}`;
   return { start, end, slug, label };
 }
 
 /** The most recently completed calendar month relative to `anchor`. */
 function lastCompletedMonth(anchor: Date): PeriodTarget {
-  const firstThis = new Date(Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth(), 1));
+  const firstThis = new Date(
+    Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth(), 1),
+  );
   const end = new Date(firstThis);
   end.setUTCDate(0); // last day of previous month
   const start = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1));
-  const slug = `${end.getUTCFullYear()}-${String(end.getUTCMonth() + 1).padStart(2, "0")}`;
+  const slug = `${end.getUTCFullYear()}-${
+    String(end.getUTCMonth() + 1).padStart(2, "0")
+  }`;
   const label = `${MONTHS_LONG[end.getUTCMonth()]} ${end.getUTCFullYear()}`;
   return { start, end, slug, label };
 }
@@ -397,7 +428,9 @@ async function collectDailyArticles(
 }
 
 function periodSystemPrompt(period: Period): string {
-  return `You are the editor of "Changelog". You are given the DAILY summaries for one open-source repository over a single calendar ${period === "weekly" ? "week" : "month"}. Synthesize them into ONE concise ${period} summary for developers.
+  return `You are the editor of "Changelog". You are given the DAILY summaries for one open-source repository over a single calendar ${
+    period === "weekly" ? "week" : "month"
+  }. Synthesize them into ONE concise ${period} summary for developers.
 
 Rules:
 - Do NOT just concatenate the days. Identify the ${period}'s most important themes and changes, merge related work across days, and tell the story of the ${period}.
@@ -476,13 +509,17 @@ async function runPeriod(
       continue;
     }
     const commits = articles.reduce((n, a) => n + a.commits, 0);
-    console.error(`  ${articles.length} daily summary(ies), ${commits} commits`);
+    console.error(
+      `  ${articles.length} daily summary(ies), ${commits} commits`,
+    );
 
     if (dryRun) {
       console.log("=".repeat(60));
       console.log(`${period.toUpperCase()} PROMPT for ${entry.repo}`);
       console.log("=".repeat(60));
-      console.log(buildPeriodPrompt(entry.repo, period, target.label, articles));
+      console.log(
+        buildPeriodPrompt(entry.repo, period, target.label, articles),
+      );
       continue;
     }
 
@@ -527,7 +564,9 @@ async function main() {
   }
 
   const day = date ?? yesterdayUTC();
-  console.error(`Changelog — daily digest for ${day} (${repos.length} repo(s))`);
+  console.error(
+    `Changelog — daily digest for ${day} (${repos.length} repo(s))`,
+  );
 
   for (const entry of repos) {
     console.error(`\n▶ ${entry.repo}`);
