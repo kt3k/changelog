@@ -30,6 +30,7 @@
 import { parse as parseYaml } from "@std/yaml";
 import { join } from "@std/path";
 import { ensureDir } from "@std/fs";
+import { Spinner } from "@std/cli/unstable-spinner";
 
 const POSTS_DIR = "src/posts";
 const CACHE_DIR = ".cache/repos"; // project-local clones (git-ignored)
@@ -171,6 +172,12 @@ const RS = "\x1e"; // record separator (between commits)
 async function ensureRepo(entry: RepoEntry): Promise<string> {
   const dir = join(CACHE_DIR, slug(entry.repo));
   const url = `https://github.com/${entry.repo}.git`;
+  const spinner = new Spinner({
+    message: `fetching ${entry.repo}`,
+    color: "yellow",
+    output: Deno.stderr,
+  });
+  spinner.start();
   try {
     await Deno.stat(join(dir, ".git"));
     await git(dir, "fetch", "--quiet", "--prune", "origin");
@@ -178,6 +185,8 @@ async function ensureRepo(entry: RepoEntry): Promise<string> {
     await ensureDir(CACHE_DIR);
     // blobless partial clone: full history, blobs fetched on demand.
     await git(".", "clone", "--quiet", "--filter=blob:none", url, dir);
+  } finally {
+    spinner.stop();
   }
   return dir;
 }
@@ -806,7 +815,17 @@ async function main() {
     console.error(`\n▶ ${entry.repo}`);
     const commits = await collectCommits(entry, day);
     if (commits.length === 0) {
-      console.error(`  no commits on ${day}, skipping`);
+      // No activity: still emit a metadata-only "no change" (size N) article so
+      // the day shows up (as empty) in the activity strip. No body, no LLM call.
+      const path = await writeArticle(`${day}_${slug(entry.repo)}`, {
+        date: day,
+        repo: entry.repo,
+        size: "N",
+        title: q("No changes"),
+        excerpt: q(""),
+        commits: 0,
+      }, "");
+      console.error(`  no commits on ${day}; ✓ wrote ${path} (size N)`);
       continue;
     }
     console.error(`  ${commits.length} commit(s)`);

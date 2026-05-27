@@ -1,5 +1,6 @@
 {
   "imports": {
+    "@std/cli": "jsr:@std/cli@^1.0.30",
     "lume/": "https://deno.land/x/lume@v3.2.5/",
     "@std/yaml": "jsr:@std/yaml@^1.0.9",
     "@std/path": "jsr:@std/path@^1.1.2",
