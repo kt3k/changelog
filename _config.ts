@@ -28,6 +28,36 @@ site.data("watched", watched);
 // Tailwind entry stylesheet (compiled by the tailwindcss plugin).
 site.add("/styles.css");
 
+// Linkify commit hashes in post bodies to their GitHub commit page. Summaries
+// reference short hashes per the prompt's `(abc1234)` convention (sometimes a
+// comma-separated group like `(2148214, 18b7c95, cab4feb)`); the repo comes
+// from the post's front matter. Matching only parenthesized hex groups avoids
+// touching hex that happens to appear elsewhere in the markup. Runs before the
+// external-link pass below so these links also get target="_blank".
+site.process([".html"], (pages) => {
+  for (const page of pages) {
+    const repo = page.data.repo as string | undefined;
+    if (!repo || page.data.type !== "post") continue;
+    // short hash → GitHub login, from the post's front matter (may be absent).
+    const byCommit = (page.data.commit_authors ?? {}) as Record<string, string>;
+    page.content = (page.content as string).replace(
+      /\(([0-9a-f]{7,40}(?:,\s*[0-9a-f]{7,40})*)\)/g,
+      (_m, group: string) =>
+        "(" +
+        group.replace(/[0-9a-f]{7,40}/g, (h) => {
+          const login = byCommit[h.slice(0, 7)];
+          // Prefix the resolved author's avatar (links to their profile).
+          const avatar = login
+            ? `<a href="https://github.com/${login}" title="${login}">` +
+              `<img class="commit-avatar" src="https://github.com/${login}.png?size=24" alt="${login}" loading="lazy" /></a>`
+            : "";
+          return `${avatar}<a href="https://github.com/${repo}/commit/${h}">${h}</a>`;
+        }) +
+        ")",
+    );
+  }
+});
+
 // Strip the `.html` extension from internal links so the address bar shows
 // clean, slash-less URLs (e.g. /denoland/deno/2026-05-25). The `.html` files
 // are still emitted; GitHub Pages serves them at the extensionless path.

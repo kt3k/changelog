@@ -24,11 +24,14 @@
  *   OPENAI_TRIAGE_MODEL triage model id (default: gpt-5.4-nano)
  *   OPENAI_WRITE_MODEL  write/summary model id (default: gpt-5.4-mini)
  *   OPENAI_BASE_URL     API base (default: https://api.openai.com/v1)
+ *   GH_TOKEN            GitHub token (or GITHUB_TOKEN) for resolving commit
+ *                       authors to GitHub logins via the API. Optional: without
+ *                       it, only `@users.noreply.github.com` authors resolve.
  *
  * CLI flags --triage-model / --write-model override the env vars.
  */
 import { parse as parseYaml } from "@std/yaml";
-import { join } from "@std/path";
+import { dirname, join } from "@std/path";
 import { ensureDir } from "@std/fs";
 import { Spinner } from "@std/cli/unstable-spinner";
 
@@ -70,6 +73,7 @@ interface FileStat {
 interface Commit {
   hash: string;
   author: string;
+  email: string;
   date: string;
   subject: string;
   body: string;
@@ -199,7 +203,7 @@ async function collectCommits(
   const rev = entry.branch ? `origin/${entry.branch}` : "origin/HEAD";
   const since = `${date}T00:00:00Z`;
   const until = `${nextDay(date)}T00:00:00Z`;
-  const fmt = ["%H", "%an", "%aI", "%s", "%b"].join(US) + RS;
+  const fmt = ["%H", "%an", "%ae", "%aI", "%s", "%b"].join(US) + RS;
   const log = await git(
     dir,
     "log",
@@ -214,12 +218,13 @@ async function collectCommits(
   for (const record of log.split(RS)) {
     const r = record.trim();
     if (!r) continue;
-    const [hash, author, cdate, subject, body = ""] = r.split(US);
+    const [hash, author, email, cdate, subject, body = ""] = r.split(US);
     if (!hash) continue;
     const files = await fileStats(dir, hash);
     commits.push({
       hash,
       author,
+      email,
       date: cdate,
       subject,
       body: body.trim(),
@@ -310,6 +315,111 @@ async function collectDiffs(
     if (d) diffs.set(c.hash, d);
   }
   return diffs;
+}
+
+// ------------------------------------------------------------- authors ----
+
+// Cache of commit-email → GitHub login, persisted across runs (git-ignored).
+// "" is a remembered miss (only stored when we actually queried the API).
+const AUTHOR_CACHE = ".cache/authors.json";
+
+async function loadAuthorCache(): Promise<Map<string, string>> {
+  try {
+    const obj = JSON.parse(await Deno.readTextFile(AUTHOR_CACHE)) as Record<
+      string,
+      string
+    >;
+    return new Map(Object.entries(obj));
+  } catch {
+    return new Map();
+  }
+}
+
+async function saveAuthorCache(cache: Map<string, string>): Promise<void> {
+  await ensureDir(dirname(AUTHOR_CACHE));
+  const obj = Object.fromEntries([...cache].sort());
+  await Deno.writeTextFile(AUTHOR_CACHE, JSON.stringify(obj, null, 2) + "\n");
+}
+
+/** GitHub login embedded in a `…@users.noreply.github.com` email, else "". */
+function loginFromEmail(email: string): string {
+  const m = email.match(/^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$/i);
+  return m ? m[1] : "";
+}
+
+/** Look up the GitHub login that authored `sha` via the API ("" on failure). */
+async function loginFromApi(
+  repo: string,
+  sha: string,
+  token: string,
+): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/commits/${sha}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+          "User-Agent": "changelog-digest",
+        },
+      },
+    );
+    if (!res.ok) {
+      console.error(`  author lookup ${sha.slice(0, 7)} → ${res.status}`);
+      return "";
+    }
+    const data = await res.json();
+    return typeof data.author?.login === "string" ? data.author.login : "";
+  } catch (e) {
+    console.error(`  author lookup ${sha.slice(0, 7)} failed (${e})`);
+    return "";
+  }
+}
+
+interface AuthorInfo {
+  /** Distinct logins, most commits first (first-seen order breaks ties). */
+  authors: string[];
+  /** Short hash (7 chars, as shown in the body) → login, resolved only. */
+  byCommit: Record<string, string>;
+}
+
+/**
+ * Resolve the GitHub authors of `commits`. Each commit email is matched against
+ * its noreply form first (no network), then the GitHub API (needs GH_TOKEN/
+ * GITHUB_TOKEN). Resolutions are cached by email across runs; unresolved emails
+ * are left uncached when no token was available so a later run can retry.
+ * Commits whose author can't be resolved are dropped from both outputs.
+ */
+async function resolveAuthors(
+  repo: string,
+  commits: Commit[],
+  cache: Map<string, string>,
+): Promise<AuthorInfo> {
+  const token = Deno.env.get("GH_TOKEN") ?? Deno.env.get("GITHUB_TOKEN") ?? "";
+  const byCommit: Record<string, string> = {};
+  const counts = new Map<string, number>();
+  const order: string[] = []; // first-seen order, for stable tie-breaking
+  for (const c of commits) {
+    const key = c.email.toLowerCase();
+    let login = cache.get(key);
+    if (login === undefined) {
+      login = loginFromEmail(c.email);
+      if (login) {
+        cache.set(key, login);
+      } else if (token) {
+        login = await loginFromApi(repo, c.hash, token);
+        cache.set(key, login); // remember the miss too, to avoid re-querying
+      }
+    }
+    if (!login) continue;
+    byCommit[c.hash.slice(0, 7)] = login;
+    if (!counts.has(login)) order.push(login);
+    counts.set(login, (counts.get(login) ?? 0) + 1);
+  }
+  // Stable sort by commit count desc keeps first-seen order within equal counts.
+  const authors = [...order].sort((a, b) => counts.get(b)! - counts.get(a)!);
+  return { authors, byCommit };
 }
 
 // ----------------------------------------------------------------- llm ----
@@ -811,6 +921,8 @@ async function main() {
       `triage=${models.triage} write=${models.write}`,
   );
 
+  const authorCache = await loadAuthorCache();
+
   for (const entry of repos) {
     console.error(`\n▶ ${entry.repo}`);
     const commits = await collectCommits(entry, day);
@@ -849,16 +961,41 @@ async function main() {
     }
 
     const summary = await summarize(entry, day, commits, models);
-    const path = await writeArticle(`${day}_${slug(entry.repo)}`, {
+    const { authors, byCommit } = await resolveAuthors(
+      entry.repo,
+      commits,
+      authorCache,
+    );
+    console.error(`  ${authors.length} author(s) resolved`);
+    const fields: Record<string, string | number> = {
       date: day,
       repo: entry.repo,
       size: summary.size,
       title: q(summary.headline),
       excerpt: q(summary.excerpt),
       commits: commits.length,
-    }, summary.body);
+    };
+    // YAML flow collections. Logins are safe unquoted (alnum + hyphen); hash
+    // keys are quoted so all-digit short hashes aren't parsed as numbers.
+    if (authors.length) fields.authors = `[${authors.join(", ")}]`;
+    // Only commits the summary actually cites get an inline avatar; drop the rest.
+    const ca = Object.entries(byCommit).filter(([h]) =>
+      summary.body.includes(h)
+    );
+    if (ca.length) {
+      fields.commit_authors = `{${
+        ca.map(([h, l]) => `"${h}": ${l}`).join(", ")
+      }}`;
+    }
+    const path = await writeArticle(
+      `${day}_${slug(entry.repo)}`,
+      fields,
+      summary.body,
+    );
     console.error(`  ✓ wrote ${path}`);
   }
+
+  await saveAuthorCache(authorCache);
 }
 
 if (import.meta.main) {

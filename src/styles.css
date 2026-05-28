@@ -66,6 +66,15 @@
   border-left: 3px solid var(--color-accent);
   font-style: italic;
 }
+.post-body .commit-avatar {
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 9999px;
+  vertical-align: text-bottom;
+  margin-right: 0.2em;
+  background: var(--color-surface);
+}
 .post-body code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
