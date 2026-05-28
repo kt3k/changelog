@@ -54,8 +54,9 @@ deno task build   # outputs to _site/
 
 ## Deploy (GitHub Pages)
 
-The `Daily digest` workflow runs at 06:00 UTC, commits any new posts, builds the
-site, and deploys to Pages. To enable it:
+The `Digest` workflow runs at 06:00 UTC: it generates the daily digest (plus a
+weekly rollup on Mondays and a monthly one on the 1st), commits any new posts,
+builds the site, and deploys to Pages. To enable it:
 
 1. Repo **Settings → Pages → Source: GitHub Actions**.
 2. Add an `OPENAI_API_KEY` repository **secret**.

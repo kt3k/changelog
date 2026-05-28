@@ -34,6 +34,7 @@
     "jsr:@std/text@^1.0.17": "1.0.18",
     "jsr:@std/toml@1.0.11": "1.0.11",
     "jsr:@std/toml@^1.0.3": "1.0.11",
+    "jsr:@std/yaml@*": "1.1.1",
     "jsr:@std/yaml@1.1.0": "1.1.0",
     "jsr:@std/yaml@^1.0.5": "1.1.1",
     "jsr:@std/yaml@^1.0.9": "1.1.1",

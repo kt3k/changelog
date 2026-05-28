@@ -1,14 +1,21 @@
-name: Daily digest
+name: Digest
 
 on:
   schedule:
-    # 06:00 UTC daily — summarizes the previous UTC day.
+    # 06:00 UTC daily — summarizes the previous UTC day. On Mondays it also rolls
+    # up the completed ISO week; on the 1st, the completed calendar month.
     - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
       date:
-        description: "Date to summarize (YYYY-MM-DD, UTC). Defaults to yesterday."
+        description: "Date to summarize/anchor (YYYY-MM-DD, UTC). Defaults to yesterday."
         required: false
+      period:
+        description: "Digest period for manual runs."
+        required: false
+        type: choice
+        options: [daily, weekly, monthly]
+        default: daily
 
 # Needed to push generated posts and to publish to GitHub Pages.
 permissions:
@@ -18,7 +25,7 @@ permissions:
 
 # Avoid overlapping runs racing on the same branch / Pages deployment.
 concurrency:
-  group: daily-digest
+  group: digest
   cancel-in-progress: false
 
 jobs:
@@ -36,11 +43,33 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_TRIAGE_MODEL: ${{ vars.OPENAI_TRIAGE_MODEL || 'gpt-5.4-nano' }}
           OPENAI_WRITE_MODEL: ${{ vars.OPENAI_WRITE_MODEL || 'gpt-5.4-mini' }}
+          # Lets the digest resolve commit authors to GitHub logins via the API
+          # (public-repo reads). Without it only noreply-email authors resolve.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT: ${{ github.event_name }}
+          DATE: ${{ github.event.inputs.date }}
+          PERIOD: ${{ github.event.inputs.period }}
         run: |
-          if [ -n "${{ github.event.inputs.date }}" ]; then
-            deno task digest --date "${{ github.event.inputs.date }}"
+          if [ "$EVENT" = "workflow_dispatch" ] && [ -n "$PERIOD" ] && [ "$PERIOD" != "daily" ]; then
+            # Manual period rollup (optionally anchored to a date).
+            if [ -n "$DATE" ]; then
+              deno task digest --period "$PERIOD" --date "$DATE"
+            else
+              deno task digest --period "$PERIOD"
+            fi
           else
-            deno task digest
+            # Daily run (optionally for a specific date).
+            if [ -n "$DATE" ]; then
+              deno task digest --date "$DATE"
+            else
+              deno task digest
+            fi
+            # Scheduled rollups over the daily posts just generated: weekly on
+            # Mondays (completed ISO week), monthly on the 1st (completed month).
+            if [ "$EVENT" = "schedule" ]; then
+              if [ "$(date -u +%u)" = "1" ]; then deno task digest --period weekly; fi
+              if [ "$(date -u +%d)" = "01" ]; then deno task digest --period monthly; fi
+            fi
           fi
 
       - name: Commit new posts
