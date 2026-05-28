@@ -66,6 +66,9 @@
   border-left: 3px solid var(--color-accent);
   font-style: italic;
 }
+.post-body .commit-ref {
+  white-space: nowrap;
+}
 .post-body .commit-avatar {
   display: inline-block;
   width: 1.05em;

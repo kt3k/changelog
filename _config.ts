@@ -40,20 +40,31 @@ site.process([".html"], (pages) => {
     if (!repo || page.data.type !== "post") continue;
     // short hash → GitHub login, from the post's front matter (may be absent).
     const byCommit = (page.data.commit_authors ?? {}) as Record<string, string>;
+    // Render one hash as its commit link, prefixed with the author's avatar
+    // (linking to their profile) when resolved.
+    const render = (h: string) => {
+      const link = `<a href="https://github.com/${repo}/commit/${h}">${h}</a>`;
+      const login = byCommit[h.slice(0, 7)];
+      if (!login) return link;
+      return `<a href="https://github.com/${login}" title="${login}">` +
+        `<img class="commit-avatar" src="https://github.com/${login}.png?size=24" alt="${login}" loading="lazy" /></a>` +
+        link;
+    };
     page.content = (page.content as string).replace(
       /\(([0-9a-f]{7,40}(?:,\s*[0-9a-f]{7,40})*)\)/g,
-      (_m, group: string) =>
-        "(" +
-        group.replace(/[0-9a-f]{7,40}/g, (h) => {
-          const login = byCommit[h.slice(0, 7)];
-          // Prefix the resolved author's avatar (links to their profile).
-          const avatar = login
-            ? `<a href="https://github.com/${login}" title="${login}">` +
-              `<img class="commit-avatar" src="https://github.com/${login}.png?size=24" alt="${login}" loading="lazy" /></a>`
-            : "";
-          return `${avatar}<a href="https://github.com/${repo}/commit/${h}">${h}</a>`;
-        }) +
-        ")",
+      (_m, group: string) => {
+        const hashes = group.split(/,\s*/);
+        // Glue the parens to their adjacent tokens and keep each avatar+hash
+        // together; allow a line break only at the commas between tokens. Each
+        // piece is a `white-space: nowrap` span.
+        return hashes
+          .map((h, i) => {
+            const open = i === 0 ? "(" : "";
+            const close = i === hashes.length - 1 ? ")" : "";
+            return `<span class="commit-ref">${open}${render(h)}${close}</span>`;
+          })
+          .join(", ");
+      },
     );
   }
 });

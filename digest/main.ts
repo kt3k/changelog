@@ -18,6 +18,8 @@
  *   deno task digest --period monthly      # last completed calendar month
  *   deno task digest --dry-run             # print the prompt, don't call the API
  *   deno task digest --triage-model gpt-5.4-nano --write-model gpt-5.4-mini
+ *   deno task digest --backfill-authors    # add authors to existing posts only
+ *                                          # (no API/summary regeneration)
  *
  * Env:
  *   OPENAI_API_KEY      required (unless --dry-run)
@@ -105,9 +107,11 @@ function parseArgs(args: string[]) {
     period: Period;
     triageModel?: string;
     writeModel?: string;
+    backfillAuthors: boolean;
   } = {
     dryRun: false,
     period: "daily",
+    backfillAuthors: false,
   };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
@@ -117,6 +121,7 @@ function parseArgs(args: string[]) {
     else if (a === "--period") out.period = args[++i] as Period;
     else if (a === "--triage-model") out.triageModel = args[++i];
     else if (a === "--write-model") out.writeModel = args[++i];
+    else if (a === "--backfill-authors") out.backfillAuthors = true;
   }
   return out;
 }
@@ -412,7 +417,10 @@ async function resolveAuthors(
         cache.set(key, login); // remember the miss too, to avoid re-querying
       }
     }
-    if (!login) continue;
+    // Skip GitHub App bots (e.g. "dependabot[bot]"): no usable avatar, and the
+    // brackets would break the YAML flow collections we emit. Resolution is
+    // still cached above, so we don't re-query them.
+    if (!login || login.endsWith("[bot]")) continue;
     byCommit[c.hash.slice(0, 7)] = login;
     if (!counts.has(login)) order.push(login);
     counts.set(login, (counts.get(login) ?? 0) + 1);
@@ -888,6 +896,60 @@ async function runPeriod(
   }
 }
 
+// -------------------------------------------------------------- backfill ----
+
+/**
+ * Add `authors`/`commit_authors` to existing daily posts WITHOUT regenerating
+ * their summaries. Re-collects each post's commits from git, resolves authors,
+ * and rewrites only the front matter (the body is left byte-for-byte intact).
+ * Idempotent: any prior author fields are replaced. Respects --repo / --date.
+ */
+async function backfillAuthors(repos: RepoEntry[], filterDate?: string) {
+  const entryByRepo = new Map(repos.map((e) => [e.repo, e]));
+  const cache = await loadAuthorCache();
+  let updated = 0;
+  for await (const e of Deno.readDir(POSTS_DIR)) {
+    if (!e.isFile || !e.name.endsWith(".md")) continue;
+    const path = join(POSTS_DIR, e.name);
+    const text = await Deno.readTextFile(path);
+    const m = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (!m) continue;
+    // Drop any prior author fields BEFORE parsing, so a previously-written
+    // (possibly malformed) value can't break the YAML parse or re-appear.
+    const fmLines = m[1].split("\n").filter((l) =>
+      !/^(authors|commit_authors):/.test(l)
+    );
+    const data = parseYaml(fmLines.join("\n")) as Record<string, unknown>;
+    if ((data.period ?? "daily") !== "daily") continue; // daily posts only
+    const repo = data.repo as string | undefined;
+    const entry = repo && entryByRepo.get(repo);
+    if (!entry) continue; // not a watched repo (or filtered out by --repo)
+    const date = ymd(new Date(data.date as string));
+    if (filterDate && date !== filterDate) continue;
+    if (Number(data.commits ?? 0) === 0) continue; // no-change post: nothing to do
+
+    console.error(`▶ ${repo} ${date}`);
+    const commits = await collectCommits(entry, date);
+    const { authors, byCommit } = await resolveAuthors(repo, commits, cache);
+    const body = m[2];
+    const cited = Object.entries(byCommit).filter(([h]) => body.includes(h));
+
+    // Re-emit: existing lines (already minus author fields) + fresh ones, with
+    // the original body byte-for-byte unchanged.
+    if (authors.length) fmLines.push(`authors: [${authors.join(", ")}]`);
+    if (cited.length) {
+      fmLines.push(
+        `commit_authors: {${cited.map(([h, l]) => `"${h}": ${l}`).join(", ")}}`,
+      );
+    }
+    await Deno.writeTextFile(path, `---\n${fmLines.join("\n")}\n---\n${body}`);
+    console.error(`  ${authors.length} author(s); ✓ ${path}`);
+    updated++;
+  }
+  await saveAuthorCache(cache);
+  console.error(`\nBackfilled ${updated} post(s).`);
+}
+
 // ----------------------------------------------------------------- main ----
 
 async function loadRepos(filter?: string): Promise<RepoEntry[]> {
@@ -907,6 +969,11 @@ async function main() {
   if (repos.length === 0) {
     console.error("No repositories to watch (check repos.yml / --repo).");
     Deno.exit(1);
+  }
+
+  if (args.backfillAuthors) {
+    await backfillAuthors(repos, date);
+    return;
   }
 
   if (period !== "daily") {
