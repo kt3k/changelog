@@ -879,6 +879,24 @@ async function runPeriod(
       `  ${articles.length} daily summary(ies), ${commits} commits`,
     );
 
+    if (commits === 0) {
+      // No activity across the whole period: emit a metadata-only size N
+      // article (excluded from listings), mirroring the daily no-change path.
+      // No LLM call.
+      if (dryRun) {
+        console.error(`  no commits in range (would write size N)`);
+        continue;
+      }
+      const path = await writePeriodArticle(entry.repo, period, target, 0, {
+        headline: "No changes",
+        excerpt: "",
+        size: "N",
+        body: "",
+      });
+      console.error(`  no commits in range; ✓ wrote ${path} (size N)`);
+      continue;
+    }
+
     if (dryRun) {
       console.log("=".repeat(60));
       console.log(`${period.toUpperCase()} PROMPT for ${entry.repo}`);
