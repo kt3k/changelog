@@ -36,6 +36,7 @@ import { parse as parseYaml } from "@std/yaml";
 import { dirname, join } from "@std/path";
 import { ensureDir } from "@std/fs";
 import { Spinner } from "@std/cli/unstable-spinner";
+import { retry } from "@std/async/retry";
 
 const POSTS_DIR = "src/posts";
 const CACHE_DIR = ".cache/repos"; // project-local clones (git-ignored)
@@ -157,17 +158,25 @@ function nextDay(date: string): string {
 const decoder = new TextDecoder();
 
 async function git(cwd: string, ...args: string[]): Promise<string> {
-  const cmd = new Deno.Command("git", {
-    args,
-    cwd,
-    stdout: "piped",
-    stderr: "piped",
-  });
-  const { code, stdout, stderr } = await cmd.output();
-  if (code !== 0) {
-    throw new Error(`git ${args.join(" ")} failed:\n${decoder.decode(stderr)}`);
-  }
-  return decoder.decode(stdout);
+  // Retry transient failures — chiefly the on-demand blob fetches a blobless
+  // clone makes for `show`/`--numstat`, which flake under load (GitHub
+  // throttling, resets). Initial attempt + 2 retries; if all fail, the error
+  // propagates and the run aborts.
+  return await retry(async () => {
+    const cmd = new Deno.Command("git", {
+      args,
+      cwd,
+      stdout: "piped",
+      stderr: "piped",
+    });
+    const { code, stdout, stderr } = await cmd.output();
+    if (code !== 0) {
+      throw new Error(
+        `git ${args.join(" ")} failed:\n${decoder.decode(stderr)}`,
+      );
+    }
+    return decoder.decode(stdout);
+  }, { maxAttempts: 3 });
 }
 
 const US = "\x1f"; // unit separator (between fields)

@@ -5,10 +5,12 @@
     "jsr:@cliffy/flags@1.1.0": "1.1.0",
     "jsr:@cliffy/internal@1.1.0": "1.1.0",
     "jsr:@cliffy/table@1.1.0": "1.1.0",
+    "jsr:@std/async@^1.4.0": "1.4.0",
     "jsr:@std/cli@1.0.29": "1.0.29",
     "jsr:@std/cli@^1.0.29": "1.0.30",
     "jsr:@std/cli@^1.0.30": "1.0.30",
     "jsr:@std/collections@^1.1.3": "1.2.0",
+    "jsr:@std/data-structures@^1.1.0": "1.1.0",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/fmt@1.0.10": "1.0.10",
     "jsr:@std/fmt@^1.0.10": "1.0.10",
@@ -75,6 +77,12 @@
         "jsr:@std/fmt@^1.0.9"
       ]
     },
+    "@std/async@1.4.0": {
+      "integrity": "4d70b008634f571cff9b554090d628c76141c32613aae0ff283fd5fa23d0c379",
+      "dependencies": [
+        "jsr:@std/data-structures"
+      ]
+    },
     "@std/cli@1.0.29": {
       "integrity": "fa4ef29130baa834d8a13b7d138240c3a2fcfba740bfb7afa646a360a15ec84f"
     },
@@ -90,6 +98,9 @@
     },
     "@std/collections@1.2.0": {
       "integrity": "47627a21d3a13138b77fd0e4d790ba9d2e603c3510b686cde6b132fe9aa98a88"
+    },
+    "@std/data-structures@1.1.0": {
+      "integrity": "c35ae4ad5d8e41a38573c2fe3e19b18ea2505f63cfea201edcb8720aca1f7f58"
     },
     "@std/encoding@1.0.10": {
       "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
@@ -784,6 +795,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/async@^1.4.0",
       "jsr:@std/cli@^1.0.30",
       "jsr:@std/fs@^1.0.19",
       "jsr:@std/path@^1.1.2",
