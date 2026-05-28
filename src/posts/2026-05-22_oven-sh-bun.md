@@ -5,6 +5,8 @@ size: L
 title: "Security, parser, and shell fixes land"
 excerpt: "Bun tightens VM sandbox isolation, fixes parser panics and YAML/YAML-like edge cases, hardens shell globbing, and upgrades WebKit."
 commits: 13
+authors: [robobun, Jarred-Sumner, alii, sosukesuzuki, dylan-conway]
+commit_authors: {"3219132": robobun, "7b34ff6": alii, "e5db584": Jarred-Sumner, "f7a2e06": robobun, "b8c19a7": robobun, "82cf7dc": robobun, "e0b291a": sosukesuzuki, "346ce08": dylan-conway}
 ---
 
 ### **Sandboxed vm globals now keep their own Object.prototype** (7b34ff6)

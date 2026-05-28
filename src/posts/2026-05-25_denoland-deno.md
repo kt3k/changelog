@@ -5,6 +5,8 @@ size: L
 title: "Timers, upgrades, and bug fixes land across Deno"
 excerpt: "Multiple user-facing fixes: web timers were rebuilt on core timers, delta upgrades compressed patches, and several runtime/type bugs were patched."
 commits: 13
+authors: [bartlomieju, divybot, turtletongue, lunadogbot]
+commit_authors: {"f9182b4": bartlomieju, "860acab": bartlomieju, "a865b21": bartlomieju, "96aeaf2": bartlomieju, "5d41c46": bartlomieju, "31969b4": bartlomieju, "e4c2fff": bartlomieju, "5bd5a3b": turtletongue, "728239f": bartlomieju, "54179d8": divybot, "64f41ef": lunadogbot, "0204e21": divybot}
 ---
 
 ### **Web timers now run directly on core timers** (860acab)

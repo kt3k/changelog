@@ -5,6 +5,8 @@ size: L
 title: "Cross-compiled macOS builds and hardening land"
 excerpt: "macOS binaries now cross-compile from Linux, while the day also brings performance work, crash fixes, and broad input hardening."
 commits: 11
+authors: [robobun, Jarred-Sumner]
+commit_authors: {"e262c99": robobun, "984bc1e": robobun, "cd1ad59": Jarred-Sumner, "fc26825": robobun, "8e6eefd": robobun, "1c6597b": robobun, "1950a3a": robobun, "7bd0861": robobun}
 ---
 
 ### **Cross-compiling macOS binaries from Linux** (8e6eefd)

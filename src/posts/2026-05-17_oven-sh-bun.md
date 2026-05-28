@@ -5,6 +5,8 @@ size: L
 title: "Bun gains Miri, fixes install dedupe, and tightens UB"
 excerpt: "New Miri support and several UB/perf fixes landed, plus install now reuses existing folder/tarball entries instead of duplicating package.json keys."
 commits: 7
+authors: [Jarred-Sumner, robobun, ldkhang1201, robjtede]
+commit_authors: {"80a06a8": Jarred-Sumner, "035add3": robobun, "655398c": ldkhang1201, "c7a7579": Jarred-Sumner, "172afa5": Jarred-Sumner, "945b894": Jarred-Sumner, "112f305": robjtede}
 ---
 
 ### **Add cargo-miri support and fix HiveArray aliasing UB** (80a06a8)

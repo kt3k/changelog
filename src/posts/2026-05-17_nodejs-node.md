@@ -5,6 +5,8 @@ size: L
 title: "Crypto WebCrypto gains BoringSSL parity"
 excerpt: "Node added BoringSSL-backed WebCrypto for ML-DSA, ML-KEM, ChaCha20-Poly1305, and AES-KW, plus stream iter fast paths and fixes."
 commits: 11
+authors: [trivikr, panva, marcopiraccini, aduh95, LiviaMedeiros]
+commit_authors: {"1f371fc": trivikr, "bc90667": trivikr, "d6be715": marcopiraccini, "550f195": panva, "be9f78f": panva, "0743198": panva, "0ed1d94": panva, "5a8882a": aduh95, "a9b0a83": LiviaMedeiros, "265679b": trivikr, "f8e8eb8": trivikr}
 ---
 
 ### **WebCrypto now supports more BoringSSL-backed algorithms** (550f195, be9f78f, 0743198)

@@ -5,6 +5,8 @@ size: M
 title: "Node.js tightens probes and stream adapters"
 excerpt: "Probe failures now surface clearly, Writable.toWeb avoids a drain race, and npm 11.15.0 plus FFI and build docs were updated."
 commits: 8
+authors: [npm-cli-bot, aduh95, Renegade334, watilde, MikeMcC399, joyeecheung, atlowChemi, Han5991]
+commit_authors: {"ca37665": Renegade334, "3553a34": joyeecheung, "7e7bde8": Han5991}
 ---
 
 ### **Debugger probe failures now surface reliably** (3553a34)

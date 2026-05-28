@@ -5,6 +5,8 @@ size: L
 title: "Node compat gets TLS, V8, and HTTP upgrades"
 excerpt: "Major Node polyfills landed for compile cache, GC profiling, startupSnapshot, TLS/socket behavior, and async_hooks-compatible HTTP server handling."
 commits: 31
+authors: [divybot, bartlomieju, littledivy, fibibot, lunadogbot]
+commit_authors: {"2270082": littledivy, "bcd6e4f": bartlomieju, "cee2067": bartlomieju, "88dbd89": bartlomieju, "6dca921": divybot, "dc3a0e5": littledivy, "d9cec98": divybot, "105a9b0": divybot, "d71f9a7": littledivy, "01e228d": divybot, "04cbd8c": divybot, "898ed17": divybot, "19e63a0": divybot, "a7fb5ef": divybot, "07eb330": divybot, "41523bf": bartlomieju, "ff55026": bartlomieju, "917b232": fibibot, "8ea25a3": bartlomieju, "2668e09": bartlomieju, "c2b5033": fibibot, "57d43c5": lunadogbot, "98ce50c": fibibot, "9346ea7": bartlomieju, "a38a98b": bartlomieju, "c41feee": divybot, "f828b5b": divybot, "a9bc206": divybot, "eb042fb": divybot, "ffd7a57": divybot, "565302b": divybot}
 ---
 
 ### **Node compatibility broadens across core APIs**

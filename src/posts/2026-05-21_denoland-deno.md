@@ -5,6 +5,8 @@ size: L
 title: "CLI gains watch mode and new install defaults"
 excerpt: "Deno added watch support to check, smarter audit/install CLI parsing, API typings, and a few targeted perf/fix wins."
 commits: 10
+authors: [bartlomieju, nathanwhitbot, nathanwhit, jbg, turtletongue]
+commit_authors: {"8266125": nathanwhit, "3e3430b": nathanwhitbot, "663d8a0": bartlomieju, "67b4248": bartlomieju, "f1a7e4e": bartlomieju, "0eb9b05": jbg, "99babcf": turtletongue, "0b6cd36": bartlomieju, "1ebc47a": nathanwhit, "d3ec5aa": nathanwhitbot}
 ---
 
 ### **`deno check` now supports `--watch`** (67b4248)

@@ -5,6 +5,8 @@ size: M
 title: "Node 26.2 lands with Thin LTO and WebCrypto updates"
 excerpt: "Release 26.2.0 ships, Windows builds switch to Thin LTO, and WebCrypto WPT coverage expands for ML-KEM serialization/imports."
 commits: 8
+authors: [nodejs-github-bot, aduh95, trivikr, StefanStojanovic, Renegade334]
+commit_authors: {"614050b": StefanStojanovic, "b5659d1": nodejs-github-bot, "d955896": aduh95}
 ---
 
 ### **Node 26.2.0 release notes published** (d955896)

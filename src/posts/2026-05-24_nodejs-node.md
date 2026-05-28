@@ -5,6 +5,8 @@ size: M
 title: "Test runner retry bug fixed; FFI API cleaned up"
 excerpt: "A retry-state bug could hide real failures, while FFI signature fields were renamed and test runner watch behavior got more reliable."
 commits: 10
+authors: [aduh95, trivikr, marcopiraccini, MoLow, avivkeller, Renegade334, atlowChemi]
+commit_authors: {"1dbea7a": trivikr, "e98f2ba": trivikr, "c58e5a1": marcopiraccini, "1ddb754": MoLow, "8bc9547": avivkeller, "d79aad8": aduh95, "8c3e9bd": aduh95, "7a9feef": aduh95, "df09b2a": Renegade334, "74ccf38": atlowChemi}
 ---
 
 **`--test-rerun-failures` no longer swallows retry failures** (74ccf38)

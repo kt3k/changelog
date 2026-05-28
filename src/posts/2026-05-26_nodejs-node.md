@@ -5,6 +5,8 @@ size: L
 title: "Permission drop lands; crypto and cert updates"
 excerpt: "Node adds runtime permission revocation, refreshes root certs, and fixes a crypto -0 crash alongside several docs and tooling updates."
 commits: 14
+authors: [RafaelGSS, nodejs-github-bot, araujogui, kovan, panva, trivikr, MoLow, aduh95, StefanStojanovic, joyeecheung, ljharb]
+commit_authors: {"3393399": ljharb, "956e2a2": RafaelGSS, "8bb63ed": nodejs-github-bot}
 ---
 
 ### **Add `process.permission.drop()` to revoke permissions at runtime** (956e2a2)

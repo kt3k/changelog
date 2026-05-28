@@ -5,6 +5,8 @@ size: L
 title: "SIMD decoding, LTO, and cross-builds land"
 excerpt: "Bun added SIMD hex/base64 paths, fixed several correctness bugs, and expanded Linux cross-compilation and LTO support."
 commits: 16
+authors: [robobun, Jarred-Sumner]
+commit_authors: {"2148214": robobun, "4324120": robobun, "18b7c95": robobun, "99f4679": robobun, "f958cbd": robobun, "c78d08f": Jarred-Sumner, "a6a5614": robobun, "4c954ab": robobun, "19dd34d": robobun, "cab4feb": robobun, "ec68d39": Jarred-Sumner, "0b1e7e5": robobun, "146afa3": robobun, "0974d03": Jarred-Sumner, "9e6a19b": Jarred-Sumner, "29f1f7c": Jarred-Sumner}
 ---
 
 **Buffer decoding gets faster and more permissive** (2148214, 18b7c95, cab4feb)

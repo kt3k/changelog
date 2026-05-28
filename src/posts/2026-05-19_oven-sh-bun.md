@@ -5,6 +5,8 @@ size: L
 title: "Bun lands import defer and SQL fix"
 excerpt: "Stage 3 deferred imports ship, MySQL MEDIUMINT decoding is fixed, and several runtime leaks and perf issues were cleaned up."
 commits: 53
+authors: [Jarred-Sumner, alii, robobun, paperclover, dylan-conway]
+commit_authors: {"2017304": robobun, "1d227bf": Jarred-Sumner, "1154d7e": Jarred-Sumner, "184d037": robobun, "4a8a093": alii, "2f15816": alii, "08f4ab4": alii, "05a7a5c": alii}
 ---
 
 ### **Implement static `import defer` support** (184d037)

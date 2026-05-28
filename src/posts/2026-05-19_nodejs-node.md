@@ -5,6 +5,8 @@ size: M
 title: "Node tightens crypto, streams, and source maps"
 excerpt: "Crypto verify accepts more buffer-like inputs, streams fix write/termination semantics, and SourceMap payloads are now frozen."
 commits: 15
+authors: [nodejs-github-bot, trivikr, joao-oliveira-softtor, ovflowd, samuel871211, MikeMcC399, watilde, Anshikakalpana, Renegade334, ikeyan]
+commit_authors: {"0c7034f": joao-oliveira-softtor, "4f4077a": ovflowd, "5605f6b": samuel871211, "46e17c7": MikeMcC399, "0b5b189": trivikr, "b1387e6": watilde, "57ee682": trivikr, "7acaa0f": Anshikakalpana, "21a92e8": nodejs-github-bot, "f352556": Renegade334, "d2b6840": nodejs-github-bot, "783b382": ikeyan, "2ebf533": nodejs-github-bot, "55920df": nodejs-github-bot}
 ---
 
 **Crypto verify now accepts ArrayBuffer and SharedArrayBuffer inputs** (7acaa0f)

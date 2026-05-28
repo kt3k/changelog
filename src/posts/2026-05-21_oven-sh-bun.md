@@ -5,6 +5,8 @@ size: L
 title: "Security hardening and crash fixes land"
 excerpt: "Bun tightened request handling, fixed two rare Linux crash paths, and corrected macOS statfs results."
 commits: 4
+authors: [Jarred-Sumner, robobun]
+commit_authors: {"12d77d1": Jarred-Sumner, "832edbc": robobun, "0b20408": Jarred-Sumner, "753f1c4": robobun}
 ---
 
 ### **Fix rare concurrent transpile segfault in AST allocation** (12d77d1)

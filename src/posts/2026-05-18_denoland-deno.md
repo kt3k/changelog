@@ -5,6 +5,8 @@ size: L
 title: "Node compat wins, snapshot shrinks"
 excerpt: "Deno tightened Node compatibility around inspector, TLS, and crypto while cutting ~3 MB from the startup snapshot."
 commits: 9
+authors: [bartlomieju, divybot, nathanwhit]
+commit_authors: {"9847847": bartlomieju, "eb4061f": nathanwhit, "ced67b1": bartlomieju, "9b9fde0": bartlomieju, "bf72384": bartlomieju, "794fb11": bartlomieju, "f68849e": divybot}
 ---
 
 **Node module hooks are back for sync `registerHooks()` flows** (ced67b1)

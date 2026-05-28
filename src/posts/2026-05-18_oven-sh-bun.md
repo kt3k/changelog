@@ -5,6 +5,8 @@ size: L
 title: "WebKit upgrade plus parser and runtime fixes"
 excerpt: "Major WebKit bump landed alongside several crash fixes in the lexer, parser, password hashing, Blob/FileSink, and dev server."
 commits: 11
+authors: [robobun, Jarred-Sumner, sosukesuzuki]
+commit_authors: {"4c8a21b": robobun, "31ec206": Jarred-Sumner, "25ad47b": robobun, "a7dca12": robobun, "ba15626": robobun, "c47ec9c": robobun, "390e0dc": sosukesuzuki, "9ecb985": robobun}
 ---
 
 ### **WebKit upgraded to 2b257999 with Bun-side API rework** (390e0dc)

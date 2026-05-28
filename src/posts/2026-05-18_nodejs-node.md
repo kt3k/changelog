@@ -5,6 +5,8 @@ size: M
 title: "Temporal lands in fs stats"
 excerpt: "Node.js adds Temporal.Instant support to fs stats, with docs and error updates plus a few test and benchmark fixes."
 commits: 5
+authors: [LiviaMedeiros, MikeMcC399, mcollina, trivikr, thisalihassan]
+commit_authors: {"4ee7567": LiviaMedeiros, "155268f": MikeMcC399, "f2aaf63": mcollina, "3b19867": trivikr, "debe2ed": thisalihassan}
 ---
 
 ### **fs stats gain Temporal.Instant support** (4ee7567)

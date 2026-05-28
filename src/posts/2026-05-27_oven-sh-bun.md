@@ -5,6 +5,8 @@ size: L
 title: "Bun hardens SQL decoding and TextDecoder"
 excerpt: "Fixes Postgres NUMERIC and MySQL YEAR binary decoding, preserves streaming legacy TextDecoder state, and trims fs.watch startup cost."
 commits: 6
+authors: [alii, robobun, Jarred-Sumner]
+commit_authors: {"4ee835b": alii, "b668561": robobun, "db928c2": robobun, "c89f30d": alii, "bb14c4e": alii, "13bbb38": Jarred-Sumner}
 ---
 
 **Postgres NUMERIC binary decoding now preserves leading zero groups** (4ee835b)

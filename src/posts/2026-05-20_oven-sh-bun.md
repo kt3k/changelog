@@ -5,6 +5,8 @@ size: L
 title: "Bun lands parser, YAML, and runtime fixes"
 excerpt: "Major correctness and perf work: YAML scalar parsing, bundler speed, escape diagnostics, Buffer ASCII parity, and several leak/use-after-free fixes."
 commits: 15
+authors: [Jarred-Sumner, robobun, alii, dylan-conway, ig-ant]
+commit_authors: {"3eb0fda": robobun, "71b4baa": robobun, "21db682": Jarred-Sumner, "a43a01b": ig-ant, "b3d086e": alii, "f5358e2": alii, "b916187": alii, "02f9249": robobun, "2f9e77b": robobun, "a55a62d": Jarred-Sumner, "be6a3c5": Jarred-Sumner, "32a161f": Jarred-Sumner, "46b2404": Jarred-Sumner, "303e97a": dylan-conway}
 ---
 
 ### **YAML block scalars now parse indentation and chomping correctly** (303e97a)

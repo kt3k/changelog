@@ -5,6 +5,8 @@ size: L
 title: "Bun hardens against fuzzed crashes"
 excerpt: "Multiple crash, hang, and OOM fixes landed across the transpiler, CSS, markdown, HTTP/2, crypto, and patching paths."
 commits: 30
+authors: [robobun, Jarred-Sumner]
+commit_authors: {"159a4b7": robobun, "0deaf0b": robobun, "2fbfcb9": robobun, "3fa9635": Jarred-Sumner, "9d5356a": robobun, "80df5b1": robobun, "08652f2": robobun, "dd0883d": robobun, "24e94ad": robobun, "af054d4": Jarred-Sumner, "81a811b": robobun, "39a8e56": Jarred-Sumner, "06b141d": robobun, "02380d3": robobun, "d2f274d": robobun, "8dcbb44": robobun, "5bf4941": robobun, "a8aec30": Jarred-Sumner, "5da1ff8": robobun, "41aa672": robobun, "a207a77": robobun, "543f2f9": robobun, "aff1bb1": robobun, "14b398c": robobun, "0179127": robobun}
 ---
 
 ### **Transpiler and parser stack-overflow fixes** (159a4b7, 41aa672, 06b141d, 81a811b, 5da1ff8, 24e94ad, 9d5356a, 80df5b1, 08652f2)

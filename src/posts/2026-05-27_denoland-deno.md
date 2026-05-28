@@ -5,6 +5,8 @@ size: L
 title: "Crypto XOFs, bundle fixes, and net permission hardening"
 excerpt: "Major crypto API expansion plus security and compatibility fixes across fetch, websocket, pack, bundle, and node compat."
 commits: 16
+authors: [bartlomieju, divybot, nathanwhit, nathanwhitbot, denobot, Tango992]
+commit_authors: {"1115186": bartlomieju, "6783347": nathanwhitbot, "2e016f4": nathanwhitbot, "2a4d1ba": divybot, "e4be93c": bartlomieju, "3e2030b": denobot, "e805fcd": bartlomieju, "f746b76": divybot, "a3c4b40": divybot, "fb6dc11": bartlomieju, "3d6c614": bartlomieju, "044bed8": bartlomieju, "12a12f2": Tango992, "57853cb": nathanwhit, "3cdfe7e": nathanwhit, "f202457": nathanwhit}
 ---
 
 ### **WebCrypto gets modern hash and AEAD support** (2a4d1ba)

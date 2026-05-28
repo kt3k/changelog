@@ -5,6 +5,8 @@ size: L
 title: "Bun hardens parsers, CSS, install, and runtime APIs"
 excerpt: "A security-hardening-style day: crash fixes, parser correctness, a CSRF API extension, install trust checks, and a major ICU runtime feature."
 commits: 27
+authors: [robobun, dylan-conway, Jarred-Sumner]
+commit_authors: {"5d1d351": Jarred-Sumner, "00e084c": Jarred-Sumner, "f8dcf1a": dylan-conway, "30c0071": robobun, "d1ed86d": robobun, "a4de1eb": robobun, "a06a00a": dylan-conway}
 ---
 
 ### **Frame-pointer crash traces replace brittle backtrace capture** (a06a00a)

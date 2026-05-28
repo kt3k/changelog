@@ -5,6 +5,8 @@ size: M
 title: "Stream iterators, encoding, and a few fixes"
 excerpt: "Notable bug fixes landed in streams, encoding, VM interception, FFI, and webstorage, alongside doc and CI cleanup."
 commits: 12
+authors: [mertcanaltin, JamieMagee, legendecas, aymanxdev, aduh95, RonGamzu, trivikr, 3zrv, Anshikakalpana, joyeecheung]
+commit_authors: {"8257091": legendecas, "4639dcb": mertcanaltin, "7dbded2": trivikr, "fda667a": 3zrv, "31c40f0": Anshikakalpana}
 ---
 
 ### **Encoding fast path avoids duplicate UTF-8 validation** (4639dcb)

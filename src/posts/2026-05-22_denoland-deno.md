@@ -5,6 +5,8 @@ size: M
 title: "Inspector hostnames and cache cleanup land"
 excerpt: "Deno now resolves inspector hostnames like localhost, trims binary size in net, and removes a couple of unused deps."
 commits: 5
+authors: [nathanwhitbot, divybot, denobot]
+commit_authors: {"a2fc6d3": nathanwhitbot, "b47520d": divybot, "c29ea5a": nathanwhitbot}
 ---
 
 ### **Inspector flags now resolve hostnames** (b47520d)

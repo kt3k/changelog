@@ -5,6 +5,8 @@ size: L
 title: "Deno grows CI, inspector, and Node compat"
 excerpt: "Major additions: `deno ci`, broader inspector/CDP coverage, and several Node compatibility fixes across test, WASI, workers, and more."
 commits: 19
+authors: [bartlomieju, divybot, dsherret, nathanwhit, crowlKats]
+commit_authors: {"280a349": bartlomieju, "42f609c": divybot, "661e3db": bartlomieju, "0f79e1d": divybot, "483096d": divybot, "ed12991": divybot, "8443ee0": bartlomieju, "3970a84": bartlomieju, "99c6f7a": bartlomieju, "0213399": bartlomieju, "6ae67f7": nathanwhit, "51f639e": divybot, "c39514d": divybot, "d7ba490": divybot}
 ---
 
 ### **`deno ci` lands for reproducible installs** (661e3db)

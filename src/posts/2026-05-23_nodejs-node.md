@@ -5,6 +5,8 @@ size: L
 title: "Major crypto, streams, and new VFS work"
 excerpt: "A big day for Node.js: experimental node:vfs lands, WebCrypto gets hardened and refactored, and stream/iter fixes improve correctness."
 commits: 10
+authors: [panva, trivikr, watilde, mcollina, Han5991]
+commit_authors: {"837910d": trivikr, "985b608": watilde, "c9562dd": mcollina, "c9dbb86": Han5991, "dfe2d47": panva, "0cabd66": panva, "b8fc182": panva, "e24e698": panva, "8d3245e": trivikr, "a7d5446": trivikr}
 ---
 
 ### **node:vfs lands as a new experimental builtin** (c9562dd)

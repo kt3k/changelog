@@ -5,6 +5,8 @@ size: L
 title: "QUIC gets faster, safer, and more capable"
 excerpt: "Node.js adds DTLS experimentally, expands QUIC APIs, and lands major QUIC performance and safety work."
 commits: 41
+authors: [jasnell, MoLow, richardlau, watilde, inoway46, legendecas, nodejs-github-bot, nadalaba, joyeecheung]
+commit_authors: {"9968679": jasnell, "2f56cd2": jasnell, "4aea61d": jasnell, "1776f3f": jasnell, "320a3a2": jasnell, "3c42f78": jasnell, "0163847": jasnell, "5d1ea79": jasnell, "b621fb3": jasnell, "5b3c053": jasnell, "fdbfb68": jasnell, "fcddd35": jasnell, "b6c6a83": jasnell, "ff8aa78": jasnell, "f835cc4": jasnell, "067d2a2": jasnell, "436748f": jasnell}
 ---
 
 ### **Experimental DTLS lands in Node.js** (436748f)

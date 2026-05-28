@@ -5,6 +5,8 @@ size: M
 title: "Node module hook fix and JUnit reporter rewrite"
 excerpt: "Restores `Module.register` on `node:module` and swaps the JUnit reporter off `quick-junit` for a local XML writer."
 commits: 2
+authors: [bartlomieju, nathanwhitbot]
+commit_authors: {"1fab348": bartlomieju, "f0ef190": nathanwhitbot}
 ---
 
 ### **Restore `Module.register` on `node:module`** (1fab348)

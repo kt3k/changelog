@@ -5,6 +5,8 @@ size: L
 title: "Deno fixes TLS, KV serialization, and Node compat"
 excerpt: "A big day of Node compatibility and runtime fixes: TLS/PFX handling, KV host-object round-tripping, npm preload resolution, and more."
 commits: 16
+authors: [bartlomieju, divybot, nathanwhitbot, mochaaP, nathanwhit]
+commit_authors: {"94e12d4": nathanwhitbot, "88d31a2": nathanwhitbot, "bd343a7": bartlomieju, "c10cf51": mochaaP, "5ca12ed": bartlomieju, "7aadfe8": bartlomieju, "b7e7233": bartlomieju, "598f39d": bartlomieju, "f542a81": bartlomieju, "c2c9105": divybot, "1ecd4c5": bartlomieju, "97c8a66": bartlomieju, "8ab9700": bartlomieju, "ca44f50": nathanwhit, "41d7773": divybot, "4e8c174": divybot}
 ---
 
 ### **Fix PKCS#12/PFX loading for `node:tls`** (5ca12ed)

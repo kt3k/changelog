@@ -5,6 +5,8 @@ size: L
 title: "Deno tightens Node compat and inspector support"
 excerpt: "Big Node-compat work lands for fetch/WebSocket inspector events, module hooks, DNS lookup behavior, and KeyObject cloning."
 commits: 11
+authors: [bartlomieju, nathanwhit, divybot, dsherret, crowlKats, lunadogbot]
+commit_authors: {"3444038": bartlomieju, "da1d096": nathanwhit, "2a8484a": divybot, "c990d56": divybot, "290c79c": dsherret, "13138f6": bartlomieju, "1ddf381": nathanwhit, "aefd24f": crowlKats, "8aec4d5": bartlomieju, "f818294": lunadogbot, "99be4f5": bartlomieju}
 ---
 
 ### **Fetch now reports Network inspector events** (8aec4d5)

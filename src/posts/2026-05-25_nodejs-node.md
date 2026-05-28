@@ -5,6 +5,8 @@ size: L
 title: "QUIC gets a major hardening pass"
 excerpt: "QUIC gained hostname verification, new rate limits, block lists, and idle stream timeouts; WebCrypto tests/docs were also tightened."
 commits: 21
+authors: [jasnell, panva, nodejs-github-bot, trivikr, joyeecheung, aduh95, watilde]
+commit_authors: {"e2ad744": joyeecheung, "b9203ee": aduh95, "742849d": panva, "ecee55e": panva, "15d0c61": watilde, "8c495c8": trivikr, "866caa6": jasnell, "813e42f": jasnell, "59a4ec1": jasnell, "430f89e": jasnell, "38e852c": jasnell, "495e534": jasnell, "15ad3a6": jasnell, "e883466": jasnell, "444ba16": jasnell, "0520174": jasnell, "c55b126": trivikr}
 ---
 
 ### **QUIC adds hostname verification and peer cert modes** (430f89e)
