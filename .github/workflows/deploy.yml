@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  # Manual edits pushed to main (posts, config, styles, watched repos) republish.
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "repos.yml"
+      - "_config.ts"
+      - "deno.json"
+      - "deno.lock"
+  # Called by the Digest workflow after it commits freshly generated posts.
+  workflow_call:
+
+# Needed to publish to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Serialize publishes so a manual push and a digest-triggered run don't race.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the branch tip rather than the triggering SHA, so a deploy
+      # invoked by Digest picks up the commit it just pushed.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Build site
+        env:
+          # Project-page base URL. Change if you use a custom domain.
+          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: deno task build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

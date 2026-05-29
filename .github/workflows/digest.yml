@@ -17,13 +17,11 @@ on:
         options: [daily, weekly, monthly]
         default: daily
 
-# Needed to push generated posts and to publish to GitHub Pages.
+# Needed to push generated posts. Publishing permissions live on the deploy job.
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
-# Avoid overlapping runs racing on the same branch / Pages deployment.
+# Avoid overlapping runs racing on the same branch.
 concurrency:
   group: digest
   cancel-in-progress: false
@@ -84,23 +82,12 @@ jobs:
             git push
           fi
 
-      - name: Build site
-        env:
-          # Project-page base URL. Change if you use a custom domain.
-          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-        run: deno task build
-
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
+  # Publish the freshly committed posts. The bot pushes with GITHUB_TOKEN, which
+  # can't trigger Deploy's `on: push`, so we call the reusable workflow directly.
   deploy:
     needs: digest
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml
