@@ -2,6 +2,7 @@ import lume from "lume/mod.ts";
 import date from "lume/plugins/date.ts";
 import basePath from "lume/plugins/base_path.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
+import feed from "lume/plugins/feed.ts";
 import { parse as parseYaml } from "@std/yaml";
 
 const site = lume({
@@ -27,6 +28,35 @@ site.data("watched", watched);
 
 // Tailwind entry stylesheet (compiled by the tailwindcss plugin).
 site.add("/styles.css");
+
+// One RSS feed per repo per cadence at /<owner>/<name>/<period>.rss. Each
+// excludes "no change" (size: N) entries; item content is the rendered article
+// body so readers get the full issue.
+const FEED_PERIODS = [
+  { key: "daily", label: "Daily", limit: 50 },
+  { key: "weekly", label: "Weekly", limit: 30 },
+  { key: "monthly", label: "Monthly", limit: 24 },
+];
+for (const repo of watched) {
+  for (const f of FEED_PERIODS) {
+    site.use(feed({
+      output: `/${repo}/${f.key}.rss`,
+      query: `type=post repo=${repo} period=${f.key} size!=N`,
+      limit: f.limit,
+      info: {
+        title: `${repo} — ${f.label}`,
+        description: `${f.label} digest of activity in ${repo}.`,
+        lang: "en",
+      },
+      items: {
+        title: "=title",
+        description: "=excerpt",
+        published: "=date",
+        content: "=children",
+      },
+    }));
+  }
+}
 
 // Linkify commit hashes in post bodies to their GitHub commit page. Summaries
 // reference short hashes per the prompt's `(abc1234)` convention (sometimes a
@@ -85,6 +115,17 @@ site.process([".html"], (pages) => {
       '<a $1 target="_blank" rel="noopener noreferrer">',
     );
     page.content = html;
+  }
+});
+
+// Match the site's clean URLs in the RSS feeds: drop `.html` from the item
+// <link>/<guid> targets (the article content itself is left untouched).
+site.process([".rss"], (pages) => {
+  for (const page of pages) {
+    page.content = (page.content as string).replace(
+      /\.html(<\/(?:link|guid)>)/g,
+      "$1",
+    );
   }
 });
 

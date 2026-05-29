@@ -9,6 +9,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  {{ if repo }}
+  <link rel="alternate" type="application/rss+xml" title="{{ repo }} — Daily" href="/{{ repo }}/daily.rss">
+  <link rel="alternate" type="application/rss+xml" title="{{ repo }} — Weekly" href="/{{ repo }}/weekly.rss">
+  <link rel="alternate" type="application/rss+xml" title="{{ repo }} — Monthly" href="/{{ repo }}/monthly.rss">
+  {{ /if }}
 </head>
 <body class="font-sans text-ink antialiased">
   <header class="border-b border-rule">
