@@ -1,8 +1,10 @@
 // EXPERIMENT (index-foo): the 40-day strip becomes interactive. Each repo's
 // 40 days of title+excerpt are embedded as JSON; hovering (or tapping) a cell
-// moves the accent ring to it and swaps the summary below to that day's. Hover
-// out does not reset. On touch, the tap acts like hover and is kept from
-// following the card link (preventDefault + stopPropagation).
+// with activity moves the accent ring to it and swaps the summary below to
+// that day's. Cells with no activity (size:N / no post) are inert — the ring
+// and summary stay where they last were. Hover out does not reset. On touch,
+// the tap acts like hover and is kept from following the card link
+// (preventDefault + stopPropagation).
 export const layout = "layouts/base.vto";
 export const url = "/index-foo.html";
 
@@ -125,24 +127,18 @@ export default function (data: Lume.Data): string {
   function show(cell) {
     var card = cell.closest("[data-card]");
     var day = data[card.getAttribute("data-card")][+cell.getAttribute("data-i")];
-    if (!day) return;
+    // Inert on days with no activity: keep the ring and summary as they were.
+    if (!day || !day.active) return;
     card.querySelectorAll("[data-i]").forEach(function (c) {
       c.classList.remove.apply(c.classList, RING);
     });
     cell.classList.add.apply(cell.classList, RING);
-    var eb = card.querySelector("[data-eyebrow]");
+    card.querySelector("[data-eyebrow]").textContent =
+      day.latest ? "Latest · " + day.human : day.human;
     var ti = card.querySelector("[data-title]");
-    var ex = card.querySelector("[data-excerpt]");
-    eb.textContent = day.latest ? "Latest · " + day.human : day.human;
-    if (day.active) {
-      ti.textContent = day.title;
-      ti.style.display = "";
-      ex.textContent = day.excerpt;
-    } else {
-      ti.textContent = "";
-      ti.style.display = "none";
-      ex.textContent = "No issues on " + day.human + ".";
-    }
+    ti.textContent = day.title;
+    ti.style.display = "";
+    card.querySelector("[data-excerpt]").textContent = day.excerpt;
   }
   document.querySelectorAll("[data-card] [data-i]").forEach(function (cell) {
     cell.addEventListener("mouseenter", function () { show(cell); });
