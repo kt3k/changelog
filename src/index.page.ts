@@ -98,6 +98,9 @@ export default function (data: Lume.Data): string {
       `<a href="/${repo}/weekly" class="no-underline hover:text-accent">Weekly</a>` +
       `<span aria-hidden="true">·</span>` +
       `<a href="/${repo}/monthly" class="no-underline hover:text-accent">Monthly</a>` +
+      `<a href="/${repo}/daily.rss" title="Subscribe (RSS)" aria-label="Subscribe to ${repo} via RSS" class="inline-flex self-center text-ink-soft hover:text-accent">` +
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>` +
+      `</a>` +
       `</nav>`;
 
     const caption =
