@@ -51,7 +51,7 @@ layout: layouts/base.vto
 {{ if archive.length }}
 <section class="mt-14 border-t border-rule pt-8">
   <h2 class="mb-5 m-0 text-xs font-semibold uppercase tracking-wider text-ink-soft">Archive</h2>
-  <ul class="m-0 flex flex-wrap gap-x-6 gap-y-3 p-0" style="list-style:none">
+  <ul class="m-0 flex flex-wrap gap-x-8 gap-y-3 p-0" style="list-style:none">
     {{ for item of archive }}
     <li>
       <a href="{{ item.url }}" class="text-sm no-underline hover:underline {{ if item.url == bucketUrl }}font-semibold text-ink{{ else }}text-accent{{ /if }}">{{ item.label }}<span class="font-normal text-ink-soft"> · {{ item.count }}</span></a>
