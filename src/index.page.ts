@@ -25,6 +25,11 @@ export default function (data: Lume.Data): string {
   const end = new Date(`${ymd(new Date())}T00:00:00Z`);
   end.setUTCDate(end.getUTCDate() - 1);
 
+  // Leftmost cell of the strip; a summary older than this can't be anchored.
+  const windowStart = new Date(end);
+  windowStart.setUTCDate(end.getUTCDate() - (CELLS - 1));
+  const windowStartKey = ymd(windowStart);
+
   const cards = watched.map((repo) => {
     const posts = allPosts.filter((p) =>
       p.repo === repo && (p.period ?? "daily") === "daily"
@@ -40,9 +45,12 @@ export default function (data: Lume.Data): string {
     }
 
     // Latest day that actually carries a summary (skip size:N / empty excerpt).
-    const latest = posts.find((p) => p.size !== "N" && p.excerpt);
+    const latestPost = posts.find((p) => p.size !== "N" && p.excerpt);
+    const latestKey = latestPost ? ymd(toDate(latestPost.date)) : null;
+    // Only treat it as "latest" when its day falls inside the 40-day strip, so
+    // the excerpt always has a ringed cell to anchor to.
+    const latest = latestKey && latestKey >= windowStartKey ? latestPost : null;
     const latestDate = latest ? toDate(latest.date) : null;
-    const latestKey = latestDate ? ymd(latestDate) : null;
     // Listed issues exclude "no change" (size: N).
     const hasIssues = posts.some((p) => p.size !== "N");
 
@@ -62,7 +70,7 @@ export default function (data: Lume.Data): string {
       const color = active ? `bg-cell-${size!.toLowerCase()}` : "bg-cell-empty";
       const tip = active ? `${key} · ${size}` : key;
       // Ring the one cell the latest summary below is about.
-      const ring = key === latestKey
+      const ring = latest && key === latestKey
         ? " relative z-10 ring-2 ring-accent ring-offset-1 ring-offset-white"
         : "";
       strip += `<span class="${cell} ${color}${ring}" title="${tip}"></span>`;
@@ -84,6 +92,10 @@ export default function (data: Lume.Data): string {
     } else if (!hasIssues) {
       latestBlock =
         `<p class="mt-4 m-0 italic text-ink-soft">No issues yet — check back after the next daily run.</p>`;
+    } else {
+      // Had issues, but none within the strip's window — nothing to anchor.
+      latestBlock =
+        `<p class="mt-4 m-0 italic text-ink-soft">No activity in the last 40 days.</p>`;
     }
 
     // The whole card is a single link to the repo feed, with a subtle hover.
