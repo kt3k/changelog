@@ -2,10 +2,11 @@
 // with a daily summary. The strip is interactive — hovering a cell with
 // activity moves the accent ring to it and swaps the summary below to that
 // day's; cells with no activity (size:N / no post) are inert. Links: the repo
-// name goes to the repo feed, an active cell goes straight to that day's
-// article, and the summary block goes to the article of the day it currently
-// shows (kept in sync as you hover). Each repo's 40 days of title + excerpt are
-// embedded as JSON for the client script.
+// name and the Daily/Weekly/Monthly tabs go to those feed views, an active cell
+// goes straight to that day's article, and the summary block goes to the
+// article of the day it currently shows (kept in sync as you hover). The commit
+// count sits as a caption under the strip it describes. Each repo's 40 days of
+// title + excerpt are embedded as JSON for the client script.
 export const layout = "layouts/base.vto";
 
 const CELLS = 40;
@@ -90,8 +91,17 @@ export default function (data: Lume.Data): string {
     }
     repoDays[repo] = days;
 
-    const stat =
-      `<span class="shrink-0 whitespace-nowrap text-xs font-semibold uppercase tracking-wider text-ink-soft">Last 40 days · ${totalCommits} commits</span>`;
+    const tabs =
+      `<nav class="flex shrink-0 items-baseline gap-2 text-xs font-semibold uppercase tracking-wider text-ink-soft">` +
+      `<a href="/${repo}/" class="no-underline hover:text-accent">Daily</a>` +
+      `<span aria-hidden="true">·</span>` +
+      `<a href="/${repo}/weekly" class="no-underline hover:text-accent">Weekly</a>` +
+      `<span aria-hidden="true">·</span>` +
+      `<a href="/${repo}/monthly" class="no-underline hover:text-accent">Monthly</a>` +
+      `</nav>`;
+
+    const caption =
+      `<p class="mt-2 m-0 text-right text-xs font-semibold uppercase tracking-wider text-ink-soft">Last 40 days · ${totalCommits} commits</p>`;
 
     // The summary block starts on the latest in-window day. When there is one
     // it is a link (kept in sync with the shown day by JS); otherwise a note.
@@ -112,11 +122,12 @@ export default function (data: Lume.Data): string {
     }
 
     return `<div data-card="${repo}" class="border-b border-rule py-6 last:border-0">
-      <div class="mb-3.5 flex items-baseline justify-between gap-4">
+      <div class="mb-3.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 class="m-0 font-mono text-lg font-semibold"><a href="/${repo}/" class="text-accent no-underline hover:underline">${repo}</a></h2>
-        ${stat}
+        ${tabs}
       </div>
       <div class="flex gap-1">${strip}</div>
+      ${caption}
       ${summary}
     </div>`;
   });
