@@ -2,3 +2,4 @@ _site/
 _cache/
 .cache/
 .env
+.claude/scheduled_tasks.lock
