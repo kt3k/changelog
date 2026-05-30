@@ -100,8 +100,10 @@ pinned).
    their patches. Each diff is:
    - filtered to drop noisy files — lockfiles, `*.min.js`/`*.min.css`, `*.map`,
      `vendor/`, `third_party/`, `node_modules/`, `__snapshots__/`;
-   - truncated to `MAX_DIFF_LINES` (120) lines with a truncation marker. Commits
-     whose diff is empty after filtering are omitted.
+   - truncated to `MAX_DIFF_LINES` (120) lines with a truncation marker, and any
+     single line longer than `MAX_DIFF_LINE_CHARS` (500) is clamped (so a bundled
+     or minified dist line can't blow the token budget). Commits whose diff is
+     empty after filtering are omitted.
 
 4. **Pass 2 — write** (`callLLM`): send the full commit list plus the attached
    diffs to the write model, which returns the article `Summary`. The system
@@ -164,6 +166,7 @@ are quoted and `"`-escaped.
 | `TRIAGE_BYPASS_THRESHOLD` | 10    | At/below this commit count, skip the triage call. |
 | `MAX_DIFF_COMMITS`        | 8     | Max commits that get a diff attached per day.     |
 | `MAX_DIFF_LINES`          | 120   | Per-commit diff line cap.                         |
+| `MAX_DIFF_LINE_CHARS`     | 500   | Per-line char cap (clamps bundled/minified lines).|
 | `DIFF_EXCLUDE`            | —     | Path patterns whose diffs are dropped.            |
 
 Diffs dominate token cost, so they are bounded by both count and per-commit
