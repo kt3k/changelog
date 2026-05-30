@@ -52,6 +52,7 @@ const DEFAULT_WRITE_MODEL = "gpt-5.4-mini";
 const TRIAGE_BYPASS_THRESHOLD = 10; // <= this many commits: skip the triage call
 const MAX_DIFF_COMMITS = 8; // attach a diff to at most this many commits/day
 const MAX_DIFF_LINES = 120; // truncate each commit's diff to this many lines
+const MAX_DIFF_LINE_CHARS = 500; // truncate any single diff line to this many chars
 
 // Noisy/low-signal paths whose diffs are dropped to save tokens.
 const DIFF_EXCLUDE: RegExp[] = [
@@ -306,6 +307,13 @@ async function commitDiff(dir: string, hash: string): Promise<string> {
     lines = lines.slice(0, MAX_DIFF_LINES);
     lines.push(`… (diff truncated at ${MAX_DIFF_LINES} lines)`);
   }
+  // Clamp pathologically long lines (e.g. minified/bundled dist files), which
+  // can blow the token budget even within the line-count cap.
+  lines = lines.map((l) =>
+    l.length > MAX_DIFF_LINE_CHARS
+      ? `${l.slice(0, MAX_DIFF_LINE_CHARS)}… (line truncated at ${MAX_DIFF_LINE_CHARS} chars)`
+      : l
+  );
   return lines.join("\n").trim();
 }
 
