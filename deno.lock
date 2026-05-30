@@ -5,7 +5,6 @@
     "jsr:@cliffy/flags@1.1.0": "1.1.0",
     "jsr:@cliffy/internal@1.1.0": "1.1.0",
     "jsr:@cliffy/table@1.1.0": "1.1.0",
-    "jsr:@libs/xml@5": "5.4.16",
     "jsr:@std/async@^1.4.0": "1.4.0",
     "jsr:@std/cli@1.0.29": "1.0.29",
     "jsr:@std/cli@^1.0.29": "1.0.30",
@@ -78,9 +77,6 @@
       "dependencies": [
         "jsr:@std/fmt@^1.0.9"
       ]
-    },
-    "@libs/xml@5.4.16": {
-      "integrity": "6537b916340343261317a9f81693539a01e8530bc9896a6bbaa72d3a3cba798a"
     },
     "@std/async@1.4.0": {
       "integrity": "4d70b008634f571cff9b554090d628c76141c32613aae0ff283fd5fa23d0c379",
