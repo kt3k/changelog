@@ -44,7 +44,7 @@ for (const repo of watched) {
       query: `type=post repo=${repo} period=${f.key} size!=N`,
       limit: f.limit,
       info: {
-        title: `${repo} — ${f.label}`,
+        title: `${repo} · ${f.label}`,
         description: `${f.label} digest of activity in ${repo}.`,
         lang: "en",
       },

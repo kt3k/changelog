@@ -1,5 +1,5 @@
 // Home page: one row per watched repo, each pairing a 40-day activity strip
-// with a daily summary. The strip is interactive — hovering a cell with
+// with a daily summary. The strip is interactive. Hovering a cell with
 // activity moves the accent ring to it and swaps the summary below to that
 // day's; cells with no activity (size:N / no post) are inert. Links: the repo
 // name and the Daily/Weekly/Monthly tabs go to those feed views, an active cell
@@ -119,7 +119,7 @@ export default function (data: Lume.Data): string {
     } else {
       const note = hasIssues
         ? "No activity in the last 40 days."
-        : "No issues yet — check back after the next daily run.";
+        : "No issues yet. Check back after the next daily run.";
       summary =
         `<p class="mt-5 m-0 italic text-ink-soft">${note}</p>`;
     }

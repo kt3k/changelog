@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ if title }}{{ title }} — {{ site_name }}{{ else }}{{ site_name }}{{ /if }}</title>
+  <title>{{ if title }}{{ title }} · {{ site_name }}{{ else }}{{ site_name }}{{ /if }}</title>
   <meta name="description" content="{{ description || site_description }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   {{ if repo }}
-  <link rel="alternate" type="application/rss+xml" title="{{ repo }} — Daily" href="/{{ repo }}/daily.rss">
-  <link rel="alternate" type="application/rss+xml" title="{{ repo }} — Weekly" href="/{{ repo }}/weekly.rss">
-  <link rel="alternate" type="application/rss+xml" title="{{ repo }} — Monthly" href="/{{ repo }}/monthly.rss">
+  <link rel="alternate" type="application/rss+xml" title="{{ repo }} · Daily" href="/{{ repo }}/daily.rss">
+  <link rel="alternate" type="application/rss+xml" title="{{ repo }} · Weekly" href="/{{ repo }}/weekly.rss">
+  <link rel="alternate" type="application/rss+xml" title="{{ repo }} · Monthly" href="/{{ repo }}/monthly.rss">
   {{ /if }}
 </head>
 <body class="font-sans text-ink antialiased">
@@ -29,7 +29,7 @@
   <footer class="border-t border-rule bg-surface" id="subscribe">
     <div class="mx-auto max-w-2xl px-6 py-16 text-center">
       <h2 class="text-3xl font-bold tracking-tight">Follow via RSS</h2>
-      <p class="mx-auto mt-2 mb-7 max-w-sm text-ink-soft">Every repository has Daily, Weekly, and Monthly RSS feeds — open a repo to grab the one you want.</p>
+      <p class="mx-auto mt-2 mb-7 max-w-sm text-ink-soft">Every repository has Daily, Weekly, and Monthly RSS feeds. Open a repo to grab the one you want.</p>
       <a href="/" class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 font-semibold text-white no-underline hover:opacity-90">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M4 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M4 4a16 16 0 0 1 16 16"></path><path d="M4 11a9 9 0 0 1 9 9"></path></svg>
         Browse repositories

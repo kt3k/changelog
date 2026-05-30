@@ -1,10 +1,10 @@
 // Generates the per-repo tab pages and their time-bucketed archive pages:
-//   /<owner>/<name>/               daily   — latest N + month archive index
-//   /<owner>/<name>/<YYYY>/<MM>    daily   — one month
-//   /<owner>/<name>/weekly         weekly  — latest N + year archive index
-//   /<owner>/<name>/weekly/<YYYY>  weekly  — one year
-//   /<owner>/<name>/monthly        monthly — latest N + year archive index
-//   /<owner>/<name>/monthly/<YYYY> monthly — one year
+//   /<owner>/<name>/               daily   · latest N + month archive index
+//   /<owner>/<name>/<YYYY>/<MM>    daily   · one month
+//   /<owner>/<name>/weekly         weekly  · latest N + year archive index
+//   /<owner>/<name>/weekly/<YYYY>  weekly  · one year
+//   /<owner>/<name>/monthly        monthly · latest N + year archive index
+//   /<owner>/<name>/monthly/<YYYY> monthly · one year
 export const layout = "layouts/repo.vto";
 
 const MONTHS = [
