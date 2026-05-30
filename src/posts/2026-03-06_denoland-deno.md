@@ -5,7 +5,7 @@ size: L
 title: "Deno tightens Node compat and dotenv support"
 excerpt: "Big Node-compat fixes landed for workers, crypto, fs, stdio, and env-file substitution, plus an npm tarball perf win."
 commits: 15
-authors: [bartlomieju, dsherret, Copilot, Tango992, crowlKats]
+authors: [bartlomieju, dsherret, Tango992, crowlKats]
 commit_authors: {"a3c01bd": bartlomieju, "6b73c27": dsherret, "e99c9b9": Tango992, "a6e66a8": bartlomieju, "6d08482": bartlomieju, "885ad24": crowlKats, "dd0728d": bartlomieju, "d26e5c4": bartlomieju}
 ---
 

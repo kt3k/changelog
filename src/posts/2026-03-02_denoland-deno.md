@@ -5,8 +5,8 @@ size: L
 title: "Deno tightens Node compat, npm installs, and Jupyter"
 excerpt: "Big Node crypto/process fixes, npm resolver and install speedups, plus protocol-correct Jupyter interrupts and shutdowns."
 commits: 27
-authors: [bartlomieju, nathanwhit, Copilot, marvinhagemeister, pmarchini, Tango992]
-commit_authors: {"f7bcc96": bartlomieju, "9becb83": Copilot, "5fb8a4d": marvinhagemeister, "968baf7": bartlomieju, "cf2455c": bartlomieju, "95140c3": nathanwhit, "e726953": bartlomieju, "70497bb": bartlomieju, "fd9def3": bartlomieju, "84f7a15": bartlomieju, "b9f6889": nathanwhit, "64a1d86": bartlomieju, "cc8c488": bartlomieju, "59bec9b": bartlomieju, "63ff522": bartlomieju, "d428817": bartlomieju, "9cf5852": bartlomieju}
+authors: [bartlomieju, nathanwhit, marvinhagemeister, pmarchini, Tango992]
+commit_authors: {"f7bcc96": bartlomieju, "5fb8a4d": marvinhagemeister, "968baf7": bartlomieju, "cf2455c": bartlomieju, "95140c3": nathanwhit, "e726953": bartlomieju, "70497bb": bartlomieju, "fd9def3": bartlomieju, "84f7a15": bartlomieju, "b9f6889": nathanwhit, "64a1d86": bartlomieju, "cc8c488": bartlomieju, "59bec9b": bartlomieju, "63ff522": bartlomieju, "d428817": bartlomieju, "9cf5852": bartlomieju}
 ---
 
 ### **Node crypto gets broader key support and fewer edge-case crashes** (f7bcc96, fd9def3, 968baf7, 9becb83, 70497bb, cc8c488, 59bec9b, 63ff522, e726953, 9cf5852)

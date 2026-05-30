@@ -5,8 +5,8 @@ size: L
 title: "Deno gets faster, safer, and more Node-compatible"
 excerpt: "Major Node-compat fixes, performance wins in eval/LSP/fs, and crash/security hardening across core and web APIs."
 commits: 20
-authors: [bartlomieju, Tango992, Copilot, nathanwhit, veeceey, shivamtiwari3, Hajime-san]
-commit_authors: {"3998494": bartlomieju, "9f327bb": Copilot, "6aa3354": bartlomieju, "e4ae311": nathanwhit, "922a9ca": bartlomieju, "9be5e36": Tango992, "21a8152": bartlomieju, "832fbcf": bartlomieju, "974c6da": bartlomieju, "40c1da6": bartlomieju, "457de64": bartlomieju, "44301a6": bartlomieju, "4ba47aa": bartlomieju, "c665693": bartlomieju, "66db846": veeceey, "14bb3e7": shivamtiwari3, "5e966f1": Tango992, "4b0474c": bartlomieju, "b8c4441": Hajime-san}
+authors: [bartlomieju, Tango992, nathanwhit, veeceey, shivamtiwari3, Hajime-san]
+commit_authors: {"3998494": bartlomieju, "6aa3354": bartlomieju, "e4ae311": nathanwhit, "922a9ca": bartlomieju, "9be5e36": Tango992, "21a8152": bartlomieju, "832fbcf": bartlomieju, "974c6da": bartlomieju, "40c1da6": bartlomieju, "457de64": bartlomieju, "44301a6": bartlomieju, "4ba47aa": bartlomieju, "c665693": bartlomieju, "66db846": veeceey, "14bb3e7": shivamtiwari3, "5e966f1": Tango992, "4b0474c": bartlomieju, "b8c4441": Hajime-san}
 ---
 
 ### **Node Buffer, tty, crypto, and process compatibility level up**

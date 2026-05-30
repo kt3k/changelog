@@ -5,8 +5,8 @@ size: L
 title: "Doc JSON overhaul and npm install fix"
 excerpt: "Deno Doc switched to a v2 schema and global npm installs now create shims for every bin entry; audit and CI got targeted fixes."
 commits: 7
-authors: [bartlomieju, crowlKats, Copilot]
-commit_authors: {"eb108d2": crowlKats, "8b14d5a": bartlomieju, "38186cc": Copilot}
+authors: [bartlomieju, crowlKats]
+commit_authors: {"eb108d2": crowlKats, "8b14d5a": bartlomieju}
 ---
 
 ### **Deno Doc JSON schema v2 and structural rewrite** (eb108d2)

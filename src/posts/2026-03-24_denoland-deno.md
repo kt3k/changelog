@@ -5,7 +5,7 @@ size: L
 title: "Deno hardens NAPI, Node, and fmt"
 excerpt: "Major fixes land for native addon crashes, HTTP/TLS leaks, formatter behavior, and OpenTelemetry console output."
 commits: 16
-authors: [bartlomieju, Copilot, Rohan5commit]
+authors: [bartlomieju, Rohan5commit]
 commit_authors: {"4739004": bartlomieju, "dd5c9cb": bartlomieju, "802a788": bartlomieju, "637b758": bartlomieju}
 ---
 

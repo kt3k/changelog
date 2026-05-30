@@ -5,7 +5,7 @@ size: L
 title: "Node compat, fs, and runtime fixes land"
 excerpt: "Major Node-compat refactors, microtask ordering fixes, heap APIs, and a couple of security/stability patches."
 commits: 16
-authors: [bartlomieju, dsherret, Copilot, denobot, crowlKats]
+authors: [bartlomieju, dsherret, denobot, crowlKats]
 commit_authors: {"6c740b6": bartlomieju, "f19102c": bartlomieju, "f020655": bartlomieju, "0c84694": bartlomieju, "9d90318": bartlomieju, "888568c": dsherret}
 ---
 

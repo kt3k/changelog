@@ -5,8 +5,8 @@ size: L
 title: "Node compat and fetch reliability land"
 excerpt: "Deno adds a developer CLI and ships several Node compatibility fixes, plus stale HTTP retry and FreeBSD signal handling."
 commits: 17
-authors: [bartlomieju, dsherret, Copilot, amyssnippet, denobot, littledivy]
-commit_authors: {"6936075": dsherret, "1190dc9": Copilot, "7c84b09": amyssnippet, "9e682be": dsherret, "e0464f4": bartlomieju, "3249c98": dsherret, "b2ecb43": dsherret, "a395e36": bartlomieju, "cbdfed1": bartlomieju, "7bcaaa2": bartlomieju, "9bb8552": bartlomieju, "0238181": denobot, "e55b986": bartlomieju, "bd3fd9a": littledivy, "130a377": bartlomieju}
+authors: [bartlomieju, dsherret, amyssnippet, denobot, littledivy]
+commit_authors: {"6936075": dsherret, "7c84b09": amyssnippet, "9e682be": dsherret, "e0464f4": bartlomieju, "3249c98": dsherret, "b2ecb43": dsherret, "a395e36": bartlomieju, "cbdfed1": bartlomieju, "7bcaaa2": bartlomieju, "9bb8552": bartlomieju, "0238181": denobot, "e55b986": bartlomieju, "bd3fd9a": littledivy, "130a377": bartlomieju}
 ---
 
 ### **Node compatibility gets a batch of fixes**

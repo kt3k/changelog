@@ -311,7 +311,9 @@ async function commitDiff(dir: string, hash: string): Promise<string> {
   // can blow the token budget even within the line-count cap.
   lines = lines.map((l) =>
     l.length > MAX_DIFF_LINE_CHARS
-      ? `${l.slice(0, MAX_DIFF_LINE_CHARS)}… (line truncated at ${MAX_DIFF_LINE_CHARS} chars)`
+      ? `${
+        l.slice(0, MAX_DIFF_LINE_CHARS)
+      }… (line truncated at ${MAX_DIFF_LINE_CHARS} chars)`
       : l
   );
   return lines.join("\n").trim();
@@ -399,6 +401,45 @@ async function loginFromApi(
   }
 }
 
+/**
+ * GitHub account type for `login`: `"User"` / `"Organization"` / `"Bot"`, `""`
+ * when the login has no public account page (so `github.com/<login>.png` would
+ * 404), or `null` when the check was inconclusive (network/transient error, so
+ * the caller should not drop the author). Cached across runs under a `type:`
+ * key namespace in the same author cache (email keys always contain `@`, so the
+ * two never collide).
+ */
+async function accountType(
+  login: string,
+  token: string,
+  cache: Map<string, string>,
+): Promise<string | null> {
+  const key = `type:${login.toLowerCase()}`;
+  const cached = cache.get(key);
+  if (cached !== undefined) return cached;
+  try {
+    const res = await fetch(`https://api.github.com/users/${login}`, {
+      headers: {
+        ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "changelog-digest",
+      },
+    });
+    if (res.status === 404) {
+      cache.set(key, ""); // definitive: no such user/org page
+      return "";
+    }
+    if (!res.ok) return null; // transient (rate limit, 5xx): don't cache/drop
+    const data = await res.json();
+    const type = typeof data.type === "string" ? data.type : "";
+    cache.set(key, type);
+    return type;
+  } catch {
+    return null; // network error: inconclusive, keep the author
+  }
+}
+
 interface AuthorInfo {
   /** Distinct logins, most commits first (first-seen order breaks ties). */
   authors: string[];
@@ -442,8 +483,23 @@ async function resolveAuthors(
     if (!counts.has(login)) order.push(login);
     counts.set(login, (counts.get(login) ?? 0) + 1);
   }
+  // Drop logins whose GitHub account is a Bot or has no public page — their
+  // `github.com/<login>.png` avatar 404s. This catches bots that don't use the
+  // `[bot]` suffix, like the "Copilot" coding agent, whose noreply email
+  // resolves to login "Copilot" (type Bot, no user page).
+  for (const login of order) {
+    const type = await accountType(login, token, cache);
+    if (type === "Bot" || type === "") {
+      counts.delete(login);
+      for (const h of Object.keys(byCommit)) {
+        if (byCommit[h] === login) delete byCommit[h];
+      }
+    }
+  }
   // Stable sort by commit count desc keeps first-seen order within equal counts.
-  const authors = [...order].sort((a, b) => counts.get(b)! - counts.get(a)!);
+  const authors = order
+    .filter((l) => counts.has(l))
+    .sort((a, b) => counts.get(b)! - counts.get(a)!);
   return { authors, byCommit };
 }
 

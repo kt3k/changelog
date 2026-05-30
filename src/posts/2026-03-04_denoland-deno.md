@@ -5,8 +5,8 @@ size: L
 title: "Deno ships Node, npm, and core fixes"
 excerpt: "Major core refactors landed alongside Windows named pipe HTTP support, npm resolver fixes, and a npm install startup perf win."
 commits: 15
-authors: [bartlomieju, dsherret, crowlKats, Tango992, nathanwhit, denobot, marvinhagemeister, Copilot]
-commit_authors: {"8426078": bartlomieju, "d143d7c": Tango992, "be569cf": nathanwhit, "1e7a295": dsherret, "92ed54b": bartlomieju, "9f02e00": bartlomieju, "91e84ae": bartlomieju, "e78a7fa": denobot, "4b7bdcd": dsherret, "f85c0ca": crowlKats, "739f9ae": marvinhagemeister, "7a5efce": dsherret, "148e8a0": crowlKats, "a0133e2": Copilot}
+authors: [bartlomieju, dsherret, crowlKats, Tango992, nathanwhit, denobot, marvinhagemeister]
+commit_authors: {"8426078": bartlomieju, "d143d7c": Tango992, "be569cf": nathanwhit, "1e7a295": dsherret, "92ed54b": bartlomieju, "9f02e00": bartlomieju, "91e84ae": bartlomieju, "e78a7fa": denobot, "4b7bdcd": dsherret, "f85c0ca": crowlKats, "739f9ae": marvinhagemeister, "7a5efce": dsherret, "148e8a0": crowlKats}
 ---
 
 ### **Windows named-pipe HTTP support for Node compatibility** (fce52fa)
