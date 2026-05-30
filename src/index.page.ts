@@ -164,5 +164,10 @@ export default function (data: Lume.Data): string {
 })();
 </script>`;
 
-  return `<div>${cards.join("\n")}</div>${script}`;
+  const intro =
+    `<div class="mb-10 border-b border-rule pb-8">
+      <p class="m-0 text-lg leading-snug text-ink-soft">A daily, LLM-written digest of the open-source projects worth following — read from the commits, not the press releases. <a class="font-semibold text-accent no-underline hover:underline" href="/about">How it works →</a></p>
+    </div>`;
+
+  return `${intro}<div>${cards.join("\n")}</div>${script}`;
 }
