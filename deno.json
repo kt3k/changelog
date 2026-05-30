@@ -13,6 +13,9 @@
     "serve": "deno task lume -s",
     "digest": "deno run -A --env digest/main.ts"
   },
+  "fmt": {
+    "exclude": ["src/posts"]
+  },
   "compilerOptions": {
     "types": ["lume/types.ts"]
   },
