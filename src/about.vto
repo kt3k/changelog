@@ -1,0 +1,37 @@
+---
+layout: layouts/base.vto
+title: About
+description: How Changelog turns each day's commits into a plain-language digest of the open-source world.
+---
+<article>
+  <header class="mb-12 text-center">
+    <h1 class="mb-4 text-4xl font-bold leading-tight tracking-tight md:text-5xl">About</h1>
+    <p class="mx-auto max-w-lg text-xl leading-snug text-ink-soft">A daily, impact-weighted digest of the open-source world — read from the commits, not the press releases.</p>
+  </header>
+
+  <div class="post-body">
+    <p><strong>{{ site_name }}</strong> follows a handful of open-source projects and tells you what actually changed in each one, every day. Instead of skimming raw commit logs or waiting for a release note, you get a short, plain-language summary of the work that matters — and a quiet line for everything that doesn't.</p>
+
+    <h2>How it works</h2>
+    <p>Each morning a scheduled job clones every watched repository and reads the previous day's commits. A cheap triage model first picks out the high-impact changes; their real diffs are then handed to a second model that writes the summary. Because the write-up is grounded in the actual code change, it reflects what shipped — not what a changelog file claims.</p>
+    <p>High-impact changes get their own short write-ups; everything trivial is bundled under <em>"Other misc changes."</em> The same pipeline rolls the daily issues up into weekly and monthly editions, so you can follow a project as closely — or as loosely — as you like.</p>
+
+    <h2>What it follows</h2>
+    <p>The repositories currently watched:</p>
+    <ul>
+      {{ for repo of watched }}
+      <li><a href="/{{ repo }}/">{{ repo }}</a></li>
+      {{ /for }}
+    </ul>
+
+    <h2>Reading &amp; subscribing</h2>
+    <p>Every repository has Daily, Weekly, and Monthly RSS feeds. Open a repo from the <a href="/">home page</a> and grab the cadence you want — nothing to sign up for, no inbox required.</p>
+
+    <h2>Colophon</h2>
+    <p>Built with <a href="https://lume.land">Lume</a> on Deno and published to GitHub Pages. The summaries are written by a language model, so the occasional rough edge is on us — the <a href="https://github.com/kt3k/changelog">source is on GitHub</a> if you'd like to watch your own repositories or open an issue.</p>
+  </div>
+
+  <nav class="mt-14 border-t border-rule pt-6">
+    <a class="font-medium text-ink-soft no-underline hover:text-accent" href="/">← Back home</a>
+  </nav>
+</article>
