@@ -28,14 +28,12 @@
 
   <footer class="border-t border-rule bg-surface" id="subscribe">
     <div class="mx-auto max-w-2xl px-6 py-16 text-center">
-      <h2 class="text-3xl font-bold tracking-tight">Never miss an issue</h2>
-      <p class="mx-auto mt-2 mb-7 max-w-sm text-ink-soft">Get the day's open-source highlights delivered to your inbox.</p>
-      <form class="mx-auto flex max-w-sm flex-wrap justify-center gap-2" onsubmit="return false">
-        <input type="email" placeholder="you@example.com" aria-label="Email address" required
-          class="min-w-0 flex-1 rounded-full border border-rule bg-white px-4 py-2.5">
-        <button type="submit"
-          class="rounded-full bg-accent px-6 py-2.5 font-semibold text-white hover:opacity-90">Subscribe</button>
-      </form>
+      <h2 class="text-3xl font-bold tracking-tight">Follow via RSS</h2>
+      <p class="mx-auto mt-2 mb-7 max-w-sm text-ink-soft">Every repository has Daily, Weekly, and Monthly RSS feeds — open a repo to grab the one you want.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 font-semibold text-white no-underline hover:opacity-90">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M4 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M4 4a16 16 0 0 1 16 16"></path><path d="M4 11a9 9 0 0 1 9 9"></path></svg>
+        Browse repositories
+      </a>
       <p class="mt-10 text-sm text-ink-soft">© {{ ("" + new Date().getFullYear()) }} {{ site_name }}. Built with Lume.</p>
     </div>
   </footer>
