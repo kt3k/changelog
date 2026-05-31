@@ -13,22 +13,58 @@ description: How Changelog turns each day's commits into a plain-language digest
     <p><strong>{{ site_name }}</strong> follows a handful of open-source projects and tells you what actually changed in each one, every day. Instead of skimming raw commit logs or waiting for a release note, you get a short, plain-language summary of the work that matters, plus a quiet line for everything that doesn't.</p>
 
     <h2>How it works</h2>
-    <p>Each morning a scheduled job clones every watched repository and reads the previous day's commits. A cheap triage model first picks out the high-impact changes; their real diffs are then handed to a second model that writes the summary. Because the write-up is grounded in the actual code change, it reflects what shipped, not what a changelog file claims.</p>
-    <p>High-impact changes get their own short write-ups; everything trivial is bundled under <em>"Other misc changes."</em> The same pipeline rolls the daily issues up into weekly and monthly editions, so you can follow a project as closely, or as loosely, as you like.</p>
+    <p>Every day a scheduled job runs a two-pass pipeline over each watched repository. A cheap model triages the day's commits, the real diffs of the ones that matter are pulled in, and a second model turns those into the article you read. Grounding the write-up in the actual diff keeps it honest about what shipped.</p>
 
-    <h2>What it follows</h2>
-    <p>The repositories currently watched:</p>
-    <ul>
-      {{ for repo of watched }}
-      <li><a href="/{{ repo }}/">{{ repo }}</a></li>
-      {{ /for }}
-    </ul>
+    <figure class="not-prose my-9">
+      <ol class="m-0 flex list-none flex-col gap-0 p-0">
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">1</span>
+            <span class="text-base font-semibold tracking-tight">Collect commits</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">Clone or fetch the repo and read the previous day's commits: message, author, and per-file line counts. No diffs are loaded yet, so the list stays cheap to scan.</div>
+        </li>
 
-    <h2>Reading &amp; subscribing</h2>
-    <p>Every repository has Daily, Weekly, and Monthly RSS feeds. Open a repo from the <a href="/">home page</a> and grab the cadence you want. Nothing to sign up for, no inbox required.</p>
+        <li class="flex justify-center py-2 text-ink-soft" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
+        </li>
 
-    <h2>Colophon</h2>
-    <p>Built with <a href="https://lume.land">Lume</a> on Deno and published to GitHub Pages. The summaries are written by a language model, so the occasional rough edge is on us. The <a href="https://github.com/kt3k/changelog">source is on GitHub</a> if you'd like to watch your own repositories or open an issue.</p>
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">2</span>
+            <span class="text-base font-semibold tracking-tight">Triage the commits</span>
+            <span class="ml-auto rounded-full border border-rule px-2 py-0.5 font-mono text-xs text-ink-soft">gpt-5.4-nano</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">The lightweight list goes to <code>gpt-5.4-nano</code>, which flags the high-impact commits by what the change actually means, not by commit-message conventions. Recall is favoured, so borderline commits make the cut.</div>
+        </li>
+
+        <li class="flex justify-center py-2 text-ink-soft" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
+        </li>
+
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">3</span>
+            <span class="text-base font-semibold tracking-tight">Attach the diffs</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">For the flagged commits, the real patches are pulled in. Noise is dropped (lockfiles, minified bundles, vendored trees) and long diffs are truncated, so the model sees the substance without blowing the token budget.</div>
+        </li>
+
+        <li class="flex justify-center py-2 text-ink-soft" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
+        </li>
+
+        <li class="rounded-xl border border-accent bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-white">4</span>
+            <span class="text-base font-semibold tracking-tight">Write the summary</span>
+            <span class="ml-auto rounded-full border border-rule px-2 py-0.5 font-mono text-xs text-ink-soft">gpt-5.4-mini</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">The full commit list plus the attached diffs go to <code>gpt-5.4-mini</code>, which writes the article: a short write-up for each high-impact change, with everything trivial bundled under <em>"Other misc changes."</em></div>
+        </li>
+      </ol>
+      <figcaption class="mt-4 text-center text-sm text-ink-soft">The same pipeline rolls the daily issues up into weekly and monthly editions.</figcaption>
+    </figure>
   </div>
 
   <nav class="mt-14 border-t border-rule pt-6">
