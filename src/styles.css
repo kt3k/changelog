@@ -30,6 +30,22 @@
   }
 }
 
+/* Days with no committed digest at all — before backfill reached, or before the
+   repo was watched. A hollow, hatched cell, distinct from the flat gray "quiet"
+   (size N) cell and the green activity cells. The frame is an inset shadow so it
+   doesn't shrink the flex cell the way a border would. */
+.cell-none {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-cell-empty);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-cell-empty) 0,
+    var(--color-cell-empty) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
 /* Markdown-rendered article body (elements we can't add utilities to). */
 .post-body {
   font-size: 1.15rem;

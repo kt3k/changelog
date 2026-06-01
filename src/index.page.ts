@@ -91,8 +91,14 @@ export default function (data: Lume.Data): string {
       totalCommits += Number(p?.commits ?? 0);
       const size = p?.size as string | undefined;
       const active = !!size && size !== "N";
-      const color = active ? `bg-cell-${size!.toLowerCase()}` : "bg-cell-empty";
-      const tip = active ? `${key} · ${size}` : key;
+      // Three states: active (S/M/L), quiet (a size:N post exists), and no data
+      // (no committed post — before backfill / before the repo was watched).
+      const color = active
+        ? `bg-cell-${size!.toLowerCase()}`
+        : p
+        ? "bg-cell-empty"
+        : "cell-none";
+      const tip = active ? `${key} · ${size}` : p ? key : `${key} · no data`;
       const isLatest = key === latestKey;
       const ring = isLatest
         ? " relative z-10 ring-2 ring-accent ring-offset-1 ring-offset-white"
