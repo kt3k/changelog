@@ -193,6 +193,14 @@ export default function (data: Lume.Data): string {
   }
   document.querySelectorAll("[data-card] [data-i]").forEach(function (cell) {
     cell.addEventListener("mouseenter", function () { show(cell); });
+    cell.addEventListener("click", function (e) {
+      // On devices that can't hover (touch), a tap previews the day instead of
+      // jumping to the article; the repointed summary link is how you open it.
+      if (window.matchMedia("(hover: none)").matches) {
+        e.preventDefault();
+        show(cell);
+      }
+    });
   });
 })();
 </script>`;
