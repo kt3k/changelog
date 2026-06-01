@@ -13,3 +13,6 @@ repos:
   - tc39/ecma262
   - tc39/proposals
   - microsoft/typescript-go
+  - pnpm/pnpm
+  - vitejs/vite
+  - biomejs/biome
