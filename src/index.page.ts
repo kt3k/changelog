@@ -202,7 +202,7 @@ export default function (data: Lume.Data): string {
     nextRun.setUTCDate(nextRun.getUTCDate() + 1);
   }
   const nextNote =
-    `<p class="mb-8 m-0 text-center text-xs text-ink-soft">Next update scheduled for ${
+    `<p class="mb-8 m-0 text-right text-xs text-ink-soft">Next update scheduled for ${
       human(nextRun)
     }, 06:00 UTC.</p>`;
 
