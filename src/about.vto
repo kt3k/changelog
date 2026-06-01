@@ -12,6 +12,10 @@ description: How Changelog turns each day's commits into a plain-language digest
   <div class="post-body">
     <p><strong>{{ site_name }}</strong> follows a handful of open-source projects and tells you what actually changed in each one, every day. Instead of skimming raw commit logs or waiting for a release note, you get a short, plain-language summary of the work that matters, plus a quiet line for everything that doesn't.</p>
 
+    <h2>Motivation</h2>
+    <p>Ever watched a repository on GitHub? The notifications are mostly noise. Issue comments, pull-request threads, invalid questions, suggestions built on a misreading. On a busy project they pile up faster than anyone can read them, and most people quietly stop looking.</p>
+    <p>The efficient way to follow an active repository, I think, is to watch only what lands on the main branch. There is very little noise there, and it holds the real progress of the project in distilled form. Changelog is built around that view: a way to follow a repository by what actually shipped.</p>
+
     <h2>How it works</h2>
     <p>Every day a scheduled job runs a two-pass pipeline over each watched repository. A cheap model triages the day's commits, the real diffs of the ones that matter are pulled in, and a second model turns those into the article you read. Grounding the write-up in the actual diff keeps it honest about what shipped.</p>
 
