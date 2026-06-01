@@ -173,7 +173,7 @@ export default function (data: Lume.Data): string {
         <h2 class="m-0 font-mono text-lg font-semibold"><a href="/${repo}/" class="text-accent no-underline hover:underline">${repo}</a></h2>
         ${tabs}
       </div>
-      <div class="flex gap-1">${strip}</div>
+      <div data-strip class="flex gap-1 touch-pan-y">${strip}</div>
       ${caption}
       ${summary}
     </div>`;
@@ -204,15 +204,42 @@ export default function (data: Lume.Data): string {
     // the base path / clean-URL rewrites are preserved).
     card.querySelector("[data-summary]").setAttribute("href", cell.getAttribute("href"));
   }
+  // Desktop: hover a cell to preview, click to open the article.
   document.querySelectorAll("[data-card] [data-i]").forEach(function (cell) {
     cell.addEventListener("mouseenter", function () { show(cell); });
-    cell.addEventListener("click", function (e) {
-      // On devices that can't hover (touch), a tap previews the day instead of
-      // jumping to the article; the repointed summary link is how you open it.
-      if (window.matchMedia("(hover: none)").matches) {
-        e.preventDefault();
-        show(cell);
+  });
+  var noHover = function () {
+    return window.matchMedia("(hover: none)").matches;
+  };
+  var cellAt = function (t) {
+    var el = document.elementFromPoint(t.clientX, t.clientY);
+    return el && el.closest ? el.closest("[data-i]") : null;
+  };
+  // Touch: tap or swipe along the strip previews the day under the finger; the
+  // article opens via the summary link below, not by tapping a cell.
+  document.querySelectorAll("[data-strip]").forEach(function (strip) {
+    var sx = 0, sy = 0, horiz = false;
+    strip.addEventListener("touchstart", function (e) {
+      var t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; horiz = false;
+      var cell = cellAt(t);
+      if (cell && strip.contains(cell)) show(cell);
+    }, { passive: true });
+    strip.addEventListener("touchmove", function (e) {
+      var t = e.touches[0];
+      if (!horiz) {
+        // Defer to vertical scrolling until the gesture is clearly horizontal.
+        if (Math.abs(t.clientX - sx) <= Math.abs(t.clientY - sy)) return;
+        horiz = true;
       }
+      var cell = cellAt(t);
+      if (cell && strip.contains(cell)) show(cell);
+      e.preventDefault(); // own the horizontal gesture; don't scroll the page
+    }, { passive: false });
+    // Swallow the cell's click on touch: a tap previews (handled above), and a
+    // swipe must not let the trailing click snap the summary back.
+    strip.addEventListener("click", function (e) {
+      if (noHover()) e.preventDefault();
     });
   });
 })();
