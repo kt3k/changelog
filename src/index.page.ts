@@ -10,6 +10,9 @@
 export const layout = "layouts/base.vto";
 
 const CELLS = 40;
+// Phones can't fit 40 tappable cells; below the `sm` breakpoint only the most
+// recent MOBILE_CELLS are shown (the older ones are hidden, not re-laid-out).
+const MOBILE_CELLS = 20;
 const MONTHS = [
   "Jan",
   "Feb",
@@ -83,12 +86,20 @@ export default function (data: Lume.Data): string {
     const days: Day[] = [];
     let strip = "";
     let totalCommits = 0;
+    let mobileCommits = 0;
     for (let i = CELLS - 1; i >= 0; i--) {
       const d = new Date(end);
       d.setUTCDate(d.getUTCDate() - i);
       const key = ymd(d);
       const p = postByDate.get(key);
-      totalCommits += Number(p?.commits ?? 0);
+      const idx = days.length;
+      const commits = Number(p?.commits ?? 0);
+      totalCommits += commits;
+      // The oldest cells are hidden below `sm`; only the most recent
+      // MOBILE_CELLS show on phones, and the caption counts match.
+      const onMobile = idx >= CELLS - MOBILE_CELLS;
+      if (onMobile) mobileCommits += commits;
+      const vis = onMobile ? "" : "hidden sm:block ";
       const size = p?.size as string | undefined;
       const active = !!size && size !== "N";
       // Three states: active (S/M/L), quiet (a size:N post exists), and no data
@@ -103,13 +114,12 @@ export default function (data: Lume.Data): string {
       const ring = isLatest
         ? " relative z-10 ring-2 ring-accent ring-offset-1 ring-offset-white"
         : "";
-      const idx = days.length;
       // Active cells link straight to that day's article; empty cells are inert.
       strip += active
         ? `<a href="${
           p!.url
-        }" data-i="${idx}" class="${base} ${color} cursor-pointer${ring}" title="${tip}"></a>`
-        : `<span data-i="${idx}" class="${base} ${color}" title="${tip}"></span>`;
+        }" data-i="${idx}" class="${vis}${base} ${color} cursor-pointer${ring}" title="${tip}"></a>`
+        : `<span data-i="${idx}" class="${vis}${base} ${color}" title="${tip}"></span>`;
       days.push({
         human: human(d),
         latest: isLatest,
@@ -133,7 +143,10 @@ export default function (data: Lume.Data): string {
       `</nav>`;
 
     const caption =
-      `<p class="mt-2 m-0 text-right text-xs font-semibold uppercase tracking-wider text-ink-soft">Last 40 days · ${totalCommits} commits</p>`;
+      `<p class="mt-2 m-0 text-right text-xs font-semibold uppercase tracking-wider text-ink-soft">` +
+      `<span class="sm:hidden">Last ${MOBILE_CELLS} days · ${mobileCommits} commits</span>` +
+      `<span class="hidden sm:inline">Last ${CELLS} days · ${totalCommits} commits</span>` +
+      `</p>`;
 
     // The summary block starts on the latest in-window day. When there is one
     // it is a link (kept in sync with the shown day by JS); otherwise a note.
