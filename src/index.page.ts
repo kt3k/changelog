@@ -195,16 +195,5 @@ export default function (data: Lume.Data): string {
       <p class="m-0 text-lg leading-snug text-ink-soft">A daily, LLM-written digest of selected git repositories. <a class="font-semibold text-accent no-underline hover:underline" href="/about">How it works →</a></p>
     </div>`;
 
-  // Next scheduled daily run: the upcoming 06:00 UTC relative to build time.
-  const now = new Date();
-  const nextRun = new Date(`${ymd(now)}T06:00:00Z`);
-  if (nextRun.getTime() <= now.getTime()) {
-    nextRun.setUTCDate(nextRun.getUTCDate() + 1);
-  }
-  const nextNote =
-    `<p class="mb-8 m-0 text-right text-xs text-ink-soft">Next update scheduled for ${
-      human(nextRun)
-    }, 06:00 UTC.</p>`;
-
-  return `${intro}${nextNote}<div>${cards.join("\n")}</div>${script}`;
+  return `${intro}<div>${cards.join("\n")}</div>${script}`;
 }

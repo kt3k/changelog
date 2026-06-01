@@ -26,6 +26,32 @@ const watched = (reposDoc.repos ?? []).map((r) =>
 );
 site.data("watched", watched);
 
+// Next scheduled daily run (cron "0 6 * * *"): the upcoming 06:00 UTC, computed
+// at build time and shown in the footer.
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+const buildNow = new Date();
+const nextRun = new Date(`${buildNow.toISOString().slice(0, 10)}T06:00:00Z`);
+if (nextRun.getTime() <= buildNow.getTime()) {
+  nextRun.setUTCDate(nextRun.getUTCDate() + 1);
+}
+site.data(
+  "nextUpdate",
+  `${MONTHS[nextRun.getUTCMonth()]} ${nextRun.getUTCDate()}, 06:00 UTC`,
+);
+
 // Tailwind entry stylesheet (compiled by the tailwindcss plugin).
 site.add("/styles.css");
 
@@ -91,7 +117,9 @@ site.process([".html"], (pages) => {
           .map((h, i) => {
             const open = i === 0 ? "(" : "";
             const close = i === hashes.length - 1 ? ")" : "";
-            return `<span class="commit-ref">${open}${render(h)}${close}</span>`;
+            return `<span class="commit-ref">${open}${
+              render(h)
+            }${close}</span>`;
           })
           .join(", ");
       },
