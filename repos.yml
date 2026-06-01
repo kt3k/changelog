@@ -11,4 +11,5 @@ repos:
   - oven-sh/bun
   - nodejs/node
   - tc39/ecma262
+  - tc39/proposals
   - microsoft/typescript-go
