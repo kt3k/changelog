@@ -11,12 +11,23 @@ export const layout = "layouts/base.vto";
 
 const CELLS = 40;
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 const ymd = (d: Date): string => d.toISOString().slice(0, 10);
-const human = (d: Date): string => `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
+const human = (d: Date): string =>
+  `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
 const toDate = (v: unknown): Date =>
   v instanceof Date ? v : new Date(v as string);
 
@@ -36,8 +47,17 @@ export default function (data: Lume.Data): string {
   const watched: string[] = data.watched ?? [];
   const allPosts = data.search.pages("type=post", "date=desc");
 
-  const end = new Date(`${ymd(new Date())}T00:00:00Z`);
-  end.setUTCDate(end.getUTCDate() - 1);
+  // Anchor the strip to the latest day a digest has actually been committed for
+  // (size:"N" counts: the day was processed, just quiet), not to the calendar.
+  // This keeps the grid from advancing past yesterday before the daily run lands.
+  const latestDaily = allPosts.find((p) => (p.period ?? "daily") === "daily");
+  const end = latestDaily
+    ? new Date(`${ymd(toDate(latestDaily.date))}T00:00:00Z`)
+    : (() => {
+      const d = new Date();
+      d.setUTCDate(d.getUTCDate() - 1);
+      return new Date(`${ymd(d)}T00:00:00Z`);
+    })();
   const windowStart = new Date(end);
   windowStart.setUTCDate(end.getUTCDate() - (CELLS - 1));
   const windowStartKey = ymd(windowStart);
@@ -54,8 +74,9 @@ export default function (data: Lume.Data): string {
     // Latest day carrying a summary, but only if it sits inside the strip.
     const latestPost = posts.find((p) => p.size !== "N" && p.excerpt);
     const latestPostKey = latestPost ? ymd(toDate(latestPost.date)) : null;
-    const latestKey =
-      latestPostKey && latestPostKey >= windowStartKey ? latestPostKey : null;
+    const latestKey = latestPostKey && latestPostKey >= windowStartKey
+      ? latestPostKey
+      : null;
     const hasIssues = posts.some((p) => p.size !== "N");
 
     const base = "flex-1 aspect-square rounded-[3px]";
@@ -79,7 +100,9 @@ export default function (data: Lume.Data): string {
       const idx = days.length;
       // Active cells link straight to that day's article; empty cells are inert.
       strip += active
-        ? `<a href="${p!.url}" data-i="${idx}" class="${base} ${color} cursor-pointer${ring}" title="${tip}"></a>`
+        ? `<a href="${
+          p!.url
+        }" data-i="${idx}" class="${base} ${color} cursor-pointer${ring}" title="${tip}"></a>`
         : `<span data-i="${idx}" class="${base} ${color}" title="${tip}"></span>`;
       days.push({
         human: human(d),
@@ -111,8 +134,11 @@ export default function (data: Lume.Data): string {
     const latest = latestKey ? postByDate.get(latestKey) : null;
     let summary: string;
     if (latest) {
-      summary = `<a data-summary href="${latest.url}" class="group mt-5 block border-l-2 border-accent pl-4 no-underline">
-        <p data-eyebrow class="m-0 mb-1 text-xs font-semibold uppercase tracking-wider text-accent">Latest · ${human(toDate(latest.date))}</p>
+      summary =
+        `<a data-summary href="${latest.url}" class="group mt-5 block border-l-2 border-accent pl-4 no-underline">
+        <p data-eyebrow class="m-0 mb-1 text-xs font-semibold uppercase tracking-wider text-accent">Latest · ${
+          human(toDate(latest.date))
+        }</p>
         <h3 data-title class="m-0 mb-1 text-base font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent">${latest.title}</h3>
         <p data-excerpt class="m-0 text-sm text-ink-soft">${latest.excerpt}</p>
       </a>`;
@@ -120,8 +146,7 @@ export default function (data: Lume.Data): string {
       const note = hasIssues
         ? "No activity in the last 40 days."
         : "No issues yet. Check back after the next daily run.";
-      summary =
-        `<p class="mt-5 m-0 italic text-ink-soft">${note}</p>`;
+      summary = `<p class="mt-5 m-0 italic text-ink-soft">${note}</p>`;
     }
 
     return `<div data-card="${repo}" class="border-b border-rule py-6 last:border-0">
@@ -135,7 +160,9 @@ export default function (data: Lume.Data): string {
     </div>`;
   });
 
-  const script = `<script type="application/json" id="repo-days">${safeJson(repoDays)}</script>
+  const script = `<script type="application/json" id="repo-days">${
+    safeJson(repoDays)
+  }</script>
 <script>
 (function () {
   var data = JSON.parse(document.getElementById("repo-days").textContent);
@@ -164,8 +191,7 @@ export default function (data: Lume.Data): string {
 })();
 </script>`;
 
-  const intro =
-    `<div class="mb-10 border-b border-rule pb-8">
+  const intro = `<div class="mb-10 border-b border-rule pb-8">
       <p class="m-0 text-lg leading-snug text-ink-soft">A daily, LLM-written digest of selected git repositories. <a class="font-semibold text-accent no-underline hover:underline" href="/about">How it works →</a></p>
     </div>`;
 
