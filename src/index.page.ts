@@ -202,9 +202,9 @@ export default function (data: Lume.Data): string {
     nextRun.setUTCDate(nextRun.getUTCDate() + 1);
   }
   const nextNote =
-    `<p class="mt-10 m-0 text-center text-xs text-ink-soft">Next update scheduled for ${
+    `<p class="mb-8 m-0 text-center text-xs text-ink-soft">Next update scheduled for ${
       human(nextRun)
     }, 06:00 UTC.</p>`;
 
-  return `${intro}<div>${cards.join("\n")}</div>${nextNote}${script}`;
+  return `${intro}${nextNote}<div>${cards.join("\n")}</div>${script}`;
 }
