@@ -69,6 +69,54 @@ description: How Changelog turns each day's commits into a plain-language digest
     </figure>
 
     <p class="text-sm text-ink-soft">The cheap triage and the capped diffs keep the bill small: at current API prices an active repository runs about 1.5 to 2.5 cents a day, and quiet days cost under a cent.</p>
+
+    <h2>Run your own</h2>
+    <p>Changelog is open source. Fork it, point it at the repositories you care about, and you have your own daily digest running on free GitHub infrastructure in a few minutes.</p>
+
+    <figure class="not-prose my-9">
+      <ol class="m-0 flex list-none flex-col gap-3 p-0">
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">1</span>
+            <span class="text-base font-semibold tracking-tight">Fork the repo</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">Fork <a href="https://github.com/kt3k/changelog">kt3k/changelog</a> on GitHub into your own account.</div>
+        </li>
+
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">2</span>
+            <span class="text-base font-semibold tracking-tight">Choose your repos</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">Edit <code>repos.yml</code> and list the <code>owner/name</code> repositories you want to follow.</div>
+        </li>
+
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">3</span>
+            <span class="text-base font-semibold tracking-tight">Add your API key</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">In <strong>Settings → Secrets and variables → Actions</strong>, add an <code>OPENAI_API_KEY</code> repository secret.</div>
+        </li>
+
+        <li class="rounded-xl border border-rule bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">4</span>
+            <span class="text-base font-semibold tracking-tight">Turn on Pages</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">In <strong>Settings → Pages</strong>, set the source to <strong>GitHub Actions</strong> so the built site can deploy.</div>
+        </li>
+
+        <li class="rounded-xl border border-accent bg-surface px-5 py-4">
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-white">5</span>
+            <span class="text-base font-semibold tracking-tight">Run it</span>
+          </div>
+          <div class="mt-1.5 pl-[2.125rem] text-sm leading-relaxed text-ink-soft">Trigger the <strong>Digest</strong> workflow from the <strong>Actions</strong> tab to test, then let the daily schedule take over — weekly and monthly editions roll up automatically.</div>
+        </li>
+      </ol>
+      <figcaption class="mt-4 text-center text-sm text-ink-soft">See the <a href="https://github.com/kt3k/changelog#readme">README</a> for running locally and tuning the models.</figcaption>
+    </figure>
   </div>
 
   <nav class="mt-14 border-t border-rule pt-6">
