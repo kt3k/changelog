@@ -27,6 +27,14 @@
   </main>
 
   <footer class="border-t border-rule">
+    <div class="mx-auto flex max-w-2xl flex-col items-center gap-3 border-b border-rule px-6 py-12 text-center">
+      <p class="text-lg font-bold tracking-tight text-ink">あなたの関心のあるリポジトリがありませんか？</p>
+      <p class="max-w-md text-sm leading-relaxed text-ink-soft">Fork してあなた用の Changelog サイトを作りましょう！</p>
+      <a href="/about#run-your-own" class="mt-1 inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white no-underline transition hover:opacity-90">
+        Fork して始める
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
     <div class="mx-auto flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-1 px-6 py-10 text-center text-sm text-ink-soft">
       <span>© {{ ("" + new Date().getFullYear()) }} {{ site_name }}</span>
       <span aria-hidden="true">·</span>
