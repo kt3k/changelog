@@ -5,8 +5,8 @@ size: L
 title: "Deno tightens Node, npm, and runtime behavior"
 excerpt: "Big day of compatibility fixes: Node crypto/fs/child_process, npm resolution, Windows permissions, LSP URIs, and WebTransport."
 commits: 17
-authors: [bartlomieju, crowlKats, kovan]
-commit_authors: {"8252557": bartlomieju, "41fd4a1": bartlomieju, "4678f77": bartlomieju, "5ab1541": crowlKats, "4738ecd": bartlomieju, "ca989a0": bartlomieju, "2bb0666": bartlomieju, "7c57830": bartlomieju, "b365d54": bartlomieju, "fa18175": bartlomieju, "583bee8": bartlomieju, "bf3f85b": kovan, "8b9d1aa": bartlomieju, "6710d58": bartlomieju, "e15a439": bartlomieju, "6511a14": bartlomieju}
+authors: [bartlomieju, crowlKats, kovan, lu-zero]
+commit_authors: {"8252557": bartlomieju, "41fd4a1": bartlomieju, "4678f77": bartlomieju, "5ab1541": crowlKats, "4738ecd": bartlomieju, "ca989a0": bartlomieju, "2bb0666": bartlomieju, "7c57830": bartlomieju, "b365d54": bartlomieju, "fa18175": bartlomieju, "583bee8": bartlomieju, "bf3f85b": kovan, "8b9d1aa": bartlomieju, "6710d58": bartlomieju, "e15a439": bartlomieju, "6511a14": bartlomieju, "d6f8331": lu-zero}
 ---
 
 ### **Fix npm-linked package resolution when the package isn’t published** (fa18175)

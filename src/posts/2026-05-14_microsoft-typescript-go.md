@@ -5,8 +5,8 @@ size: L
 title: "TypeScript-Go sharpens overloads, index signatures"
 excerpt: "JS expando index signatures now infer better, overload-tag handling was tightened, and realpath resolution got a major speedup."
 commits: 11
-authors: [jakebailey, andrewbranch, johnfav03]
-commit_authors: {"49b85c9": andrewbranch, "a8b2a52": jakebailey, "37632e9": johnfav03, "2d9635d": jakebailey}
+authors: [weswigham, jakebailey, andrewbranch, a-tarasyuk, johnfav03, ahejlsberg]
+commit_authors: {"4423492": weswigham, "c282336": weswigham, "49b85c9": andrewbranch, "c65161e": weswigham, "137998e": a-tarasyuk, "a8b2a52": jakebailey, "37632e9": johnfav03, "895d80c": ahejlsberg, "2d9635d": jakebailey}
 ---
 
 ### **Speed up realpath resolution on Linux and macOS** (a8b2a52)

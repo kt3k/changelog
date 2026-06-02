@@ -5,8 +5,8 @@ size: L
 title: "Node compat and npm resolver get big upgrades"
 excerpt: "Major Node crypto/UDP fixes, npm resolution performance gains, and a cache-dir refactor landed alongside several CI and correctness improvements."
 commits: 24
-authors: [bartlomieju, dsherret, nathanwhit, denobot, arnauorriols, Tango992]
-commit_authors: {"5073362": bartlomieju, "2334e53": dsherret, "86a97b2": bartlomieju, "3fe843d": dsherret, "5d6b106": bartlomieju, "75c9638": bartlomieju, "d45142b": bartlomieju, "83e3746": denobot, "3f45941": nathanwhit, "74cc882": bartlomieju, "0cfe40a": dsherret, "25dbe4c": bartlomieju, "28ec7c0": bartlomieju, "5b5f84c": bartlomieju, "01f99e8": arnauorriols, "a4f20ad": dsherret, "291532f": bartlomieju, "984300a": bartlomieju, "f5f84cd": Tango992, "df9c814": dsherret}
+authors: [bartlomieju, dsherret, nathanwhit, denobot, kajukitli, arnauorriols, Tango992]
+commit_authors: {"5073362": bartlomieju, "2334e53": dsherret, "86a97b2": bartlomieju, "3fe843d": dsherret, "5d6b106": bartlomieju, "75c9638": bartlomieju, "d45142b": bartlomieju, "83e3746": denobot, "c15deea": kajukitli, "3f45941": nathanwhit, "74cc882": bartlomieju, "0cfe40a": dsherret, "25dbe4c": bartlomieju, "28ec7c0": bartlomieju, "5b5f84c": bartlomieju, "01f99e8": arnauorriols, "a4f20ad": dsherret, "291532f": bartlomieju, "984300a": bartlomieju, "f5f84cd": Tango992, "df9c814": dsherret}
 ---
 
 ### **Deno cache directory moved into the main repo** (3fe843d)

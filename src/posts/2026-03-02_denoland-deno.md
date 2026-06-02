@@ -5,7 +5,7 @@ size: L
 title: "Deno tightens Node compat, npm installs, and Jupyter"
 excerpt: "Big Node crypto/process fixes, npm resolver and install speedups, plus protocol-correct Jupyter interrupts and shutdowns."
 commits: 27
-authors: [bartlomieju, nathanwhit, marvinhagemeister, pmarchini, Tango992]
+authors: [bartlomieju, nathanwhit, marvinhagemeister, pmarchini, Tango992, fraidev]
 commit_authors: {"f7bcc96": bartlomieju, "5fb8a4d": marvinhagemeister, "968baf7": bartlomieju, "cf2455c": bartlomieju, "95140c3": nathanwhit, "e726953": bartlomieju, "70497bb": bartlomieju, "fd9def3": bartlomieju, "84f7a15": bartlomieju, "b9f6889": nathanwhit, "64a1d86": bartlomieju, "cc8c488": bartlomieju, "59bec9b": bartlomieju, "63ff522": bartlomieju, "d428817": bartlomieju, "9cf5852": bartlomieju}
 ---
 

@@ -5,8 +5,8 @@ size: M
 title: "LSP and types reshuffle land"
 excerpt: "Deno sped up LSP caching, fixed tsgo root sync, and split Temporal types into their own declarations file."
 commits: 5
-authors: [bartlomieju]
-commit_authors: {"0e2450c": bartlomieju, "574272d": bartlomieju}
+authors: [bartlomieju, CertainLach, kajukitli, nayeemrmn]
+commit_authors: {"f7d492d": CertainLach, "0e2450c": bartlomieju, "e7bafc9": kajukitli, "55b7691": nayeemrmn, "574272d": bartlomieju}
 ---
 
 ### **Fix LSP root file syncing with tsgo** (55b7691)

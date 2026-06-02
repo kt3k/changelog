@@ -5,8 +5,8 @@ size: M
 title: "Test runner exit codes and stream errors tightened"
 excerpt: "Notable fixes for test runner failures and pipeline error handling, plus a sqlite callback lifetime bug and tooling updates."
 commits: 7
-authors: [legendecas, geeksilva97, marcopiraccini]
-commit_authors: {"56aba88": legendecas, "f68824a": geeksilva97, "40c625b": geeksilva97, "27501b4": legendecas, "4d2d6de": marcopiraccini}
+authors: [legendecas, geeksilva97, chohner, JLHwung, marcopiraccini]
+commit_authors: {"56aba88": legendecas, "f68824a": geeksilva97, "40c625b": geeksilva97, "27501b4": legendecas, "7ca5de7": chohner, "bd8522a": JLHwung, "4d2d6de": marcopiraccini}
 ---
 
 ### **Test runner now fails on suite-level errors** (f68824a)

@@ -5,8 +5,8 @@ size: L
 title: "Svelte, linting, markdown, and YAML fixes"
 excerpt: "Major parser and lint rule improvements landed, plus markdown/YAML correctness fixes and automation workflow updates."
 commits: 6
-authors: [IxxyDev, jfmcdowell]
-commit_authors: {"24e51d6": IxxyDev, "f54d5a2": jfmcdowell}
+authors: [Mokto, IxxyDev, jfmcdowell, siketyan, pkallos, ematipico]
+commit_authors: {"0c03ee3": Mokto, "24e51d6": IxxyDev, "f54d5a2": jfmcdowell, "6d0e473": siketyan, "ff635a9": pkallos}
 ---
 
 ### **Svelte await blocks now allow omitted bindings** (0c03ee3)

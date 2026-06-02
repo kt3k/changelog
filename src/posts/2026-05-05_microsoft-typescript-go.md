@@ -5,8 +5,8 @@ size: L
 title: "Inference and declaration emit fixes land"
 excerpt: "Several bug fixes improve type inference, isolatedDeclarations, and declaration emit correctness; one printer panic fix rounds out the day."
 commits: 7
-authors: [jakebailey]
-commit_authors: {"3fef754": jakebailey}
+authors: [a-tarasyuk, Andarist, jakebailey, ahejlsberg]
+commit_authors: {"ee4225a": Andarist, "23ec44f": a-tarasyuk, "3fef754": jakebailey, "fdfe96e": ahejlsberg, "2a41760": a-tarasyuk, "3b78168": a-tarasyuk}
 ---
 
 ### **Fix inference from `never` into union targets** (ee4225a)

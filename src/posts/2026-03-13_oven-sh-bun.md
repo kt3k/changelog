@@ -5,8 +5,8 @@ size: L
 title: "Big build overhaul, several crash fixes"
 excerpt: "TypeScript-based build replaces CMake, while crypto, HTTP, websocket, watcher, and bundler bugs get targeted fixes."
 commits: 8
-authors: [Jarred-Sumner, robobun, gaowhen, dylan-conway]
-commit_authors: {"8863614": robobun, "636c638": Jarred-Sumner, "7c00cce": Jarred-Sumner, "2964b4a": Jarred-Sumner, "0d22c69": gaowhen, "a8ee0d3": dylan-conway}
+authors: [Jarred-Sumner, robobun, WhiteMinds, gaowhen, dylan-conway]
+commit_authors: {"8863614": robobun, "636c638": Jarred-Sumner, "7c00cce": Jarred-Sumner, "2964b4a": Jarred-Sumner, "ace03ea": WhiteMinds, "0d22c69": gaowhen, "a8ee0d3": dylan-conway}
 ---
 
 ### **Build system moves from CMake to TypeScript** (a8ee0d3)

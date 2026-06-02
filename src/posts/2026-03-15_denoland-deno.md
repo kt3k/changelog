@@ -5,8 +5,8 @@ size: L
 title: "Deno tightens telemetry, profiling, and coverage"
 excerpt: "Fixes OTEL console/HTTP span semantics, applies source maps to CPU profiles, and corrects coverage and Node UDP behavior."
 commits: 7
-authors: [bartlomieju]
-commit_authors: {"895fa89": bartlomieju, "24bc84e": bartlomieju, "62a57bc": bartlomieju, "ad32e93": bartlomieju, "2989e30": bartlomieju, "622a15e": bartlomieju}
+authors: [bartlomieju, kajukitli]
+commit_authors: {"895fa89": bartlomieju, "24bc84e": bartlomieju, "62a57bc": bartlomieju, "ad32e93": bartlomieju, "2989e30": bartlomieju, "622a15e": bartlomieju, "408ddbe": kajukitli}
 ---
 
 ### **Telemetry now tags console logs with stdout/stderr** (2989e30)

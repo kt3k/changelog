@@ -5,8 +5,8 @@ size: L
 title: "Bun hardens bundling, buffers, and I/O"
 excerpt: "Major fixes for dynamic-import bundling, buffer detachment safety, and several runtime/parser edge cases; plus new markdown metadata."
 commits: 16
-authors: [robobun, dylan-conway, Jarred-Sumner, anthonybaldwin, sosukesuzuki]
-commit_authors: {"6c7e972": dylan-conway, "32edef7": Jarred-Sumner, "aa51d60": anthonybaldwin, "1896d27": robobun, "9e1044f": robobun, "36793df": robobun, "a67d8e2": robobun, "1278e46": sosukesuzuki, "0b61853": dylan-conway, "5d79daa": robobun, "6f256c4": robobun, "5ff4536": robobun, "616501d": robobun}
+authors: [robobun, dylan-conway, Jarred-Sumner, anthonybaldwin, c-stoeckl, sosukesuzuki]
+commit_authors: {"6c7e972": dylan-conway, "32edef7": Jarred-Sumner, "aa51d60": anthonybaldwin, "1896d27": robobun, "9e1044f": robobun, "36793df": robobun, "a67d8e2": robobun, "d5badc2": c-stoeckl, "1278e46": sosukesuzuki, "0b61853": dylan-conway, "5d79daa": robobun, "6f256c4": robobun, "5ff4536": robobun, "616501d": robobun}
 ---
 
 ### **Bundler now preserves barrel exports for dynamic import** (6c7e972)

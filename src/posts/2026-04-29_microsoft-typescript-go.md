@@ -5,8 +5,8 @@ size: L
 title: "API expansion and debugger stack guard"
 excerpt: "New native-preview checker endpoints, a stack-limit escape hatch, and fixes for union truncation and JS Promise diagnostics."
 commits: 6
-authors: [navya9singh]
-commit_authors: {"1b81e8f": navya9singh}
+authors: [ahejlsberg, navya9singh, Andarist]
+commit_authors: {"1b81e8f": navya9singh, "5a31703": ahejlsberg, "ce43ebc": Andarist, "f65feaf": ahejlsberg}
 ---
 
 ### **Native preview exposes more checker APIs** (1b81e8f)

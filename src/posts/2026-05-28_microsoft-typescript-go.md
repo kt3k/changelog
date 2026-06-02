@@ -5,6 +5,8 @@ size: M
 title: "Computed-name emit and JSDoc hover fixes"
 excerpt: "TypeScript-Go now emits serialized computed property names more faithfully and improves hover docs for destructured binding elements."
 commits: 2
+authors: [weswigham, ahejlsberg]
+commit_authors: {"0970dc4": weswigham, "2a26cbd": ahejlsberg}
 ---
 
 ### **Emit computed property names instead of index signatures** (0970dc4)

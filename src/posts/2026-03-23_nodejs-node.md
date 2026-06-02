@@ -5,8 +5,8 @@ size: M
 title: "Node adds official SSL_CTX addon API"
 excerpt: "A new native addon API exposes OpenSSL contexts, alongside doc fixes and safer Windows child_process guidance."
 commits: 3
-authors: [pimterry, kovan]
-commit_authors: {"2263b4d": pimterry, "22fc52b": kovan}
+authors: [lilianakatrina684-a11y, pimterry, kovan]
+commit_authors: {"7f8019e": lilianakatrina684-a11y, "2263b4d": pimterry, "22fc52b": kovan}
 ---
 
 ### **Official SSL_CTX access for native addons** (2263b4d)

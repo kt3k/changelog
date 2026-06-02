@@ -5,7 +5,7 @@ size: M
 title: "Node tightens docs, fixes coverage and CLI edge cases"
 excerpt: "A mix of real bug fixes, a runtime deprecation, a util regression fix, and a SQLite upgrade landed today."
 commits: 12
-authors: [kovan, Renegade334, nodejs-github-bot, mertcanaltin, aduh95, sxa, marcopiraccini, Han5991]
+authors: [kovan, Renegade334, nodejs-github-bot, Xstoudi, mertcanaltin, aduh95, sxa, marcopiraccini, Han5991]
 commit_authors: {"f08e2e0": mertcanaltin, "6f7b948": marcopiraccini, "9e89867": kovan, "ac63754": Renegade334, "b4ea323": Renegade334, "a62f641": Han5991, "9580d58": nodejs-github-bot}
 ---
 

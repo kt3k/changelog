@@ -5,8 +5,8 @@ size: L
 title: "Crash fixes and hover/resolution polish"
 excerpt: "Multiple crash fixes landed across hover, token lookup, module resolution, and LSP behavior, plus one Unicode bug fix."
 commits: 10
-authors: [jakebailey]
-commit_authors: {"21b262e": jakebailey, "ef89a24": jakebailey}
+authors: [jakebailey, gabritto, Andarist, ahejlsberg, a-tarasyuk]
+commit_authors: {"39c4ad2": Andarist, "21b262e": jakebailey, "60169b3": gabritto, "6b79498": gabritto, "ef89a24": jakebailey, "6b8645e": a-tarasyuk}
 ---
 
 ### **Fix invalid UTF-8 line/character mapping** (2de4a3f)

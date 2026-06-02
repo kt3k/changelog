@@ -5,8 +5,8 @@ size: L
 title: "Declaration emit and tracing get sharper"
 excerpt: "Fixes for CJS export declaration emit, static class name conflicts, JSX runtime imports, and trace metadata."
 commits: 9
-authors: [jakebailey]
-commit_authors: {"2879671": jakebailey}
+authors: [weswigham, iisaduan, jakebailey]
+commit_authors: {"2879671": jakebailey, "01cc069": weswigham, "35e8f91": iisaduan, "e3ea2a8": weswigham}
 ---
 
 ### **Declaration emit now prefers identifiers for CJS export names** (01cc069)

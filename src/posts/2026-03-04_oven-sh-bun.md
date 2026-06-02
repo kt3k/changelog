@@ -5,6 +5,8 @@ size: S
 title: "Docs code sample formatting cleaned up"
 excerpt: "A single docs-only change reindented and normalized Bun fullstack examples in the bundler guide."
 commits: 1
+authors: [baboon-king]
+commit_authors: {"663a4cc": baboon-king}
 ---
 
 ### Other misc changes

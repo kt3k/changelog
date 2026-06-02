@@ -5,8 +5,8 @@ size: L
 title: "Timer refactor, WebCrypto P-521, and compat fixes"
 excerpt: "Major timer architecture cleanup plus P-521 WebCrypto support, Node compat fixes, and an HTTP telemetry enhancement."
 commits: 13
-authors: [bartlomieju, dsherret, denobot]
-commit_authors: {"391a2c8": bartlomieju, "8ab268c": bartlomieju, "24dd077": bartlomieju, "b82edaf": dsherret, "af16b8a": bartlomieju, "c436b5f": bartlomieju, "b3e93cf": bartlomieju, "8fa9085": denobot, "42eb6ab": bartlomieju, "a2a7955": bartlomieju}
+authors: [bartlomieju, joshvfleming, dsherret, denobot]
+commit_authors: {"391a2c8": bartlomieju, "756d5d9": joshvfleming, "8ab268c": bartlomieju, "24dd077": bartlomieju, "b82edaf": dsherret, "af16b8a": bartlomieju, "c436b5f": bartlomieju, "b3e93cf": bartlomieju, "8fa9085": denobot, "42eb6ab": bartlomieju, "a2a7955": bartlomieju}
 ---
 
 ### **Web timers now ride on Node's Timeout implementation** (391a2c8)

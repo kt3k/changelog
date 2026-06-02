@@ -5,8 +5,8 @@ size: M
 title: "Module resolution, declaration emit, and LS fixes"
 excerpt: "A mixed day of several notable bug fixes across module resolution, declaration emit, and language service behavior."
 commits: 18
-authors: [DanielRosenwasser, andrewbranch, RyanCavanaugh, jakebailey]
-commit_authors: {"e1f8f97": andrewbranch, "5c67e17": RyanCavanaugh, "48e2953": jakebailey, "04b3256": DanielRosenwasser, "968d062": DanielRosenwasser}
+authors: [weswigham, DanielRosenwasser, andrewbranch, RyanCavanaugh, ahejlsberg, jakebailey, Andarist, a-tarasyuk]
+commit_authors: {"e1f8f97": andrewbranch, "c872613": weswigham, "5c67e17": RyanCavanaugh, "88f5792": weswigham, "b6de67f": ahejlsberg, "48e2953": jakebailey, "ed6cf5d": Andarist, "1fb728b": a-tarasyuk, "04b3256": DanielRosenwasser, "968d062": DanielRosenwasser}
 ---
 
 ### **Fix package exports fallback and self-name resolution edge cases** (e1f8f97)

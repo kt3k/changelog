@@ -5,7 +5,7 @@ size: M
 title: "Node 25.8.0 lands with key fixes"
 excerpt: "Node.js 25.8.0 ships plus source-map, async context, and build fixes; most remaining changes are dependency and doc updates."
 commits: 12
-authors: [nodejs-github-bot, legendecas, aduh95, joyeecheung, Flarna, avivkeller]
+authors: [nodejs-github-bot, legendecas, JLHwung, aduh95, joyeecheung, Flarna, ShenHongFei, avivkeller]
 commit_authors: {"afc30b7": legendecas, "48c208f": aduh95, "d0798d1": joyeecheung, "3b9fe89": nodejs-github-bot, "4eac937": Flarna}
 ---
 

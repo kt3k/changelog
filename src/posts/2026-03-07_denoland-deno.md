@@ -5,8 +5,8 @@ size: M
 title: "Coverage gets function metrics; npm extraction faster"
 excerpt: "Deno adds function coverage reporting, refines core module loading internals, and ships two npm tarball extraction speedups."
 commits: 6
-authors: [bartlomieju, dsherret]
-commit_authors: {"cca3136": bartlomieju, "99bb112": bartlomieju, "adafd45": bartlomieju, "09a9f0b": dsherret, "e219207": dsherret}
+authors: [bartlomieju, dsherret, kajukitli]
+commit_authors: {"cca3136": bartlomieju, "99bb112": bartlomieju, "d6ebab8": kajukitli, "adafd45": bartlomieju, "09a9f0b": dsherret, "e219207": dsherret}
 ---
 
 ### **Function coverage now shows up in reports** (adafd45)

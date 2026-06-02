@@ -5,8 +5,8 @@ size: S
 title: "Rolldown bump, docs tweak, error polish"
 excerpt: "Vite updates rolldown to 1.0.3, clarifies a plugin docs example, and cleans up a few error strings."
 commits: 3
-authors: [shulaoda, RonGamzu]
-commit_authors: {"646dbed": shulaoda, "85a0eff": RonGamzu}
+authors: [shulaoda, Sean-Kenneth-Doherty, RonGamzu]
+commit_authors: {"646dbed": shulaoda, "c2d1082": Sean-Kenneth-Doherty, "85a0eff": RonGamzu}
 ---
 
 ### **Rolldown updated to 1.0.3** (646dbed)

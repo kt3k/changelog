@@ -5,6 +5,8 @@ size: L
 title: "Patches land for emit, JSX, and checker crashes"
 excerpt: "A busy day of bug fixes: declaration emit, JSX parsing/printing, scanner correctness, and several panic/hang fixes in the checker."
 commits: 20
+authors: [a-tarasyuk, Andarist, ahejlsberg]
+commit_authors: {"913fed9": a-tarasyuk, "9f17e24": ahejlsberg}
 ---
 
 ### **Declaration emit now preserves parsed `typeof` postfix forms** (5a1261b)

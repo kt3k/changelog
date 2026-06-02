@@ -5,8 +5,8 @@ size: M
 title: "Type hints and quick info get sharper"
 excerpt: "Several fixes improve widened assignments, hover/type display, and restart reliability, with one broader checker refactor restored."
 commits: 6
-authors: [ekazakov14, jakebailey]
-commit_authors: {"2a3f6d2": ekazakov14, "de302e0": jakebailey}
+authors: [ahejlsberg, a-tarasyuk, ekazakov14, gabritto, jakebailey]
+commit_authors: {"3499951": ahejlsberg, "85f9b3c": ahejlsberg, "245ae95": a-tarasyuk, "2a3f6d2": ekazakov14, "14a12d0": gabritto, "de302e0": jakebailey}
 ---
 
 ### **Fix widened assignment declarations before reporting them** (85f9b3c)

@@ -5,8 +5,8 @@ size: M
 title: "Signal handling fix and PR issue bot"
 excerpt: "Bun fixed a signal-listener bug, reverted a Windows exit workaround, and added an automated GitHub Action to suggest related issues on PRs."
 commits: 9
-authors: [Jarred-Sumner, robobun, dylan-conway]
-commit_authors: {"120f06e": robobun, "f1a040d": dylan-conway, "0502608": robobun}
+authors: [Jarred-Sumner, robobun, igorkofman, dylan-conway, km-anthropic]
+commit_authors: {"120f06e": robobun, "94292f2": igorkofman, "f1a040d": dylan-conway, "0502608": robobun}
 ---
 
 ### **Fix signal listener removal so remaining handlers keep working** (94292f2)

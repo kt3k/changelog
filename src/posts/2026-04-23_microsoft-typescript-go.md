@@ -5,8 +5,8 @@ size: L
 title: "Auto-imports, hover, and code actions refined"
 excerpt: "Notable fixes landed across auto-imports, hover rendering, iteration diagnostics, and VS Code extension auto-insert behavior."
 commits: 16
-authors: [andrewbranch, jakebailey, RyanCavanaugh]
-commit_authors: {"ba858e5": andrewbranch, "5b5c713": jakebailey, "2e7b0e5": jakebailey, "88f8ad1": jakebailey}
+authors: [andrewbranch, jakebailey, gabritto, Andarist, RyanCavanaugh, lucygramley, a-tarasyuk, ahejlsberg]
+commit_authors: {"5351378": Andarist, "ba858e5": andrewbranch, "4f599c6": gabritto, "5b5c713": jakebailey, "2e7b0e5": jakebailey, "44e13b7": lucygramley, "a94f221": a-tarasyuk, "fd9bbdb": ahejlsberg, "88f8ad1": jakebailey, "911ba0b": Andarist, "5ee9d71": gabritto}
 ---
 
 ### **VS closing-tag auto-insertion now uses the new onAutoInsert path** (44e13b7)

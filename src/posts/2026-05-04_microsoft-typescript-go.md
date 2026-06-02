@@ -5,6 +5,8 @@ size: M
 title: "Fix expando object circularity in index inference"
 excerpt: "TypeScript-Go now avoids treating expando object literals as inferable indexable shapes, fixing a circularity bug in property assignment."
 commits: 1
+authors: [ahejlsberg]
+commit_authors: {"6a6cb09": ahejlsberg}
 ---
 
 ### **Fix circularity when assigning to expando object properties** (6a6cb09)

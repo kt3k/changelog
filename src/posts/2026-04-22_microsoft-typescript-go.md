@@ -5,8 +5,8 @@ size: L
 title: "Checker fixes and native preview packaging"
 excerpt: "Major type-checker and language-service fixes landed alongside a native-preview packaging move and cache/hover refinements."
 commits: 12
-authors: [jakebailey, andrewbranch, RyanCavanaugh]
-commit_authors: {"e7283bb": jakebailey, "c4663ad": jakebailey, "88b5b78": RyanCavanaugh, "effd0f8": andrewbranch, "d128e3d": andrewbranch}
+authors: [Andarist, ahejlsberg, jakebailey, andrewbranch, RyanCavanaugh]
+commit_authors: {"33b9297": ahejlsberg, "e7283bb": jakebailey, "c4663ad": jakebailey, "88b5b78": RyanCavanaugh, "effd0f8": andrewbranch, "967095e": ahejlsberg, "d128e3d": andrewbranch, "ae8ae79": Andarist, "5f57ade": Andarist, "3f37555": Andarist}
 ---
 
 ### **Improve recursion identity for direct type instantiations** (33b9297)

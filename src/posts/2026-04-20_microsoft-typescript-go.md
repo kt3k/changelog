@@ -5,8 +5,8 @@ size: M
 title: "Declaration emit and auto-imports improved"
 excerpt: "JS declaration emit now remaps type nodes more accurately, auto-import realpaths follow symlinked deps, and rename ranges are tighter."
 commits: 7
-authors: [jakebailey, andrewbranch, auvred]
-commit_authors: {"98f57c9": jakebailey, "59360d9": jakebailey, "5a4e6db": jakebailey, "27b6dd1": andrewbranch, "dfa7a1d": auvred}
+authors: [jakebailey, weswigham, andrewbranch, auvred]
+commit_authors: {"98f57c9": jakebailey, "59360d9": jakebailey, "74841e4": weswigham, "5a4e6db": jakebailey, "27b6dd1": andrewbranch, "dfa7a1d": auvred}
 ---
 
 ### **JS declaration emit now remaps JS type nodes** (74841e4)

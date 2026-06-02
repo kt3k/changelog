@@ -5,7 +5,7 @@ size: L
 title: "Security fixes land across HTTP, TLS, FS"
 excerpt: "Multiple CVEs fixed: header prototype crashes, TLS SNI exception handling, permission gaps, HTTP/2 flow control, and V8 hash collision hardening."
 commits: 17
-authors: [RafaelGSS, mcollina, joyeecheung, panva, marco-ippolito, aduh95, kovan, nodejs-github-bot]
+authors: [RafaelGSS, mcollina, joyeecheung, panva, marco-ippolito, juanarbol, aduh95, JLHwung, kovan, nodejs-github-bot]
 commit_authors: {"8261536": RafaelGSS, "0d7e4b1": joyeecheung, "b36d5a3": panva, "ef5929b": mcollina, "59c86b1": RafaelGSS, "2e2abc6": mcollina, "dabb2f5": RafaelGSS, "3a04e0f": RafaelGSS, "e4f3c20": RafaelGSS, "7be0e28": marco-ippolito}
 ---
 

@@ -5,8 +5,8 @@ size: L
 title: "Deno tightens Node compat and event-loop plumbing"
 excerpt: "Big Node-compat fixes, event-loop refactors, and a few resolver/CLI bug fixes landed alongside NAPI coverage and version bumps."
 commits: 23
-authors: [bartlomieju, denobot, dsherret]
-commit_authors: {"5db85e4": bartlomieju, "bf581bc": bartlomieju, "357759f": bartlomieju, "34f7b23": bartlomieju, "8ae5320": bartlomieju, "29ce038": bartlomieju, "460cca9": bartlomieju, "b6f73d5": bartlomieju, "5a97b62": bartlomieju, "ffbe236": bartlomieju, "4fc7ee2": bartlomieju, "d54097a": bartlomieju, "ea9214c": bartlomieju, "ac6b68d": bartlomieju}
+authors: [bartlomieju, majiayu000, denobot, rnbguy, dsherret]
+commit_authors: {"8f1c771": majiayu000, "5db85e4": bartlomieju, "bf581bc": bartlomieju, "357759f": bartlomieju, "34f7b23": bartlomieju, "8ae5320": bartlomieju, "29ce038": bartlomieju, "6a9d927": rnbguy, "460cca9": bartlomieju, "b6f73d5": bartlomieju, "5a97b62": bartlomieju, "ffbe236": bartlomieju, "4fc7ee2": bartlomieju, "d54097a": bartlomieju, "ea9214c": bartlomieju, "ac6b68d": bartlomieju}
 ---
 
 ### **Event loop gets a shared Rust↔JS tick path** (5db85e4)

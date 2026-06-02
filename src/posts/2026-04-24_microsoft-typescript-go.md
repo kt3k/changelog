@@ -5,8 +5,8 @@ size: L
 title: "Trace logging, ATA toggle, and auto-import fixes"
 excerpt: "Tracing was added across the checker and compiler, VS Code gains ATA controls, and auto-import symlink races were fixed and retested."
 commits: 9
-authors: [jakebailey, RyanCavanaugh, andrewbranch, ericnorris]
-commit_authors: {"eb04840": andrewbranch}
+authors: [jakebailey, RyanCavanaugh, dimitropoulos, andrewbranch, ahejlsberg, ericnorris]
+commit_authors: {"7abf963": dimitropoulos, "eb04840": andrewbranch}
 ---
 
 ### **Add --generateTrace support across checker/compiler** (7abf963)

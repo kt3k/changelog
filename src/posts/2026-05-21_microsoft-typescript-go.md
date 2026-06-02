@@ -5,6 +5,8 @@ size: M
 title: "JSX pragma parsing and CLI panic fix"
 excerpt: "One parser fix and one CLI safety fix prevent ignored pragmas and response-file crashes."
 commits: 2
+authors: [a-tarasyuk]
+commit_authors: {"d99f6b2": a-tarasyuk}
 ---
 
 ### **Skip unknown JSX pragmas instead of aborting** (d99f6b2)

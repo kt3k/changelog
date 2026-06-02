@@ -5,6 +5,8 @@ size: M
 title: "Helper checks and call-hierarchy crash fixes"
 excerpt: "Adds emit-helper validation for async/import cases, fixes JSX hover and call hierarchy bugs, and removes an overflow assertion that could fail spuriously."
 commits: 7
+authors: [gabritto, ahejlsberg, Andarist]
+commit_authors: {"8259006": Andarist, "803dcde": ahejlsberg, "3cfb531": gabritto, "6eb79f4": gabritto}
 ---
 
 ### **Emit helper checks expanded for async functions and imports** (3cfb531)

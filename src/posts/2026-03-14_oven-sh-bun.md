@@ -5,8 +5,8 @@ size: L
 title: "HTTP/2 settings and SQL prep fixes land"
 excerpt: "Node-compatible HTTP/2 settings handling and atomic Postgres prepared-statement execution headline a day of important runtime fixes."
 commits: 5
-authors: [robobun, dylan-conway]
-commit_authors: {"10bdb48": robobun, "8fb62c0": robobun, "685b934": dylan-conway, "f4dc498": robobun}
+authors: [robobun, alii, dylan-conway]
+commit_authors: {"10bdb48": robobun, "8fb62c0": robobun, "1f134a1": alii, "685b934": dylan-conway, "f4dc498": robobun}
 ---
 
 ### **HTTP/2 settings now match Node more closely** (8fb62c0)

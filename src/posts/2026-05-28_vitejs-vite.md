@@ -5,6 +5,8 @@ size: S
 title: "Docs refresh for pnpm overrides setup"
 excerpt: "Updated Vite contribution docs to reflect pnpm v10.5+ overrides placement and current link syntax."
 commits: 1
+authors: [btea]
+commit_authors: {"23de98e": btea}
 ---
 
 ### Other misc changes

@@ -5,8 +5,8 @@ size: L
 title: "Crypto, QUIC, and diagnostics_channel move"
 excerpt: "Major crypto refactors and new APIs land alongside QUIC, inspector, fs.statfs, and diagnostics_channel upgrades."
 commits: 20
-authors: [nodejs-github-bot, jasnell, panva, guybedford, GeoffreyBooth, aduh95, Renegade334]
-commit_authors: {"1ccae7c": panva, "cd391b5": guybedford, "1a88acb": jasnell, "79b960a": jasnell, "57186e5": jasnell, "e9b5214": GeoffreyBooth, "f92c61f": aduh95, "7e3c244": nodejs-github-bot, "9df9b66": panva, "404c3f9": nodejs-github-bot, "d587695": Renegade334}
+authors: [nodejs-github-bot, jasnell, panva, verycosy, Qard, guybedford, GeoffreyBooth, aduh95, lilianakatrina684-a11y, cola119, Renegade334]
+commit_authors: {"f8ee196": verycosy, "1ccae7c": panva, "cb78a7f": Qard, "cd391b5": guybedford, "1a88acb": jasnell, "79b960a": jasnell, "57186e5": jasnell, "e9b5214": GeoffreyBooth, "f92c61f": aduh95, "60f19bc": lilianakatrina684-a11y, "7e3c244": nodejs-github-bot, "9df9b66": panva, "bf452bb": cola119, "404c3f9": nodejs-github-bot, "d587695": Renegade334}
 ---
 
 ### **Crypto key import paths are unified** (1ccae7c)

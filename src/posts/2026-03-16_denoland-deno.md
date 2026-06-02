@@ -5,8 +5,8 @@ size: L
 title: "FFI safety fix, Node compat and perf wins"
 excerpt: "A security-relevant FFI GC fix lands alongside telemetry array attributes, Node compat fixes, and a core string-conversion speedup."
 commits: 9
-authors: [bartlomieju, dsherret]
-commit_authors: {"764ce2f": bartlomieju, "f0e7923": bartlomieju, "216126e": bartlomieju, "954edda": bartlomieju, "39a07b2": dsherret, "4a19007": bartlomieju, "60edd78": bartlomieju}
+authors: [bartlomieju, fraidev, dsherret]
+commit_authors: {"764ce2f": bartlomieju, "f0e7923": bartlomieju, "216126e": bartlomieju, "954edda": bartlomieju, "f7a43a2": fraidev, "262cb59": fraidev, "39a07b2": dsherret, "4a19007": bartlomieju, "60edd78": bartlomieju}
 ---
 
 ### **Fix nonblocking FFI to retain ArrayBuffer backing stores** (764ce2f)

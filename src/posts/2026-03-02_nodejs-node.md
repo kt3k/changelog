@@ -5,8 +5,8 @@ size: L
 title: "Node fixes hooks, HTTP validation, SQLite"
 excerpt: "Major changes land for module hooks, HTTP request/header validation, and SQLite iterator invalidation, plus new CLI heap sizing support."
 commits: 16
-authors: [aduh95, araujogui, suuuuuuminnnnnn, MikeMcC399, mcollina, joyeecheung, RafaelGSS, nodejs-github-bot, Renegade334]
-commit_authors: {"88be44d": araujogui, "cb6ff03": suuuuuuminnnnnn, "5554a28": aduh95, "d198813": MikeMcC399, "78e56fa": aduh95, "acb79bc": mcollina, "dd400b9": joyeecheung, "f8d5bad": RafaelGSS, "97c1312": aduh95, "a6e9e32": nodejs-github-bot, "70242ea": Renegade334}
+authors: [aduh95, araujogui, suuuuuuminnnnnn, tannal, MikeMcC399, ChALkeR, mcollina, joyeecheung, RafaelGSS, rsclarke, cuiweixie, codebytere, nodejs-github-bot, Renegade334]
+commit_authors: {"88be44d": araujogui, "cb6ff03": suuuuuuminnnnnn, "ddecee7": tannal, "5554a28": aduh95, "d198813": MikeMcC399, "097e763": ChALkeR, "78e56fa": aduh95, "acb79bc": mcollina, "dd400b9": joyeecheung, "f8d5bad": RafaelGSS, "e78bf55": rsclarke, "09c21d8": cuiweixie, "9027f29": codebytere, "97c1312": aduh95, "a6e9e32": nodejs-github-bot, "70242ea": Renegade334}
 ---
 
 ### **module: run require.resolve through module.registerHooks()** (dd400b9)

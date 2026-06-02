@@ -5,8 +5,8 @@ size: L
 title: "Markdown/YAML parser fixes land, plugins added"
 excerpt: "Biome fixed Markdown fence handling, YAML alias keys, and a core type regression, while shipping a release that adds plugin config support."
 commits: 4
-authors: [jfmcdowell]
-commit_authors: {"fa05c19": jfmcdowell}
+authors: [jfmcdowell, siketyan, ematipico]
+commit_authors: {"fa05c19": jfmcdowell, "ce9d27f": siketyan, "de2a33c": ematipico}
 ---
 
 ### **Markdown fenced code blocks now end at list boundaries** (fa05c19)

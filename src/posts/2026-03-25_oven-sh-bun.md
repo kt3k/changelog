@@ -5,7 +5,7 @@ size: L
 title: "WebView overhaul and a wave of crash fixes"
 excerpt: "Bun adds Chrome-backed WebView capabilities, upgrades to TypeScript 6, and lands multiple crash, leak, and glob performance fixes."
 commits: 19
-authors: [robobun, sosukesuzuki, dylan-conway, alii, Jarred-Sumner]
+authors: [robobun, sosukesuzuki, dylan-conway, alii, gameroman, Jarred-Sumner]
 commit_authors: {"3909487": robobun, "2e610b1": robobun, "9ead1e1": robobun, "7fb7897": sosukesuzuki, "3eba9cb": alii, "0bcb402": Jarred-Sumner, "698eb81": robobun, "e59a147": dylan-conway, "3ca678c": robobun, "24fa207": robobun, "e94c303": robobun, "36f17ca": sosukesuzuki, "594f421": robobun, "6034bd8": robobun, "9ce5b05": sosukesuzuki}
 ---
 

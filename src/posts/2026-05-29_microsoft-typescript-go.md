@@ -5,6 +5,8 @@ size: M
 title: "JSDoc `@satisfies` errors now point correctly"
 excerpt: "Fixes diagnostic spans for `@satisfies`, including JSDoc cases, so errors highlight the tag instead of the expression."
 commits: 1
+authors: [Andarist]
+commit_authors: {"9a58775": Andarist}
 ---
 
 ### **Fix `@satisfies` error locations** (9a58775)

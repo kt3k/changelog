@@ -5,8 +5,8 @@ size: M
 title: "Undici gains SOCKS5, libuv updated"
 excerpt: "Undici adds SOCKS5 proxy support and cache docs, libuv bumps to 1.52.1, plus worker heap profile optimizations."
 commits: 5
-authors: [nodejs-github-bot, aduh95, IlyasShabi]
-commit_authors: {"4579957": nodejs-github-bot, "5bebd7e": nodejs-github-bot, "82409af": IlyasShabi}
+authors: [nodejs-github-bot, anonrig, aduh95, IlyasShabi]
+commit_authors: {"4579957": nodejs-github-bot, "1bc0fdd": anonrig, "5bebd7e": nodejs-github-bot, "82409af": IlyasShabi}
 ---
 
 ### **Undici 7.24.3 lands with SOCKS5 proxy support** (4579957)

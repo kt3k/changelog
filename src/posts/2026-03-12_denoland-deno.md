@@ -5,8 +5,8 @@ size: L
 title: "Node compat, perf, and runtime fixes land"
 excerpt: "CONNECT handling, crypto validation, worker memory, V8 wakeups, and npm/script performance improvements shipped today."
 commits: 20
-authors: [bartlomieju, dsherret, nathanwhit, seroperson]
-commit_authors: {"1ea5ff0": bartlomieju, "8cf29d5": dsherret, "2353a5a": bartlomieju, "b31680f": bartlomieju, "7698bcc": bartlomieju, "5b9986d": bartlomieju}
+authors: [bartlomieju, dsherret, fraidev, nathanwhit, nayeemrmn, seroperson]
+commit_authors: {"1ea5ff0": bartlomieju, "8cf29d5": dsherret, "2353a5a": bartlomieju, "b31680f": bartlomieju, "7698bcc": bartlomieju, "5b9986d": bartlomieju, "0895897": fraidev}
 ---
 
 ### **HTTP CONNECT now emits node:http "connect" events** (1ea5ff0)

@@ -5,8 +5,8 @@ size: L
 title: "Deno lands CPU flamegraphs and Node fixes"
 excerpt: "New interactive CPU flamegraphs, faster base64, and several Node compatibility fixes for child_process, crypto, N-API, and TCP permissions."
 commits: 13
-authors: [bartlomieju, littledivy, dsherret]
-commit_authors: {"b177ff6": littledivy, "f00f798": bartlomieju, "2c3b295": bartlomieju, "7ab15ad": bartlomieju, "bfd9685": dsherret, "e88d18a": bartlomieju, "081e2e8": bartlomieju}
+authors: [bartlomieju, fraidev, littledivy, dsherret]
+commit_authors: {"368c99d": fraidev, "7cc2464": fraidev, "749270f": fraidev, "b177ff6": littledivy, "f00f798": bartlomieju, "2c3b295": bartlomieju, "7ab15ad": bartlomieju, "bfd9685": dsherret, "4d45fe5": fraidev, "e88d18a": bartlomieju, "081e2e8": bartlomieju}
 ---
 
 ### **Interactive CPU flamegraphs added via `--cpu-prof-flamegraph`** (e88d18a)

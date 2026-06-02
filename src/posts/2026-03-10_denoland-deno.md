@@ -5,8 +5,8 @@ size: L
 title: "Deno lands major node/http2 and npm fixes"
 excerpt: "Big day for Deno: new npm-aware docs, a rewritten Node http2 stack, async/N-API fixes, and several correctness/perf improvements."
 commits: 17
-authors: [bartlomieju, dsherret, seroperson, littledivy, Tango992]
-commit_authors: {"b7cc30f": dsherret, "ed367f2": bartlomieju, "527c844": bartlomieju, "ed98585": seroperson, "9c73df3": littledivy, "88d6de0": bartlomieju, "4c548d4": bartlomieju, "f33915b": Tango992, "1036b2a": bartlomieju, "a33c974": bartlomieju, "0eddc94": bartlomieju, "913548b": bartlomieju, "c285733": bartlomieju}
+authors: [bartlomieju, kajukitli, dsherret, seroperson, littledivy, nayeemrmn, Tango992]
+commit_authors: {"b7cc30f": dsherret, "ed367f2": bartlomieju, "527c844": bartlomieju, "ed98585": seroperson, "9c73df3": littledivy, "88d6de0": bartlomieju, "f81e360": nayeemrmn, "4c548d4": bartlomieju, "f33915b": Tango992, "1036b2a": bartlomieju, "c0de125": kajukitli, "a33c974": bartlomieju, "0eddc94": bartlomieju, "913548b": bartlomieju, "c285733": bartlomieju, "20e1ef8": kajukitli}
 ---
 
 ### **Deno doc now understands npm packages** (b7cc30f)

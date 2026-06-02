@@ -5,6 +5,8 @@ size: M
 title: "JSDoc typing and grammar fixes land"
 excerpt: "Restored JSDoc namespace handling and fixed `@template` modifier checks for `in`/`out` in templates."
 commits: 2
+authors: [ahejlsberg]
+commit_authors: {"73868c8": ahejlsberg, "804eb7a": ahejlsberg}
 ---
 
 ### **Restore JSDoc namespace declarations** (804eb7a)

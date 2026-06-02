@@ -5,8 +5,8 @@ size: M
 title: "Diagnostics, watchers, and JS docs tightened"
 excerpt: "Fixes a JSDoc mismatch diagnostic, removes an LSP hang, speeds scope cloning, and updates JS docs around constructor functions."
 commits: 5
-authors: [jakebailey, sandersn]
-commit_authors: {"1e58c84": jakebailey, "763092d": jakebailey, "20d34b5": sandersn}
+authors: [jakebailey, Andarist, sandersn]
+commit_authors: {"18f93b8": Andarist, "1e58c84": jakebailey, "763092d": jakebailey, "20d34b5": sandersn}
 ---
 
 ### **Fix JSDoc `@extends` mismatch diagnostics for property access bases** (18f93b8)

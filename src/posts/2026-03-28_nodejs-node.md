@@ -5,8 +5,8 @@ size: L
 title: "Stream/iter lands, async scopes expand"
 excerpt: "Node adds experimental stream/iter and AsyncLocalStorage using scopes, with crypto error detail improvements and a few ecosystem updates."
 commits: 10
-authors: [jasnell, panva, richardlau, npm-cli-bot, jakecastelli]
-commit_authors: {"cc96741": richardlau, "cf2b05c": panva, "74509b1": panva, "ae7c6a7": jasnell}
+authors: [jasnell, panva, richardlau, npm-cli-bot, Qard, jakecastelli, anonrig]
+commit_authors: {"cc96741": richardlau, "5b6091c": Qard, "cf2b05c": panva, "74509b1": panva, "ae7c6a7": jasnell}
 ---
 
 ### **Experimental `node:stream/iter` lands** (ae7c6a7)

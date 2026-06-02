@@ -5,8 +5,8 @@ size: L
 title: "Deno sharpens Node parity and runtime behavior"
 excerpt: "Signal handling, Node compat fixes, V8 task ownership, and a macOS TTY fallback headline a busy day."
 commits: 19
-authors: [bartlomieju, nathanwhit, dsherret, denobot]
-commit_authors: {"1012804": bartlomieju, "a087e7c": bartlomieju, "e03b790": nathanwhit, "852d499": bartlomieju, "d63ae19": bartlomieju, "cdeec3c": bartlomieju, "f5d0971": bartlomieju, "76c3d7e": dsherret, "3449a2d": bartlomieju, "ffbaf13": denobot, "0fede96": bartlomieju, "328c8d3": bartlomieju, "7d810ee": bartlomieju, "2b62955": bartlomieju, "97a701c": bartlomieju, "cca89e6": bartlomieju, "6f4d5e9": bartlomieju}
+authors: [bartlomieju, nathanwhit, kajukitli, dsherret, denobot]
+commit_authors: {"1012804": bartlomieju, "a087e7c": bartlomieju, "e03b790": nathanwhit, "852d499": bartlomieju, "d63ae19": bartlomieju, "cdeec3c": bartlomieju, "f5d0971": bartlomieju, "0896ac3": kajukitli, "76c3d7e": dsherret, "3449a2d": bartlomieju, "ffbaf13": denobot, "0fede96": bartlomieju, "328c8d3": bartlomieju, "7d810ee": bartlomieju, "2b62955": bartlomieju, "97a701c": bartlomieju, "cca89e6": bartlomieju, "6f4d5e9": bartlomieju}
 ---
 
 ### **Graceful shutdown now dispatches SIGTERM during watch restarts and Ctrl+C** (a087e7c)

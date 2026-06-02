@@ -5,8 +5,8 @@ size: L
 title: "Auto-import, rootDir, and enum fixes land"
 excerpt: "Major auto-import scanning changes plus rootDir validation, enum NaN handling, and several crash/overflow fixes."
 commits: 7
-authors: [andrewbranch, jakebailey]
-commit_authors: {"47ca648": andrewbranch, "ff5823b": jakebailey}
+authors: [a-tarasyuk, andrewbranch, weswigham, jakebailey, iisaduan]
+commit_authors: {"47ca648": andrewbranch, "d686a16": a-tarasyuk, "49f210f": weswigham, "ff5823b": jakebailey, "a697eb3": iisaduan, "9f1f2da": a-tarasyuk}
 ---
 
 ### **Auto-import scanning now respects package exports** (47ca648)

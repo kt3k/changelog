@@ -5,6 +5,8 @@ size: M
 title: "Four parser/codegen bug fixes land"
 excerpt: "Fixes out-of-bounds/trivia scanning, destructuring flattening, JSX runtime import detection, and async accessor error handling."
 commits: 4
+authors: [a-tarasyuk]
+commit_authors: {"0a70299": a-tarasyuk, "c6460d1": a-tarasyuk, "03db8ff": a-tarasyuk, "105910f": a-tarasyuk}
 ---
 
 ### **Async accessor no longer triggers a panic** (105910f)

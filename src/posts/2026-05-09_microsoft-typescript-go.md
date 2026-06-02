@@ -5,6 +5,8 @@ size: M
 title: "JSDoc host alignment and crash fix"
 excerpt: "Tightened JSDoc attachment and function-like host detection, plus a regression test for shorthand property assignment crashes."
 commits: 1
+authors: [ahejlsberg]
+commit_authors: {"092b34f": ahejlsberg}
 ---
 
 ### **Align JSDoc host lookup and parser reparsing** (092b34f)

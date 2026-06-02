@@ -5,8 +5,8 @@ size: L
 title: "VS references output, alias resolution, and fixes"
 excerpt: "Added classified VS Find All References output, fixed alias lookup and a private-identifier panic, plus extension setting cleanup."
 commits: 4
-authors: [navya9singh, DanielRosenwasser]
-commit_authors: {"94f31f3": navya9singh, "898015c": DanielRosenwasser}
+authors: [navya9singh, DanielRosenwasser, ahejlsberg]
+commit_authors: {"94f31f3": navya9singh, "898015c": DanielRosenwasser, "3215d45": ahejlsberg}
 ---
 
 ### **Classified text output for VS Find All References** (94f31f3)

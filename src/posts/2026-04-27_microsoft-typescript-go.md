@@ -5,6 +5,8 @@ size: L
 title: "JS declarations and IDE fixes land"
 excerpt: "Large day for TypeScript-Go: declaration emit grows smarter, quick info improves for optional members, and several crash fixes land."
 commits: 7
+authors: [ahejlsberg, Andarist, a-tarasyuk, weswigham, gabritto]
+commit_authors: {"6bf24cc": a-tarasyuk, "b5cece1": ahejlsberg, "34cf1ba": weswigham, "f549afa": ahejlsberg, "463a747": gabritto, "78b1ba1": Andarist, "c5039e6": Andarist}
 ---
 
 ### **JS declaration emit now tracks `this` assignments and `require()` forms** (34cf1ba)

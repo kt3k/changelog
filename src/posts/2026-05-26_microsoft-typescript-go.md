@@ -5,6 +5,8 @@ size: M
 title: "Type emit fixes and smarter path completions"
 excerpt: "Fixes declaration emit for keyword property names, avoids stale type-node caching during expansion, and improves partial-path import completions."
 commits: 3
+authors: [gabritto, a-tarasyuk]
+commit_authors: {"c54ff7c": a-tarasyuk, "2f91510": gabritto, "a4c6528": gabritto}
 ---
 
 ### **Fix declaration emit for property names like `new`** (c54ff7c)

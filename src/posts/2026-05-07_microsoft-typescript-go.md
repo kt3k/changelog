@@ -5,8 +5,8 @@ size: L
 title: "JSDoc, config lookup, and LSP watchdog fixes"
 excerpt: "Several notable parser and project-resolution fixes landed, plus LSP now exits when its parent dies."
 commits: 11
-authors: [DanielRosenwasser, jakebailey, andrewbranch]
-commit_authors: {"51a1064": jakebailey, "9e69d83": DanielRosenwasser}
+authors: [DanielRosenwasser, jakebailey, purelualight, andrewbranch, a-tarasyuk, weswigham]
+commit_authors: {"51a1064": jakebailey, "b96acbe": a-tarasyuk, "0d33019": weswigham, "9e69d83": DanielRosenwasser}
 ---
 
 ### **LSP now shuts down when its parent process exits** (51a1064)

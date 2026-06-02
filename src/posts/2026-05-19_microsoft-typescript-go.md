@@ -5,8 +5,8 @@ size: L
 title: "Typed fixes, better emits, faster lookup"
 excerpt: "Key checker and emit fixes landed: recursion guard, enum/NaN emit, destructuring semantics, auto-import path selection, and a symbol lookup speedup."
 commits: 12
-authors: [jakebailey]
-commit_authors: {"52d3d0f": jakebailey, "937ea9f": jakebailey}
+authors: [jakebailey, ahejlsberg]
+commit_authors: {"52d3d0f": jakebailey, "21b8d00": ahejlsberg, "937ea9f": jakebailey}
 ---
 
 ### **Preserve iterator semantics for CommonJS export destructuring** (654d05c)

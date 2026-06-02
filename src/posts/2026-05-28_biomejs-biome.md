@@ -5,6 +5,8 @@ size: S
 title: "Playground preview WASM gets unstable features"
 excerpt: "Preview web builds now compile biome_wasm with unstable language features enabled, exposing Markdown and YAML support in the playground."
 commits: 1
+authors: [siketyan]
+commit_authors: {"bdbfec1": siketyan}
 ---
 
 ### **Playground preview builds enable unstable features** (bdbfec1)

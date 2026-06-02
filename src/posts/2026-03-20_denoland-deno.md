@@ -5,8 +5,8 @@ size: M
 title: "Node compat gets several runtime fixes"
 excerpt: "Deno tightened Node API compatibility around child_process, sqlite, process, and HTTP, plus a few smaller test/metadata updates."
 commits: 11
-authors: [bartlomieju, dsherret]
-commit_authors: {"3015343": bartlomieju, "4a0e228": bartlomieju, "5a92ed2": bartlomieju}
+authors: [bartlomieju, fraidev, dsherret]
+commit_authors: {"3015343": bartlomieju, "49a9e13": fraidev, "4a0e228": bartlomieju, "5a92ed2": bartlomieju}
 ---
 
 ### **Node child_process now honors uid/gid and exposes getgroups()** (49a9e13)

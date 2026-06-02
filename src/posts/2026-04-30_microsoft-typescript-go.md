@@ -5,8 +5,8 @@ size: M
 title: "Accessor duplicate checks tightened"
 excerpt: "Duplicate-declaration handling now treats properties and accessors correctly, and a JSX signature-help crash was fixed."
 commits: 3
-authors: [RyanCavanaugh]
-commit_authors: {"c9f8677": RyanCavanaugh}
+authors: [ahejlsberg, RyanCavanaugh, Andarist]
+commit_authors: {"25963e4": ahejlsberg, "c9f8677": RyanCavanaugh, "1f20854": Andarist}
 ---
 
 ### **Fix property/accessor duplicate declaration checks** (25963e4)

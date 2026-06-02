@@ -5,8 +5,8 @@ size: L
 title: "Node compat gets inspector, child_process, and buffer fixes"
 excerpt: "Big Deno/Node compatibility work landed across inspector, child_process, TLS, Buffer, and web APIs, plus npm resolution cleanup."
 commits: 15
-authors: [bartlomieju, dsherret]
-commit_authors: {"70268d6": bartlomieju, "b75e2b8": bartlomieju, "d0e3cfb": bartlomieju, "e8ba184": bartlomieju, "80121ae": bartlomieju, "c99c8ac": bartlomieju, "f5014bb": bartlomieju, "fd73dff": bartlomieju}
+authors: [bartlomieju, dsherret, r3wretrhy]
+commit_authors: {"70268d6": bartlomieju, "b75e2b8": bartlomieju, "d0e3cfb": bartlomieju, "e8ba184": bartlomieju, "80121ae": bartlomieju, "c99c8ac": bartlomieju, "af67058": r3wretrhy, "f5014bb": bartlomieju, "fd73dff": bartlomieju}
 ---
 
 ### **Node inspector now handles break-on-start correctly** (70268d6)

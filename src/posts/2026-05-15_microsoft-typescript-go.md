@@ -5,8 +5,8 @@ size: L
 title: "Bugfix sweep: crashes, hangs, and editor polish"
 excerpt: "Multiple fixes for compiler/runtime panics and deadlocks, plus signature help and workspace symbol improvements."
 commits: 16
-authors: [navya9singh, jakebailey, joj]
-commit_authors: {"1170944": joj, "f4a1d2a": navya9singh, "dd3d9c7": jakebailey}
+authors: [navya9singh, gabritto, jakebailey, joj, a-tarasyuk]
+commit_authors: {"1170944": joj, "f4a1d2a": navya9singh, "a7acc87": gabritto, "dd3d9c7": jakebailey, "3d2b680": a-tarasyuk}
 ---
 
 **Signature help now supports VS tooltip coloring** (f4a1d2a)

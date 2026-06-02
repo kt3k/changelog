@@ -5,8 +5,8 @@ size: L
 title: "Deno fixes standalone args, TTY, and crypto edge cases"
 excerpt: "A strong day of bug fixes spanning compiled binaries, Windows TTY behavior, publish type checking, and a timing-safe crypto comparison."
 commits: 7
-authors: [bartlomieju, marvinhagemeister]
-commit_authors: {"522e071": bartlomieju, "5950fb4": marvinhagemeister, "eb43657": bartlomieju, "3f67ba9": bartlomieju, "d043fd6": bartlomieju, "6a66ea5": bartlomieju}
+authors: [bartlomieju, marvinhagemeister, majiayu000]
+commit_authors: {"7250271": majiayu000, "522e071": bartlomieju, "5950fb4": marvinhagemeister, "eb43657": bartlomieju, "3f67ba9": bartlomieju, "d043fd6": bartlomieju, "6a66ea5": bartlomieju}
 ---
 
 ### **Compiled standalone binaries now preserve argv correctly** (6a66ea5, 522e071)

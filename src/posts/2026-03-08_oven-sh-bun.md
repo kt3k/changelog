@@ -5,8 +5,8 @@ size: L
 title: "Two TLS fixes and a tiny typo cleanup"
 excerpt: "Bun fixed a proxy-tunnel SSLConfig race and custom DNS lookup TLS verification, plus a minor comment spelling fix."
 commits: 3
-authors: [cirospaciari, robobun]
-commit_authors: {"7b8aabb": cirospaciari, "7ce4120": robobun}
+authors: [ssing2, cirospaciari, robobun]
+commit_authors: {"06b2ba7": ssing2, "7b8aabb": cirospaciari, "7ce4120": robobun}
 ---
 
 ### **Fix SSLConfig intern/deref race that could segfault in proxy tunnels** (7b8aabb)

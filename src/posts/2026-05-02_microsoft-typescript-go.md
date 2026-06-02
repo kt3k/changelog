@@ -5,6 +5,8 @@ size: M
 title: "Better typing for `this.xxx` assignment declarations"
 excerpt: "TypeScript-Go now handles self-referential `this` property assignments more precisely, improving inferred property types and avoiding bad widening."
 commits: 1
+authors: [ahejlsberg]
+commit_authors: {"2f6504c": ahejlsberg}
 ---
 
 ### **Improve `this.xxx` assignment declaration typing** (2f6504c)

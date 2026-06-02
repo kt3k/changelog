@@ -5,8 +5,8 @@ size: M
 title: "Declaration emit fix and AI policy update"
 excerpt: "Declaration emit now normalizes reused string property names, while CONTRIBUTING adds explicit guidance on AI-assisted and autonomous PRs."
 commits: 3
-authors: [RyanCavanaugh]
-commit_authors: {"2cf002e": RyanCavanaugh}
+authors: [RyanCavanaugh, ahejlsberg]
+commit_authors: {"2cf002e": RyanCavanaugh, "196800c": ahejlsberg}
 ---
 
 ### **Normalize reused string-literal property names in declaration emit** (91c4dfd)

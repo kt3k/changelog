@@ -5,8 +5,8 @@ size: L
 title: "Node compat, watch, and env-file fixes"
 excerpt: "A day of significant Deno compatibility fixes: N-API coercion, env-file handling, Node crypto/X509 cloning, watch restarts, and npm resolution."
 commits: 13
-authors: [bartlomieju, dsherret, KnorpelSenf]
-commit_authors: {"7607cb2": bartlomieju, "8ac8de1": bartlomieju, "975db92": bartlomieju, "9ab5c0c": dsherret, "6c5ef85": bartlomieju, "ae8a10d": bartlomieju, "4da9f0b": bartlomieju, "5b7680f": bartlomieju, "653c3c5": bartlomieju, "7fa991e": bartlomieju, "7e58228": KnorpelSenf, "92ca1fe": bartlomieju}
+authors: [bartlomieju, nayeemrmn, dsherret, KnorpelSenf]
+commit_authors: {"7607cb2": bartlomieju, "8ac8de1": bartlomieju, "975db92": bartlomieju, "d3aaa24": nayeemrmn, "9ab5c0c": dsherret, "6c5ef85": bartlomieju, "ae8a10d": bartlomieju, "4da9f0b": bartlomieju, "5b7680f": bartlomieju, "653c3c5": bartlomieju, "7fa991e": bartlomieju, "7e58228": KnorpelSenf, "92ca1fe": bartlomieju}
 ---
 
 ### **Fix N-API object coercion on null/undefined** (7607cb2)
