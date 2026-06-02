@@ -34,12 +34,18 @@ repos:
 
 ```sh
 export OPENAI_API_KEY=sk-...
+export GH_TOKEN=$(gh auth token)  # or GITHUB_TOKEN; needed to resolve authors
 deno task digest                  # yesterday (UTC)
 deno task digest --date 2026-05-20
 deno task digest --repo denoland/deno
-deno task digest --dry-run        # print the LLM prompt, no API call
+deno task digest --period weekly  # weekly/monthly rollup of existing dailies
+deno task digest --dry-run        # print the LLM prompt, no API call (no token needed)
 deno task digest --triage-model gpt-5.4-nano --write-model gpt-5.4-mini
 ```
+
+`GH_TOKEN` (or `GITHUB_TOKEN`) is required for real runs — it resolves commit
+authors to GitHub logins for avatars, and the run errors early if neither is
+set. Only `--dry-run` skips this.
 
 Models are configurable via `OPENAI_TRIAGE_MODEL` (default `gpt-5.4-nano`) and
 `OPENAI_WRITE_MODEL` (default `gpt-5.4-mini`), the CLI flags above, and the API
@@ -54,12 +60,15 @@ deno task build   # outputs to _site/
 
 ## Deploy (GitHub Pages)
 
-The `Digest` workflow runs at 06:00 UTC: it generates the daily digest (plus a
-weekly rollup on Mondays and a monthly one on the 1st), commits any new posts,
-builds the site, and deploys to Pages. To enable it:
+The `Digest` workflow (`.github/workflows/digest.yml`) runs at 06:00 UTC: it
+generates the daily digest (plus a weekly rollup on Mondays and a monthly one on
+the 1st) and commits any new posts. It then calls the separate `Deploy` workflow
+(`.github/workflows/deploy.yml`), which builds the Lume site and publishes it to
+Pages. To enable it:
 
 1. Repo **Settings → Pages → Source: GitHub Actions**.
-2. Add an `OPENAI_API_KEY` repository **secret**.
+2. Add an `OPENAI_API_KEY` repository **secret**. (The workflow already passes
+   the built-in `GITHUB_TOKEN` for author resolution — no extra setup needed.)
 3. (Optional) set `OPENAI_TRIAGE_MODEL` / `OPENAI_WRITE_MODEL` repository
    **variables**.
 
