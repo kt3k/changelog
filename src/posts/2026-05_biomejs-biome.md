@@ -4,22 +4,32 @@ repo: biomejs/biome
 period: monthly
 slug: 2026-05
 period_label: "May 2026"
-size: M
-title: "Parser correctness and rule coverage improved across languages"
-excerpt: "Biome fixed several parser edge cases in Markdown, YAML, Svelte, and SCSS, while expanding lint rule precision and adding plugin config support."
-commits: 13
+size: L
+title: "Biome’s Sass, Markdown, and Vue support level up"
+excerpt: "May brought major SCSS parser/formatter expansion, stronger Markdown/YAML parsing, new lint rules, and plugin/feature gating cleanup."
+commits: 174
 ---
 
-### Parser and formatter correctness across markup languages
-Biome spent the month tightening syntax handling in several front-end and content languages. Markdown parsing was fixed for fenced code blocks that should stop at list boundaries, and for loose lists that follow empty items, bringing CommonMark behavior closer to spec. YAML got multiple fixes too: aliases can now be used as mapping keys, and anchors/tags are correctly lexed before block sequences. On the template side, Svelte `{:then}`/`{:catch}` blocks now accept omitted bindings, and SCSS semicolonless `@use`/`@forward` rules are parsed and formatted cleanly.
+### SCSS becomes much more complete
+Biome spent the month filling major Sass gaps in the parser, formatter, and analyzer. Support expanded across interpolation in selectors, pseudo/selectors, attribute selectors, nested properties, keyframes, media/container queries, `url()` values, parent selectors, semicolonless `@use`/`@forward`, semicolonless statement at-rules, and `@include ... using`. Formatting also improved for maps, `@if`/`@else if`, `@each`, binary expressions, blank lines, comments, and interpolation spacing, with several fixes aimed at preserving source intent and reducing churn.
 
-### Linting got smarter and more configurable
-`noUnnecessaryConditions` now catches a broader set of redundant conditions using type information, including optional chaining, nullish coalescing, logical expressions, null/undefined comparisons, and impossible `switch` cases. In parallel, `useNullishCoalescing` gained `ignoreMixedLogicalExpressions`, giving teams a way to suppress suggestions in mixed `&&`/`||` trees.
+### Markdown parsing got a broad CommonMark cleanup
+Markdown handling saw repeated fixes for list continuation, ordered sublists, lazy continuations, fenced code boundaries, quoted list interruptions, blank-line separators, and reference-definition edge cases. The result is a more faithful parser and formatter for nested lists, blockquotes, thematic breaks, and fenced code blocks, with fewer AST surprises in real-world docs.
 
-### Public config and build/runtime updates
-Biome’s public schema now exposes a `plugins` configuration field, and a regression in emitted configuration types/schema generation was fixed so generated typings stay aligned. Playground preview WASM builds also started enabling unstable features, with the WASM crate gaining an `unstable` feature flag to toggle Markdown and YAML support for web previews.
+### YAML support moved from gaps to a real foundation
+YAML parsing improved substantially with support for properties, anchors, tags, aliases as keys, and harder mapping/flow cases. Biome also added experimental YAML formatting plumbing, service wiring, and broader test coverage, laying groundwork for first-class YAML formatting while still keeping it gated.
+
+### New lint rules and rule upgrades
+May added several new rules, especially for JavaScript and Vue: `noExcessiveNestedCallbacks`, `noBaseToString`, `useThisInClassMethods`, `useTestHooksInOrder`, `useVueNextTickPromise`, `noVueImportCompilerMacros`, and `useVueValidVFor`. Existing rules also became more capable, including `useDestructuring` option parity, `noMisleadingReturnType` improvements, `useOptionalChain` and `noUnnecessaryConditions` coverage, `useNullishCoalescing` configurability, and readonly/`as const`-aware TypeScript checks.
+
+### Tailwind, HTML, and Svelte got meaningful parser upgrades
+Tailwind arbitrary values were taught to parse more like CSS, with better handling for numbers, percentages, functions, URLs, math, and typed v4 arbitrary values for sorting. HTML/Svelte parsing and formatting improved around text-context keywords, comments splitting tags, multiline interpolation, function bindings, await blocks, and Astro frontmatter/diagnostic positioning.
+
+### Architecture, config, and CI became more modular
+Biome introduced feature gating for plugins and several language services, making Markdown/YAML/GraphQL/Grit and plugin support more explicitly opt-in. The CLI transport was refactored, dependency and workflow hygiene improved, and CI hardening included all-features checks, security scanning, and workflow permission reductions. Import organization also got stricter validation for unknown predefined groups and clearer diagnostics.
 
 ### Other misc changes
-- Release housekeeping, changelog/package version updates, and changeset cleanup
-- CI and GitHub Actions workflow updates, including stale-issue automation and safer steps
-- Minor token/workflow maintenance in repository automation
+- `biome rage --linter` now reports domain-enabled rules correctly.
+- `noStaticElementInteractions` excludes custom elements; `noThisInStatic` ignores `new this()`.
+- `noUntrustedLicenses` text was fixed and several diagnostics/messages became more precise.
+- Multiple release housekeeping, dependency bumps, docs, snapshots, and test-harness updates.

@@ -5,25 +5,28 @@ period: monthly
 slug: 2026-05
 period_label: "May 2026"
 size: L
-title: "pnpm adds server installs, registry hardening, and workspace parity"
-excerpt: "May focused on major install/runtime parity, stricter integrity checks, a new server-assisted mode, and big registry improvements."
-commits: 55
+title: "Major install-engine and supply-chain hardening month"
+excerpt: "pnpm added audit signature checks, safer publish/auth flows, and a huge wave of install-engine, registry, and parity work."
+commits: 498
 ---
 
-### **Install engine parity jumps forward**
-Pacquet picked up several core pnpm behaviors: fresh installs with `nodeLinker: hoisted`, workspace filters, `--lockfile-only`, lifecycle scripts during install, network config wiring, resolution policy settings, and workspace preference/dedupe knobs. It also gained support for `injectWorkspacePackages`, `packageExtensions`, `excludeLinksFromLockfile`, `dedupePeers`, and peer-suffix length controls, closing many compatibility gaps and changing lockfile/install output for real-world workspaces.
+### **Supply-chain and release hardening**
+May brought several high-impact security and release improvements: `pnpm audit signatures` now verifies registry ECDSA signatures, release artifacts moved to macOS-native signing, and provenance attestation was added for published binaries. The month also tightened publish/auth flows with trusted publishing precedence, scoped registry correctness, tarball integrity enforcement, Git-hosted tarball checks, and safer registry/server behavior across the new in-repo registry stack.
 
-### **New server-assisted install mode**
-A new opt-in `pnprServer` mode offloads dependency resolution and missing-file calculation to a `pnpr` server, then links `node_modules` locally from the server-produced lockfile. This is the month’s biggest performance-oriented change and sets up faster installs without changing the final on-disk result.
+### **Install engine parity took a big leap**
+The biggest story of the month was the ongoing Rust install-engine work in pacquet. It gained lifecycle script execution, bin linking, side-effects cache read/write, patched dependency handling, hoisted installs, workspace-wide installs, lockfile generation, workspace state persistence, `nodeLinker` support, offline/prefer-offline, lockfile-only mode, filtered installs, and a growing set of pnpm-compatible config knobs. By month end, installs could even be offloaded to a `pnprServer` in an opt-in server-accelerated mode.
 
-### **Registry and publish flow become much stricter**
-The in-repo registry gained request logging, health checks, ACL/policy enforcement, persistent users/tokens, and tarball integrity verification on publish. On the client side, publish/access handling was fixed for scoped packages, dist-tag writes were made 2FA-compatible, and remote tarball direct dependencies now resolve end to end with proper sha512 integrity recorded.
+### **Resolver, lockfile, and workspace correctness kept filling gaps**
+A lot of pnpm behavior was restored or tightened: peer resolution, optional dependencies, workspace protocol handling, package extensions, dedupe rules, catalog/override support, runtime specifiers, git/tarball/file/link resolution, injected workspace deps, and modules-manifest handling. Lockfile behavior also became stricter and more faithful, with better freshness checks, verification caching, `minimumReleaseAge` enforcement, integrity requirements, CRLF-safe parsing, and better handling of combined v11 lockfiles.
 
-### **Integrity and trust checks now fail closed**
-Install-time tarball integrity mismatches now error by default, with `--update-checksums` as the explicit escape hatch. Trust scoring was also tightened so staged publishes count as the strongest signal, and frozen-lockfile behavior was hardened around remote tarball and registry metadata changes.
+### **CLI and user-facing command parity expanded**
+Several missing or regressed commands and flags were fixed or added, including `pnpm bugs`, native `pnpm pkg`, `pnpm stage`, `pnpm repo`, scoped login, improved `pnpm view`, `pnpm publish --json`, `pnpm dlx` build approval, and multiple fixes for `ci`, `clean`, `fetch`, `pack`, `self-update`, and global installs. Reporter output and NDJSON events were also expanded so external tooling can consume pnpm-shaped logs more reliably.
 
-### **Correctness fixes for dependency resolution**
-Several nasty edge cases were resolved, including hanging aliased peer installs, inconsistent peer resolution in diamond graphs, stale excluded-package metadata, and workspace glob negation parsing. These fixes reduce deadlocks, version drift, and surprising workspace selection behavior.
+### **Network, registry, and Windows compatibility improved**
+The fetch/auth stack got more enterprise-friendly with proxy/TLS/auth fixes, safer tarball fetching, registry alias handling, GitLab/Azure DevOps compatibility fixes, and better config loading from env and `.npmrc`. On Windows, the month addressed alias executables, node-gyp permissions, temp-path quirks, symlink behavior, CRLF lockfiles, and several path/drive-root edge cases.
 
 ### **Other misc changes**
-Renamed `pnpm-registry` to `pnpr`, moved registry/auth state to disk, replaced the external registry mock with an in-repo fixture, relicensed `pnpm-agent` and `pnpr` under PolyForm Shield, and shipped routine dependency, CI, test, and release housekeeping.
+- More consistent config handling for overrides, minimumReleaseAge, workspace settings, and env vars
+- Better self-update behavior and package-manager version policy handling
+- Test infrastructure refactors, including the new in-repo registry and registry-server renames
+- Numerous CI, workflow, docs, and dependency maintenance updates
