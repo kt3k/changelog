@@ -27,8 +27,8 @@
  *   OPENAI_WRITE_MODEL  write/summary model id (default: gpt-5.4-mini)
  *   OPENAI_BASE_URL     API base (default: https://api.openai.com/v1)
  *   GH_TOKEN            GitHub token (or GITHUB_TOKEN) for resolving commit
- *                       authors to GitHub logins via the API. Optional: without
- *                       it, only `@users.noreply.github.com` authors resolve.
+ *                       authors to GitHub logins via the API. Required (except
+ *                       for --dry-run); the run errors early if neither is set.
  *
  * CLI flags --triage-model / --write-model override the env vars.
  */
@@ -454,12 +454,17 @@ interface AuthorInfo {
  * are left uncached when no token was available so a later run can retry.
  * Commits whose author can't be resolved are dropped from both outputs.
  */
+/** GH_TOKEN / GITHUB_TOKEN, or "" if neither is set. */
+function githubToken(): string {
+  return Deno.env.get("GH_TOKEN") ?? Deno.env.get("GITHUB_TOKEN") ?? "";
+}
+
 async function resolveAuthors(
   repo: string,
   commits: Commit[],
   cache: Map<string, string>,
 ): Promise<AuthorInfo> {
-  const token = Deno.env.get("GH_TOKEN") ?? Deno.env.get("GITHUB_TOKEN") ?? "";
+  const token = githubToken();
   const byCommit: Record<string, string> = {};
   const counts = new Map<string, number>();
   const order: string[] = []; // first-seen order, for stable tie-breaking
@@ -1055,6 +1060,18 @@ async function loadRepos(filter?: string): Promise<RepoEntry[]> {
 async function main() {
   const args = parseArgs(Deno.args);
   const { date, repo, dryRun, period } = args;
+
+  // Resolving commit authors to GitHub logins (for avatars) needs a token, so
+  // fail fast rather than silently dropping non-noreply-email authors. --dry-run
+  // makes no API calls, so it's exempt.
+  if (!dryRun && !githubToken()) {
+    console.error(
+      "GH_TOKEN or GITHUB_TOKEN is required to resolve commit authors.\n" +
+        "Set one and re-run, e.g.  GH_TOKEN=$(gh auth token) deno task digest",
+    );
+    Deno.exit(1);
+  }
+
   const models = resolveModels(args);
   const repos = await loadRepos(repo);
   if (repos.length === 0) {
