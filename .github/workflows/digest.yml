@@ -2,9 +2,9 @@ name: Digest
 
 on:
   schedule:
-    # 06:00 UTC daily — summarizes the previous UTC day. On Mondays it also rolls
+    # 00:10 UTC daily — summarizes the previous UTC day. On Mondays it also rolls
     # up the completed ISO week; on the 1st, the completed calendar month.
-    - cron: "0 6 * * *"
+    - cron: "10 0 * * *"
   workflow_dispatch:
     inputs:
       date:

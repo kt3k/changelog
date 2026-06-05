@@ -60,7 +60,7 @@ deno task build   # outputs to _site/
 
 ## Deploy (GitHub Pages)
 
-The `Digest` workflow (`.github/workflows/digest.yml`) runs at 06:00 UTC: it
+The `Digest` workflow (`.github/workflows/digest.yml`) runs at 00:10 UTC: it
 generates the daily digest (plus a weekly rollup on Mondays and a monthly one on
 the 1st) and commits any new posts. It then calls the separate `Deploy` workflow
 (`.github/workflows/deploy.yml`), which builds the Lume site and publishes it to

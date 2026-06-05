@@ -52,16 +52,16 @@
   </footer>
 
   <script>
-  // Recompute the next 06:00 UTC run on the client so the footer stays correct
+  // Recompute the next 00:10 UTC run on the client so the footer stays correct
   // even on a cached page, and append a relative ("in 3 hours") hint.
   (function () {
     var el = document.querySelector("[data-next-update]");
     if (!el) return;
     var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var now = new Date();
-    var next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 6, 0, 0));
+    var next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 10, 0));
     if (next.getTime() <= now.getTime()) next.setUTCDate(next.getUTCDate() + 1);
-    var abs = MONTHS[next.getUTCMonth()] + " " + next.getUTCDate() + ", 06:00 UTC";
+    var abs = MONTHS[next.getUTCMonth()] + " " + next.getUTCDate() + ", 00:10 UTC";
     var mins = Math.round((next.getTime() - now.getTime()) / 60000);
     var rel;
     if (mins < 1) rel = "any moment";
