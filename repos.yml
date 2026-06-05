@@ -16,3 +16,4 @@ repos:
   - pnpm/pnpm
   - vitejs/vite
   - biomejs/biome
+  - jsr-io/jsr
