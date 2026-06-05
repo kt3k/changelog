@@ -8,6 +8,7 @@
 #
 repos:
   - denoland/deno
+  - denoland/std
   - oven-sh/bun
   - nodejs/node
   - tc39/ecma262
