@@ -246,7 +246,7 @@ export default function (data: Lume.Data): string {
 </script>`;
 
   const intro = `<div class="mb-10 border-b border-rule pb-8">
-      <p class="m-0 text-lg leading-snug text-ink-soft">A daily, LLM-written digest of selected git repositories. <a class="font-semibold text-accent no-underline hover:underline" href="/about">Why and how →</a></p>
+      <p class="m-0 text-lg leading-snug text-ink-soft">Daily, weekly, and monthly summaries of the main branches of selected git repos. <a class="font-semibold text-accent no-underline hover:underline" href="/about">Why and how →</a></p>
     </div>`;
 
   return `${intro}<div>${cards.join("\n")}</div>${script}`;
