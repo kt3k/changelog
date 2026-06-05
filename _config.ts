@@ -55,6 +55,9 @@ site.data(
 // Tailwind entry stylesheet (compiled by the tailwindcss plugin).
 site.add("/styles.css");
 
+// Social-card image (see docs/og-image.md for how to regenerate it).
+site.add("/og.png");
+
 // One RSS feed per repo per cadence at /<owner>/<name>/<period>.rss. Each
 // excludes "no change" (size: N) entries; item content is the rendered article
 // body so readers get the full issue.
