@@ -9,7 +9,7 @@
   <meta property="og:site_name" content="{{ site_name }}">
   <meta property="og:title" content="{{ if title }}{{ title }} · {{ site_name }}{{ else }}{{ site_name }}{{ /if }}">
   <meta property="og:description" content="{{ description || site_description }}">
-  <meta property="og:image" content="{{ '/og.png' |> url(true) }}">
+  <meta property="og:image" content="{{ (repo ? `/${repo}/index.png` : "/og.png") |> url(true) }}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

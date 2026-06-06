@@ -8,8 +8,18 @@
 export const layout = "layouts/repo.vto";
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 // `latest` = posts shown on the tab landing before the archive index.
@@ -17,7 +27,13 @@ const MONTHS = [
 const PERIODS = [
   { key: "daily", label: "Daily", seg: "", latest: 30, bucket: "month" },
   { key: "weekly", label: "Weekly", seg: "weekly", latest: 12, bucket: "year" },
-  { key: "monthly", label: "Monthly", seg: "monthly", latest: 12, bucket: "year" },
+  {
+    key: "monthly",
+    label: "Monthly",
+    seg: "monthly",
+    latest: 12,
+    bucket: "year",
+  },
 ];
 
 interface Bucket {
@@ -84,6 +100,8 @@ export default function* (data: Lume.Data) {
       }));
 
       // Tab landing: newest `latest` posts, with the archive index below.
+      // The daily landing also renders the repo's og:image card (referenced
+      // by every page of the repo; see layouts/base.vto).
       yield {
         url: p.seg ? `/${repo}/${p.seg}.html` : `/${repo}/`,
         repo,
@@ -92,6 +110,7 @@ export default function* (data: Lume.Data) {
         topHref,
         feedPosts: posts.slice(0, p.latest),
         archive,
+        ...(p.key === "daily" ? { openGraphLayout: "og/repo.ts" } : {}),
       };
 
       // One permalinked page per bucket holding that month's/year's full slice.

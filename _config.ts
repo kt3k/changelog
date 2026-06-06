@@ -3,6 +3,7 @@ import date from "lume/plugins/date.ts";
 import basePath from "lume/plugins/base_path.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import feed from "lume/plugins/feed.ts";
+import ogImages from "lume/plugins/og_images.ts";
 import { parse as parseYaml } from "@std/yaml";
 
 const site = lume({
@@ -16,6 +17,29 @@ const site = lume({
 site.use(date());
 site.use(tailwindcss());
 site.use(basePath()); // rewrites href/src in the output to include the base path
+
+// Lume's _cache keys entries with WebCrypto MD5, which Deno 2.8 removed, so
+// every cache write throws. Disabling the cache only costs re-rendering the
+// og:image cards each build, which is fast. TODO: drop once Lume digests with
+// a supported algorithm.
+site.cache = undefined;
+
+// Per-repo og:image cards (pages opt in via `openGraphLayout`; the repo tab
+// landing pages do — see src/repo-feeds.page.ts and src/_includes/og/repo.ts).
+const mulish = (weight: number) =>
+  Deno.readFile(new URL(`./src/_fonts/mulish-${weight}.ttf`, import.meta.url));
+site.use(ogImages({
+  options: {
+    width: 1200,
+    height: 630,
+    fonts: [
+      { name: "Mulish", weight: 500, style: "normal", data: await mulish(500) },
+      { name: "Mulish", weight: 600, style: "normal", data: await mulish(700) },
+      { name: "Mulish", weight: 700, style: "normal", data: await mulish(700) },
+      { name: "Mulish", weight: 800, style: "normal", data: await mulish(800) },
+    ],
+  },
+}));
 
 // Expose the watched repo list (from repos.yml) to all templates.
 const reposDoc = parseYaml(await Deno.readTextFile("repos.yml")) as {
