@@ -18,3 +18,4 @@ repos:
   - vitejs/vite
   - biomejs/biome
   - jsr-io/jsr
+  - leanprover/lean4
