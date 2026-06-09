@@ -1,3 +1,6 @@
 site_name: Changelog
 site_description: Daily, weekly, and monthly summaries of the main branches of selected git repos.
 author: kt3k
+# Base URL of the og-worker (see og-worker/), which renders daily-post og:image
+# cards on demand. Leave empty to fall back to the per-repo cards.
+og_worker_url: ""

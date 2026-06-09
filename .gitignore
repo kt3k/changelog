@@ -3,3 +3,7 @@ _cache/
 .cache/
 .env
 .claude/scheduled_tasks.lock
+
+# og-worker (Cloudflare Worker)
+og-worker/node_modules/
+og-worker/.wrangler/

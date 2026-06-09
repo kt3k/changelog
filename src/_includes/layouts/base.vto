@@ -9,7 +9,11 @@
   <meta property="og:site_name" content="{{ site_name }}">
   <meta property="og:title" content="{{ if title }}{{ title }} · {{ site_name }}{{ else }}{{ site_name }}{{ /if }}">
   <meta property="og:description" content="{{ description || site_description }}">
+  {{- if og_worker_url && type == "post" && period == "daily" }}
+  <meta property="og:image" content="{{ og_worker_url }}/{{ repo }}/{{ date |> date('DATE') }}.png">
+  {{- else }}
   <meta property="og:image" content="{{ (repo ? `/${repo}/index.png` : "/og.png") |> url(true) }}">
+  {{- /if }}
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -1,0 +1,9 @@
+{
+  "name": "changelog-og",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  // Bundle the Mulish TTFs as ArrayBuffer data modules.
+  "rules": [
+    { "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true }
+  ]
+}
